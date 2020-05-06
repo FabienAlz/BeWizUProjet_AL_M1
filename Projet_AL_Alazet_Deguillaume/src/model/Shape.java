@@ -1,10 +1,6 @@
 package model;
 
-import java.util.Iterator;
-
 public interface Shape {
-
-
     /**
      * Observable methods
      */
