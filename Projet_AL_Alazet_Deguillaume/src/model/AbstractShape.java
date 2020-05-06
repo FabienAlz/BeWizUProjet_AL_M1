@@ -7,13 +7,15 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
     private Position rotationCenter;
     private Position translation;
     private String color;
+    private Implementor implementor;
 
-    public AbstractShape(Position position, float rotation, Position rotationCenter, Position translation, String color) {
+    public AbstractShape(Position position, float rotation, Position rotationCenter, Position translation, String color, Implementor implementor) {
         this.position = position;
         this.rotation = rotation;
         this.rotationCenter = rotationCenter;
         this.translation = translation;
         this.color = color;
+        this.implementor = implementor;
     }
 
     public Position getPosition() {

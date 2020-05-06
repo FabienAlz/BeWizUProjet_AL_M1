@@ -5,15 +5,6 @@ import java.util.Set;
 
 public class ObservableSuperClass implements Shape {
     private Set<ShapeObserver> observers = new HashSet<>();
-    private Implementor implementor;
-
-    public ObservableSuperClass(Implementor implementor) {
-        this.implementor = implementor;
-    }
-
-    public Implementor getImplementor() {
-        return implementor;
-    }
 
     @Override
     public void addObserver(ShapeObserver obs) {

@@ -5,8 +5,8 @@ import java.util.List;
 public class CompoundShape extends AbstractShape {
     private List<Shape> shapes;
 
-    public CompoundShape(Position position, float rotation, Position rotationCenter, Position translation, String color) {
-        super(position, rotation, rotationCenter, translation, color);
+    public CompoundShape(Position position, float rotation, Position rotationCenter, Position translation, String color, Implementor implementor) {
+        super(position, rotation, rotationCenter, translation, color, implementor);
     }
 
     public void add(Shape s) {
