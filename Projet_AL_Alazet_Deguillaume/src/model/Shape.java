@@ -1,6 +1,7 @@
 package model;
 
 public interface Shape extends Cloneable {
+
     /**
      * Observable methods
      */

@@ -4,7 +4,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ObservableSuperClass implements Shape {
-    Set<ShapeObserver> observers = new HashSet<>();
+    private Set<ShapeObserver> observers = new HashSet<>();
+    private Implementor implementor;
+
+    public ObservableSuperClass(Implementor implementor) {
+        this.implementor = implementor;
+    }
+
+    public Implementor getImplementor() {
+        return implementor;
+    }
 
     @Override
     public void addObserver(ShapeObserver obs) {
@@ -20,8 +29,8 @@ public class ObservableSuperClass implements Shape {
     public void notifyObserver() {
         Set<ShapeObserver> observersCp = new HashSet<>();
         observersCp.addAll(observers);
-        for(ShapeObserver uo : observersCp) {
-            uo.update(this);
+        for(ShapeObserver so : observersCp) {
+            so.update();
         }
     }
 }
