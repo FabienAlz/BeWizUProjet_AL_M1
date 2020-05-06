@@ -5,7 +5,7 @@ import java.util.List;
 public class CompoundShape extends AbstractShape {
     private List<Shape> shapes;
 
-    public CompoundShape(Position position, float rotation, Position rotationCenter, float translation, String color) {
+    public CompoundShape(Position position, float rotation, Position rotationCenter, Position translation, String color) {
         super(position, rotation, rotationCenter, translation, color);
     }
 
@@ -19,5 +19,10 @@ public class CompoundShape extends AbstractShape {
 
     public void clear() {
         shapes.clear();
+    }
+
+    @Override
+    public CompoundShape clone() {
+        return (CompoundShape) super.clone();
     }
 }
