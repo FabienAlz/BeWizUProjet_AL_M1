@@ -12,6 +12,18 @@ public class Rectangle extends AbstractShape {
         this.borderRadius = borderRadius;
     }
 
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public float getBorderRadius() {
+        return borderRadius;
+    }
+
     @Override
     public Rectangle clone() {
         return (Rectangle) super.clone();

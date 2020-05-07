@@ -3,7 +3,7 @@ package model;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ObservableSuperClass implements Shape {
+public abstract class ObservableSuperClass implements Shape {
     private Set<ShapeObserver> observers = new HashSet<>();
 
     @Override
@@ -21,7 +21,7 @@ public class ObservableSuperClass implements Shape {
         Set<ShapeObserver> observersCp = new HashSet<>();
         observersCp.addAll(observers);
         for(ShapeObserver so : observersCp) {
-            so.update();
+            so.update(this);
         }
     }
 }

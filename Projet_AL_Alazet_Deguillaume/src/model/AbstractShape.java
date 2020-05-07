@@ -16,6 +16,7 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
         this.translation = translation;
         this.color = color;
         this.implementor = implementor;
+
     }
 
     public Position getPosition() {
@@ -38,12 +39,17 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
         return color;
     }
 
+    public Implementor getImplementor() {
+        return this.implementor;
+    }
+
     @Override
     public AbstractShape clone() {
         try {
             return (AbstractShape) super.clone();
         } catch (Exception e) {
         }
+
         return this;
     }
 }

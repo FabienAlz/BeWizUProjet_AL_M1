@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class Canvas {
-    private Canvas instance;
+    private static Canvas instance;
     private List<Shape> shapes;
     private Canvas() {
         shapes = new ArrayList<>();
     }
 
-    public Canvas getInstance() {
+    public static Canvas getInstance() {
         if(instance == null)
             instance = new Canvas();
         return instance;

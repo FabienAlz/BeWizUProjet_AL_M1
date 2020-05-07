@@ -54,7 +54,7 @@
         </ScrollPane>
     </left>
     <center>
-        <Pane fx:id="dropPane" prefHeight="200.0" prefWidth="650.0" BorderPane.alignment="CENTER">
+        <Pane id="canvas" fx:id="canvas" prefHeight="200.0" prefWidth="650.0" BorderPane.alignment="CENTER">
         </Pane>
     </center>
 </BorderPane>

@@ -2,6 +2,19 @@ package model;
 
 public interface Shape extends Cloneable {
 
+
+    public Position getPosition();
+
+    public float getRotation();
+
+    public Position getRotationCenter();
+
+    public Position getTranslation();
+
+    public String getColor();
+
+    public Implementor getImplementor();
+
     /**
      * Observable methods
      */
