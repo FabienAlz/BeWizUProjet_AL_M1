@@ -10,6 +10,14 @@ public class Polygon extends AbstractShape {
         this.length = length;
     }
 
+    public int getEdges() {
+        return edges;
+    }
+
+    public float getLength() {
+        return length;
+    }
+
     @Override
     public Polygon clone() {
         return (Polygon) super.clone();

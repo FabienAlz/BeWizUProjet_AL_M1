@@ -18,10 +18,12 @@ public final class Canvas {
 
     public void add(Shape s) {
         shapes.add(s);
+        s.notifyObserver();
     }
 
     public void remove(Shape s) {
         shapes.remove(s);
+        s.notifyObserver();
     }
 
     public void clear() {
