@@ -5,8 +5,8 @@ public class Rectangle extends AbstractShape {
     private float height;
     private float borderRadius;
 
-    public Rectangle(Position position, float rotation, Position rotationCenter, Position translation, String color, float width, float height, float borderRadius, Implementor implementor) {
-        super(position, rotation, rotationCenter, translation, color, implementor);
+    public Rectangle(PositionI positionI, float rotation, PositionI rotationCenter, PositionI translation, String color, float width, float height, float borderRadius, Implementor implementor) {
+        super(positionI, rotation, rotationCenter, translation, color, implementor);
         this.width = width;
         this.height = height;
         this.borderRadius = borderRadius;

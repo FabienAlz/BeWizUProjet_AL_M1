@@ -13,11 +13,11 @@ public class Main extends Application {
         Canvas canvas = Canvas.getInstance();
         Toolbar toolbar = Toolbar.getInstance();
 
-        Shape r = new Rectangle(new ToolbarPosition(50,25), 0, new ToolbarPosition(0,0), new ToolbarPosition(0,0), "#4472c4", 30, 20, 0, implementor);
-        Shape r2 = new Rectangle(new ToolbarPosition(50,50), 0, new ToolbarPosition(0,0), new ToolbarPosition(0,0), "#202020", 40, 20, 0, implementor);
-        Shape r3 = new Rectangle(new CanvasPosition(50,75), 0, new CanvasPosition(0,0), new CanvasPosition(0,0), "#a823b3", 30, 20, 0, implementor);
+        Shape r = new Rectangle(new ToolbarPosition(), 0, new Position(0,0), new Position(0,0), "#4472c4", 30, 20, 0, implementor);
+        Shape r2 = new Rectangle(new ToolbarPosition(), 0, new Position(0,0), new Position(0,0), "#202020", 40, 20, 0, implementor);
+        Shape r3 = new Rectangle(new CanvasPosition(50,60), 0, new Position(0,0), new Position(0,0), "#a823b3", 300, 200, 0, implementor);
 
-        Shape p = new Polygon(new ToolbarPosition(500,400), 0, new ToolbarPosition(0,0), new ToolbarPosition(0,0), "#4472c4", 5, 20, implementor);
+      //  Shape p = new Polygon(new ToolbarPosition(), 0, new Position(0,0), new Position(0,0), "#4472c4", 5, 20, implementor);
 
         ShapeObserver obs = new ConcreteShapeObserver();
         r.addObserver(obs);

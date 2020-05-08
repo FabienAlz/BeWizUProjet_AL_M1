@@ -2,36 +2,40 @@ package model;
 
 public abstract class AbstractShape extends ObservableSuperClass implements Shape {
 
-    private Position position;
+    private PositionI positionI;
     private float rotation;
-    private Position rotationCenter;
-    private Position translation;
+    private PositionI rotationCenter;
+    private PositionI translation;
     private String color;
     private Implementor implementor;
+    private float ratio;
 
-    public AbstractShape(Position position, float rotation, Position rotationCenter, Position translation, String color, Implementor implementor) {
-        this.position = position;
+    public AbstractShape(PositionI positionI, float rotation, PositionI rotationCenter, PositionI translation, String color, Implementor implementor) {
+        this.positionI = positionI;
         this.rotation = rotation;
         this.rotationCenter = rotationCenter;
         this.translation = translation;
         this.color = color;
         this.implementor = implementor;
+        this.ratio = 1;
 
     }
 
-    public Position getPosition() {
-        return position;
+    public PositionI getPositionI() {
+        return positionI;
     }
+
+    public void setPosition(PositionI positionI) { this.positionI = positionI; }
 
     public float getRotation() {
         return rotation;
     }
 
-    public Position getRotationCenter() {
+    public PositionI getRotationCenter() {
         return rotationCenter;
     }
 
-    public Position getTranslation() {
+    public PositionI getTranslation() {
         return translation;
     }
 
@@ -42,6 +46,10 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
     public Implementor getImplementor() {
         return this.implementor;
     }
+
+    public float getRatio() { return this.ratio; }
+
+    public void setRatio(float ratio) { this.ratio = ratio; }
 
     @Override
     public AbstractShape clone() {

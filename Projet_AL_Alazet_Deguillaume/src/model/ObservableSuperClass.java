@@ -17,6 +17,11 @@ public abstract class ObservableSuperClass implements Shape {
     }
 
     @Override
+    public void removeAllObservers() {
+        observers.clear();
+    }
+
+    @Override
     public void notifyObserver() {
         Set<ShapeObserver> observersCp = new HashSet<>();
         observersCp.addAll(observers);

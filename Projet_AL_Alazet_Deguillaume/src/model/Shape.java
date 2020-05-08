@@ -3,13 +3,15 @@ package model;
 public interface Shape extends Cloneable {
 
 
-    public Position getPosition();
+    public PositionI getPositionI();
+
+    public void setPosition(PositionI positionI);
 
     public float getRotation();
 
-    public Position getRotationCenter();
+    public PositionI getRotationCenter();
 
-    public Position getTranslation();
+    public PositionI getTranslation();
 
     public String getColor();
 
@@ -20,6 +22,7 @@ public interface Shape extends Cloneable {
      */
     public void addObserver(ShapeObserver obs);
     public void removeObserver(ShapeObserver obs);
+    public void removeAllObservers();
     public void notifyObserver();
 
 }

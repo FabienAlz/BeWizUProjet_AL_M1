@@ -23,6 +23,7 @@ public final class Canvas {
 
     public void remove(Shape s) {
         shapes.remove(s);
+        s.removeAllObservers();
         s.notifyObserver();
     }
 
