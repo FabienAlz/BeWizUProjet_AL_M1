@@ -40,7 +40,6 @@ public final class Toolbar {
 
     public ToolbarPosition getNextPosition() {
         ToolbarPosition currentPosition = new ToolbarPosition(nextPosition.getX(), nextPosition.getY());
-        //this.nextPosition = new ToolbarPosition(nextPosition.getX(), nextPosition.getY()+30);
         return currentPosition;
     }
 

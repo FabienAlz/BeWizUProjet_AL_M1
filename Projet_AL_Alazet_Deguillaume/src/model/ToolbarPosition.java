@@ -2,7 +2,7 @@ package model;
 
 public class ToolbarPosition implements PositionI {
 
-    private int x, y;
+    private double x, y;
 
     public ToolbarPosition() {
         ToolbarPosition nextPosition = Toolbar.getInstance().getNextPosition();
@@ -10,17 +10,17 @@ public class ToolbarPosition implements PositionI {
         this.y = nextPosition.getY();
     }
 
-    public ToolbarPosition(int x, int y) {
+    public ToolbarPosition(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
 
-    public int getX() {
+    public double getX() {
         return this.x;
     }
 
-    public int getY() {
+    public double getY() {
         return this.y;
     }
 }
