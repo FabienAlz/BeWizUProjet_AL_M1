@@ -9,6 +9,7 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
     private String color;
     private Implementor implementor;
     private float ratio;
+    private boolean isSelected;
 
     public AbstractShape(PositionI positionI, float rotation, PositionI rotationCenter, PositionI translation, String color, Implementor implementor) {
         this.positionI = positionI;
@@ -18,7 +19,7 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
         this.color = color;
         this.implementor = implementor;
         this.ratio = 1;
-
+        this.isSelected = false;
     }
 
     public PositionI getPositionI() {
@@ -50,6 +51,15 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
     public float getRatio() { return this.ratio; }
 
     public void setRatio(float ratio) { this.ratio = ratio; }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+        notifyObserver();
+    }
 
     @Override
     public AbstractShape clone() {

@@ -17,6 +17,8 @@ public interface Shape extends Cloneable {
 
     public Implementor getImplementor();
 
+    public Shape clone();
+
     /**
      * Observable methods
      */

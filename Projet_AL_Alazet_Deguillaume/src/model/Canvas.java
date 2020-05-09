@@ -16,6 +16,20 @@ public final class Canvas {
         return instance;
     }
 
+    public List<Shape> getShapes() {
+        List<Shape> copy = new ArrayList<>();
+        for(Shape s : shapes) {
+            copy.add(s.clone());
+        }
+        return copy;
+    }
+
+    public void resetSelection() {
+        for(Shape s : shapes) {
+            ((AbstractShape)s).setSelected(false);
+        }
+    }
+
     public void add(Shape s) {
         shapes.add(s);
         s.notifyObserver();

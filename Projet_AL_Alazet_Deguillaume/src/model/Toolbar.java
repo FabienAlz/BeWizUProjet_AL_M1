@@ -35,7 +35,11 @@ public final class Toolbar {
     }
 
     public List<Shape> getShapes() {
-        return this.shapes;
+        List<Shape> copy = new ArrayList<>();
+        for(Shape s : shapes) {
+            copy.add(s.clone());
+        }
+        return copy;
     }
 
     public ToolbarPosition getNextPosition() {

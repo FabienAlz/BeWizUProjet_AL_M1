@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -58,25 +60,25 @@ public final class FXImplementor implements Implementor {
     public void draw(Shape s) {
         javafx.scene.shape.Shape newShape;
         if (s instanceof Rectangle) {
-             newShape = new javafx.scene.shape.Rectangle();
-            ((javafx.scene.shape.Rectangle)newShape).setX(s.getPositionI().getX());
-            ((javafx.scene.shape.Rectangle)newShape).setY(s.getPositionI().getY());
-            ((javafx.scene.shape.Rectangle)newShape).setArcWidth(((Rectangle) s).getBorderRadius()/2);
-            ((javafx.scene.shape.Rectangle)newShape).setArcHeight(((Rectangle) s).getBorderRadius()/2);
+            newShape = new javafx.scene.shape.Rectangle();
+            ((javafx.scene.shape.Rectangle) newShape).setX(s.getPositionI().getX());
+            ((javafx.scene.shape.Rectangle) newShape).setY(s.getPositionI().getY());
+            ((javafx.scene.shape.Rectangle) newShape).setArcWidth(((Rectangle) s).getBorderRadius() / 2);
+            ((javafx.scene.shape.Rectangle) newShape).setArcHeight(((Rectangle) s).getBorderRadius() / 2);
             newShape.setFill(Color.valueOf(s.getColor()));
-            ((javafx.scene.shape.Rectangle)newShape).setWidth(((Rectangle) s).getWidth());
-            ((javafx.scene.shape.Rectangle)newShape).setHeight(((Rectangle) s).getHeight());
+            ((javafx.scene.shape.Rectangle) newShape).setWidth(((Rectangle) s).getWidth());
+            ((javafx.scene.shape.Rectangle) newShape).setHeight(((Rectangle) s).getHeight());
             if (s.getPositionI() instanceof ToolbarPosition) {
-                if(((Rectangle) s).getWidth() > leftBar.getWidth() - 24) {
-                    float ratio = (float)(((Rectangle) s).getWidth() / (leftBar.getWidth() - 24));
+                if (((Rectangle) s).getWidth() > leftBar.getWidth() - 24) {
+                    float ratio = (float) (((Rectangle) s).getWidth() / (leftBar.getWidth() - 24));
                     ((Rectangle) s).setRatio(ratio);
-                    ((javafx.scene.shape.Rectangle)newShape).setWidth(((Rectangle) s).getWidth()/ratio);
-                    ((javafx.scene.shape.Rectangle)newShape).setHeight(((Rectangle) s).getHeight()/ratio);
+                    ((javafx.scene.shape.Rectangle) newShape).setWidth(((Rectangle) s).getWidth() / ratio);
+                    ((javafx.scene.shape.Rectangle) newShape).setHeight(((Rectangle) s).getHeight() / ratio);
                 }
                 s.setPosition(Toolbar.getInstance().getNextPosition());
-                ((javafx.scene.shape.Rectangle)newShape).setX(s.getPositionI().getX());
-                ((javafx.scene.shape.Rectangle)newShape).setY(s.getPositionI().getY());
-                Toolbar.getInstance().setNextPosition((int) ((javafx.scene.shape.Rectangle)newShape).getHeight());
+                ((javafx.scene.shape.Rectangle) newShape).setX(s.getPositionI().getX());
+                ((javafx.scene.shape.Rectangle) newShape).setY(s.getPositionI().getY());
+                Toolbar.getInstance().setNextPosition((int) ((javafx.scene.shape.Rectangle) newShape).getHeight());
                 leftBar.getChildren().add(newShape);
 
                 // delete on click
@@ -89,7 +91,7 @@ public final class FXImplementor implements Implementor {
                     }
                 };
 */
-               // on click copy sur le canvas
+                // on click copy sur le canvas
                 EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent e) {
@@ -117,12 +119,10 @@ public final class FXImplementor implements Implementor {
                 newShape.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
             }
 
-        }
-
-        if (s instanceof Polygon) {
+        } else { // (s instanceof Polygon) {
             if (s.getPositionI() instanceof ToolbarPosition) {
                 s.setPosition(Toolbar.getInstance().getNextPosition());
-                Toolbar.getInstance().setNextPosition((int) ((Polygon) s).computeRadius()*2);
+                Toolbar.getInstance().setNextPosition((int) ((Polygon) s).computeRadius() * 2);
             }
             newShape = new javafx.scene.shape.Polygon(((Polygon) s).getPoints());
             newShape.setRotate(s.getRotation());
@@ -141,8 +141,7 @@ public final class FXImplementor implements Implementor {
                 };
 
                 newShape.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
-            }
-            else {
+            } else {
                 canvas.getChildren().add(newShape);
                 EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
                     @Override
@@ -158,23 +157,76 @@ public final class FXImplementor implements Implementor {
 
         }
 
+        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                Color c = (Color) newShape.getFill();
+                double r = c.getRed() * 255;
+                double g = c.getGreen() * 255;
+                double b = c.getBlue() * 255;
+                double rt, gt, bt;
+                rt = r + (0.25 * (255 - r));
+                gt = g + (0.25 * (255 - g));
+                bt = b + (0.25 * (255 - b));
+                rt /= 255;
+                gt /= 255;
+                bt /= 255;
+
+                newShape.setFill(new Color(rt, gt, bt, 1));
+
+            }
+        };
+
+        newShape.addEventFilter(MouseEvent.MOUSE_ENTERED, eventHandler);
+
+        EventHandler<MouseEvent> eventHandlerExit = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                newShape.setFill(Color.valueOf(s.getColor()));
+            }
+        };
+
+        newShape.addEventFilter(MouseEvent.MOUSE_EXITED, eventHandlerExit);
+
+
+        EventHandler<MouseEvent> eventHandlerClick = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                if(!e.isControlDown()) {
+                    Canvas.getInstance().resetSelection();
+                }
+                Color c = Color.valueOf(s.getColor());
+                double r = c.getRed() * 255;
+                double g = c.getGreen() * 255;
+                double b = c.getBlue() * 255;
+                if(r >= 65.0 && r <= 70.0 && g >= 110.0 && g <= 120.0 && b >= 190.0 && b <= 200.0)
+                    newShape.setStroke(new Color(0,0,0,1));
+                else
+                    newShape.setStroke(new Color(68.0/255,114.0/255,196.0/255,1));
+                newShape.setStrokeWidth(2);
+            }
+        };
+
+        newShape.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandlerClick);
+
+
         return;
     }
 
 
     @Override
     public void remove() {
-        List<Node> nodes  = new ArrayList<>();
+        List<Node> nodes = new ArrayList<>();
         for (Node n : leftBar.getChildren()) {
             if (n instanceof javafx.scene.shape.Rectangle) {
-               nodes.add(n);
+                nodes.add(n);
             }
         }
         for (Node n : nodes) {
             leftBar.getChildren().remove(n);
         }
         Toolbar.getInstance().resetPosition();
-        for(Shape s : Toolbar.getInstance().getShapes()) {
+        for (Shape s : Toolbar.getInstance().getShapes()) {
             s.setPosition(Toolbar.getInstance().getNextPosition());
             s.notifyObserver();
         }
