@@ -3,28 +3,32 @@ package model;
 public interface Shape extends Cloneable {
 
 
-    public PositionI getPositionI();
+    PositionI getPositionI();
 
-    public void setPosition(PositionI positionI);
+    void setPosition(PositionI positionI);
 
-    public float getRotation();
+    float getRotation();
 
-    public PositionI getRotationCenter();
+    PositionI getRotationCenter();
 
-    public PositionI getTranslation();
+    PositionI getTranslation();
 
-    public String getColor();
+    String getColor();
 
-    public Implementor getImplementor();
+    Implementor getImplementor();
 
-    public Shape clone();
+    boolean isSelected();
+
+    void setSelected(boolean b);
+
+    Shape clone();
 
     /**
      * Observable methods
      */
-    public void addObserver(ShapeObserver obs);
-    public void removeObserver(ShapeObserver obs);
-    public void removeAllObservers();
-    public void notifyObserver();
+    void addObserver(ShapeObserver obs);
+    void removeObserver(ShapeObserver obs);
+    void removeAllObservers();
+    void notifyObserver();
 
 }

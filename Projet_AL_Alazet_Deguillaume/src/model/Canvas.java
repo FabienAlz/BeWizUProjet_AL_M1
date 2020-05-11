@@ -26,7 +26,13 @@ public final class Canvas {
 
     public void resetSelection() {
         for(Shape s : shapes) {
-            ((AbstractShape)s).setSelected(false);
+            s.setSelected(false);
+        }
+    }
+
+    public void notifyAllShapes() {
+    for(Shape s : shapes) {
+            s.notifyObserver();
         }
     }
 
@@ -37,7 +43,7 @@ public final class Canvas {
 
     public void remove(Shape s) {
         shapes.remove(s);
-        s.removeAllObservers();
+       // s.removeAllObservers();
     }
 
     public void clear() {

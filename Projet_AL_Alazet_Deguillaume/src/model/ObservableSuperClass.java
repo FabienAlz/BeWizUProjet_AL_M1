@@ -29,4 +29,14 @@ public abstract class ObservableSuperClass implements Shape {
             so.update(this);
         }
     }
+
+    @Override
+    public Shape clone() {
+        try {
+            return (ObservableSuperClass) super.clone();
+        } catch (Exception e) {
+        }
+
+        return this;
+    }
 }

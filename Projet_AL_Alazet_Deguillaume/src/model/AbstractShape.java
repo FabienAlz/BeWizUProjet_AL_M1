@@ -58,7 +58,6 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
 
     public void setSelected(boolean selected) {
         isSelected = selected;
-        notifyObserver();
     }
 
     @Override
