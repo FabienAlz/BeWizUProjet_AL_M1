@@ -2,7 +2,10 @@ package model;
 
 public class Position implements PositionI {
 
-    private double x, y;
+    private double x;
+
+
+    private double y;
 
     public Position(double x, double y) {
         this.x = x;
@@ -13,8 +16,16 @@ public class Position implements PositionI {
         return this.x;
     }
 
+    public void setX(double x) {
+        this.x = x;
+    }
+
     public double getY() {
         return this.y;
+    }
+
+    public void setY(double y) {
+        this.y = y;
     }
 
     public double distance(Position p) {

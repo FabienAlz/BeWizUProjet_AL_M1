@@ -1,10 +1,8 @@
 package model;
 
-import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
@@ -15,11 +13,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
 
-import javax.naming.Context;
-import javax.swing.plaf.ToolBarUI;
-import javax.tools.Tool;
-import java.awt.*;
-import java.net.StandardSocketOptions;
 import java.util.*;
 import java.util.List;
 
@@ -33,11 +26,16 @@ public final class FXImplementor implements Implementor {
     @FXML
     private ContextMenu contextMenu;
 
+    private final Color BORDER_COLOR = new Color(68.0 / 255, 114.0 / 255, 196.0 / 255, 1);
+
     private static Implementor instance;
 
+    private Map<Long, javafx.scene.shape.Shape> shapes = new HashMap<>();;
+
     public static Implementor getInstance() {
-        if (instance == null)
+        if (instance == null) {
             instance = new FXImplementor();
+        }
         return instance;
     }
 
@@ -63,27 +61,28 @@ public final class FXImplementor implements Implementor {
         contextMenu = new ContextMenu();
         contextMenu.setId("contextMenu");
         javafx.scene.control.MenuItem group = new javafx.scene.control.MenuItem("Group");
-        group.setOnAction(new EventHandler<ActionEvent>() {
 
+        // Handler to create group of shapes
+        group.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                CompoundShape compoundShape = new CompoundShape(FXImplementor.getInstance());
-                for (Shape s : Canvas.getInstance().getShapes()) {
-                    if(s.isSelected()) {
-                        compoundShape.add(s);
-                    }
+                CompoundShape compoundShape = new CompoundShape(FXImplementor.getInstance(), new CanvasPosition(0,0));
+
+                for (Shape s : Canvas.getInstance().createCompound()) {
+                    compoundShape.add(s);
                 }
                 for(Shape s : compoundShape.getShapes()) {
-                    Canvas.getInstance().remove(s);
-            }
+                    canvas.getChildren().remove(shapes.get(s.getId()));
+                }
                 ShapeObserver obs = new ConcreteShapeObserver();
                 compoundShape.addObserver(obs);
                 Canvas.getInstance().add(compoundShape);
             }
         });
         javafx.scene.control.MenuItem edit = new MenuItem("Edit");
-        edit.setOnAction(new EventHandler<ActionEvent>() {
 
+        // Handler to edit the shapes
+        edit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 for(Shape s : Toolbar.getInstance().getShapes()) {
@@ -143,11 +142,12 @@ public final class FXImplementor implements Implementor {
                 @Override
                 public void handle(MouseEvent e) {
                     if (e.getButton() == MouseButton.PRIMARY) {
+                        boolean isSelected = s.isSelected();
                         canvas.getChildren().clear();
                         if (!e.isControlDown()) {
                             Canvas.getInstance().resetSelection();
                         }
-                        s.setSelected(true);
+                        s.setSelected(!isSelected);
                         Canvas.getInstance().notifyAllShapes();
                     }
                 }
@@ -159,6 +159,7 @@ public final class FXImplementor implements Implementor {
                 public void handle(MouseEvent e) {
                     if (e.getButton() == MouseButton.PRIMARY) {
                         Shape sToolbar = s.clone();
+                        sToolbar.setId();
                         sToolbar.setSelected(false);
                         sToolbar.setPosition(Toolbar.getInstance().getNextPosition());
                         Toolbar.getInstance().add(sToolbar);
@@ -182,6 +183,7 @@ public final class FXImplementor implements Implementor {
                 @Override
                 public void handle(MouseEvent e) {
                     Shape sCopy = s.clone();
+                    sCopy.setId();
                     sCopy.setPosition(new CanvasPosition(s.getPositionI().getX(), s.getPositionI().getY()));
                     Canvas.getInstance().add(sCopy);
                 }
@@ -203,11 +205,11 @@ public final class FXImplementor implements Implementor {
         }
     }
 
-    private void compoundShapeHandlers(CompoundShape s, Map<Shape,javafx.scene.shape.Shape> shapes) {
+    private void compoundShapeHandlers(CompoundShape s, Map<Shape,javafx.scene.shape.Shape> compoundShapes) {
         EventHandler<MouseEvent> hoverColor = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                for (Map.Entry<Shape,javafx.scene.shape.Shape> newShape : shapes.entrySet()){
+                for (Map.Entry<Shape,javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()){
                     Color c = (Color) newShape.getValue().getFill();
                     double r = c.getRed() * 255;
                     double g = c.getGreen() * 255;
@@ -228,7 +230,7 @@ public final class FXImplementor implements Implementor {
         EventHandler<MouseEvent> setBackColor = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                for (Map.Entry<Shape,javafx.scene.shape.Shape> newShape : shapes.entrySet()) {
+                for (Map.Entry<Shape,javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()) {
                     newShape.getValue().setFill(Color.valueOf(newShape.getKey().getColor()));
                 }
             }
@@ -239,12 +241,14 @@ public final class FXImplementor implements Implementor {
                 @Override
                 public void handle(MouseEvent e) {
                     if (e.getButton() == MouseButton.PRIMARY) {
-                        canvas.getChildren().clear();
+                        boolean isSelected = s.isSelected();
                         if (!e.isControlDown()) {
                             Canvas.getInstance().resetSelection();
                         }
-                        for (Map.Entry<Shape, javafx.scene.shape.Shape> newShape : shapes.entrySet()) {
-                            newShape.getKey().setSelected(true);
+                        canvas.getChildren().clear();
+                        s.setSelected(!isSelected);
+                        for (Map.Entry<Shape, javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()) {
+                            newShape.getKey().setSelected(!isSelected);
                         }
                         Canvas.getInstance().notifyAllShapes();
                     }
@@ -252,19 +256,22 @@ public final class FXImplementor implements Implementor {
                 }
             };
 
-            /*EventHandler<MouseEvent> addToToolbar = new EventHandler<MouseEvent>() {
+            EventHandler<MouseEvent> addToToolbar = new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
                     if (e.getButton() == MouseButton.PRIMARY) {
-                        Shape sToolbar = s.clone();
-                        sToolbar.setSelected(false);
-                        sToolbar.setPosition(Toolbar.getInstance().getNextPosition());
-                        Toolbar.getInstance().add(sToolbar);
+                        CompoundShape sCopy = s.clone();
+                        sCopy.setId();
+                        createToolbarCompoundShape(sCopy);
+                        Toolbar.getInstance().add(sCopy);
+                        s.setSelected(false);
+                        canvas.getChildren().clear();
+                        Canvas.getInstance().remove(s);
+                        Canvas.getInstance().notifyAllShapes();
                     }
                 }
             };
 
-            newShape.addEventFilter(MouseEvent.MOUSE_CLICKED, addToToolbar);*/
 
            /* newShape.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
 
@@ -274,14 +281,29 @@ public final class FXImplementor implements Implementor {
                 }
             });*/
 
-            for (Map.Entry<Shape,javafx.scene.shape.Shape> newShape : shapes.entrySet()){
+            for (Map.Entry<Shape,javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()){
                 newShape.getValue().addEventFilter(MouseEvent.MOUSE_CLICKED, selection);
-
+                newShape.getValue().addEventFilter(MouseEvent.MOUSE_CLICKED, addToToolbar);
             }
         }
+        else if(s.getPositionI() instanceof ToolbarPosition) {
+           /* EventHandler<MouseEvent> addToCanvas = new EventHandler<MouseEvent>() {
 
+                @Override
+                public void handle(MouseEvent e) {
+                    Shape sCopy = s.clone();
+                    sCopy.setId();
+                    sCopy.setPosition(new CanvasPosition(s.getPositionI().getX(), s.getPositionI().getY()));
+                    Canvas.getInstance().add(sCopy);
+                }
+            };
+            for (Map.Entry<Shape,javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()){
+                newShape.getValue().addEventFilter(MouseEvent.MOUSE_CLICKED, addToCanvas);
+            }*/
+           //TODO
+        }
 
-        for (Map.Entry<Shape,javafx.scene.shape.Shape> newShape : shapes.entrySet()){
+        for (Map.Entry<Shape,javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()){
             newShape.getValue().addEventFilter(MouseEvent.MOUSE_ENTERED, hoverColor);
             newShape.getValue().addEventFilter(MouseEvent.MOUSE_EXITED, setBackColor);
         }
@@ -316,108 +338,203 @@ public final class FXImplementor implements Implementor {
             double r = c.getRed() * 255;
             double g = c.getGreen() * 255;
             double b = c.getBlue() * 255;
+            // Put a stroke to the shape if it's selected
             if (s.isSelected()) {
-                if (r >= 65.0 && r <= 70.0 && g >= 110.0 && g <= 120.0 && b >= 190.0 && b <= 200.0)
+                // Change the color of the stroke to avoid having a blue stroke on a blue shape
+                if (r >= (BORDER_COLOR.getRed()*255)-10 && r <= (BORDER_COLOR.getRed()*255)+10 &&
+                        g >= (BORDER_COLOR.getGreen()*255)-10 && g <= (BORDER_COLOR.getGreen()*255)+10 &&
+                        b >= (BORDER_COLOR.getBlue()*255)-10 && b <= (BORDER_COLOR.getBlue()*255)+10)
                     newShape.setStroke(new Color(0, 0, 0, 1));
                 else
-                    newShape.setStroke(new Color(68.0 / 255, 114.0 / 255, 196.0 / 255, 1));
+                    newShape.setStroke(BORDER_COLOR);
             } else newShape.setStrokeWidth(0);
             canvas.getChildren().add(newShape);
-//            EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-//                @Override
-//                public void handle(MouseEvent e) {
-//                    if (e.getButton() == MouseButton.PRIMARY) {
-//                        Shape sToolbar = s.clone();
-//                        sToolbar.setPosition(Toolbar.getInstance().getNextPosition());
-//                        Toolbar.getInstance().add(sToolbar);
-//                    }
-//                }
-//            };
-//
-//            newShape.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
-//
-//
-//            newShape.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
-//
-//                @Override
-//                public void handle(ContextMenuEvent event) {
-//                    contextMenu.show(newShape, event.getScreenX(), event.getScreenY());
-//                }
-//            });
+
         }
         return newShape;
     }
 
-    private javafx.scene.shape.Polygon createPolygon(Polygon s) {
-        javafx.scene.shape.Polygon newShape = new javafx.scene.shape.Polygon(s.getPoints());
-        newShape.setRotate(s.getRotation());
+    private javafx.scene.shape.Rectangle createToolbarCompoundRectangle(Rectangle s) {
+        javafx.scene.shape.Rectangle newShape = new javafx.scene.shape.Rectangle();
+        newShape.setX(s.getPositionI().getX());
+        newShape.setY(s.getPositionI().getY());
+        newShape.setArcWidth(s.getBorderRadius() / 2);
+        newShape.setArcHeight(s.getBorderRadius() / 2);
         newShape.setFill(Color.valueOf(s.getColor()));
+        newShape.setWidth(s.getWidth());
+        newShape.setHeight(s.getHeight());
+
+        newShape.setStrokeWidth(0);
+        if (s.getWidth() > leftBar.getWidth() - 24) {
+            float ratio = (float) (s.getWidth() / (leftBar.getWidth() - 24));
+            s.setRatio(ratio);
+            newShape.setWidth(s.getWidth() / ratio);
+            newShape.setHeight(s.getHeight() / ratio);
+        }
+        newShape.setX(s.getPositionI().getX());
+        newShape.setY(s.getPositionI().getY());
+        leftBar.getChildren().add(newShape);
+
+        return newShape;
+    }
+
+
+    private javafx.scene.shape.Polygon createPolygon(Polygon s) {
+        double[] vertices = new double[s.getEdges() * 2];
+        int index = 0;
+        s.computeVertices();
+        for (double vertex : s.getVertices()) {
+            vertices[index] = vertex;
+            index++;
+        }
+        javafx.scene.shape.Polygon newShape;
+
         if (s.getPositionI() instanceof ToolbarPosition) {
             s.setPosition(Toolbar.getInstance().getNextPosition());
-            Toolbar.getInstance().setNextPosition((int) s.computeRadius() * 2);
-        }
+            // Adjust the length of the shape in the toolbar
+            if (s.getWidth() > leftBar.getWidth() - 35) {
+                float ratio = (float) (s.getWidth() / (leftBar.getWidth() - 35));
+                Polygon copy = s.clone();
+                copy.setRatio(ratio);
+                copy.setLength(s.getLength()/ratio);
+                copy.computeVertices();
+                index = 0;
+                for(double vertex : copy.getVertices()) {
+                    vertices[index] = vertex;
+                    index++;
+                }
+                // Compute the position of the next shape to put in the toolbar
 
-        if (s.getPositionI() instanceof ToolbarPosition) {
+                Toolbar.getInstance().setNextPosition((int) copy.computeRadius() * 2);
+
+            }
+            else {
+                Toolbar.getInstance().setNextPosition((int) s.computeRadius() * 2);
+            }
+
+            newShape = new javafx.scene.shape.Polygon(vertices);
+
+
             newShape.setStrokeWidth(0);
-            leftBar.getChildren().add(newShape);
-            // on click copy sur le canvas
-//            EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-//                @Override
-//                public void handle(MouseEvent e) {
-//                    Shape sCopy = s.clone();
-//                    sCopy.setPosition(new CanvasPosition(s.getPositionI().getX(), s.getPositionI().getY()));
-//                    Canvas.getInstance().add(sCopy);
-//                }
-//            };
-//
-//            newShape.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
-        } else {
+            newShape.setRotate(s.getRotation());
+            newShape.setFill(Color.valueOf(s.getColor()));
 
+            leftBar.getChildren().add(newShape);
+        } else {
+            newShape = new javafx.scene.shape.Polygon(vertices);
             Color c = Color.valueOf(s.getColor());
             double r = c.getRed() * 255;
             double g = c.getGreen() * 255;
             double b = c.getBlue() * 255;
+            // Put a stroke to the shape if it's selected
             if (s.isSelected()) {
-                if (r >= 65.0 && r <= 70.0 && g >= 110.0 && g <= 120.0 && b >= 190.0 && b <= 200.0)
+                // Change the color of the stroke to avoid having a blue stroke on a blue shape
+                if (r >= (BORDER_COLOR.getRed()*255)-10 && r <= (BORDER_COLOR.getRed()*255)+10 &&
+                        g >= (BORDER_COLOR.getGreen()*255)-10 && g <= (BORDER_COLOR.getGreen()*255)+10 &&
+                        b >= (BORDER_COLOR.getBlue()*255)-10 && b <= (BORDER_COLOR.getBlue()*255)+10)
                     newShape.setStroke(new Color(0, 0, 0, 1));
                 else
-                    newShape.setStroke(new Color(68.0 / 255, 114.0 / 255, 196.0 / 255, 1));
+                    newShape.setStroke(BORDER_COLOR);
             } else newShape.setStrokeWidth(0);
-            canvas.getChildren().add(newShape);
 
+            newShape.setRotate(s.getRotation());
+            newShape.setFill(Color.valueOf(s.getColor()));
+            canvas.getChildren().add(newShape);
         }
-        
         return newShape;
     }
 
+    private javafx.scene.shape.Polygon createToolbarCompoundPolygon(Polygon s) {
+        double[] vertices = new double[s.getEdges() * 2];
+        int index = 0;
+        s.computeVertices();
+        for (double vertex : s.getVertices()) {
+            vertices[index] = vertex;
+            index++;
+        }
+        javafx.scene.shape.Polygon newShape;
+        newShape = new javafx.scene.shape.Polygon(vertices);
+
+
+        newShape.setStrokeWidth(0);
+        newShape.setRotate(s.getRotation());
+        newShape.setFill(Color.valueOf(s.getColor()));
+
+        leftBar.getChildren().add(newShape);
+
+        return newShape;
+    }
+
+
+    private void createToolbarCompoundShape(CompoundShape s) {
+        Map<Shape,javafx.scene.shape.Shape> compoundShapes = new HashMap<>();
+
+        float width = s.getWidth();
+        float ratio = 1;
+        if(width > leftBar.getWidth()-35) {
+            ratio = (float)(width/(leftBar.getWidth()-35));
+        }
+        System.out.println("AVANT " + s.getPositionI().getX()+" "+s.getPositionI().getY());
+
+        for (Shape shape : s.getShapes()) {
+            float posX = (float)(Toolbar.getInstance().getNextPosition().getX() +
+                    (shape.getPositionI().getX()-s.getPositionI().getX())/ratio);
+            float posY = (float)(Toolbar.getInstance().getNextPosition().getY() +
+                    (shape.getPositionI().getY()-s.getPositionI().getY())/ratio);
+            System.out.println("PENDANT " + posX +" "+posY);
+
+            ToolbarPosition pos = new ToolbarPosition(posX, posY);
+            if (shape instanceof Rectangle) {
+                ((Rectangle) shape).setWidth(shape.getWidth()/ratio);
+                ((Rectangle) shape).setHeight(shape.getHeight()/ratio);
+                shape.setPosition(pos);
+                compoundShapes.put(shape, createToolbarCompoundRectangle((Rectangle)shape));
+            } else if (shape instanceof Polygon) {
+                ((Polygon) shape).setLength(((Polygon) shape).getLength()/ratio);
+                shape.setPosition(pos);
+                compoundShapes.put(shape, createToolbarCompoundPolygon((Polygon) shape));
+            }
+        }
+
+        s.setPosition(Toolbar.getInstance().getNextPosition());
+        System.out.println("APRES " + s.getPositionI().getX()+" "+s.getPositionI().getY());
+        Toolbar.getInstance().setNextPosition((int)(s.getHeight()));
+        compoundShapeHandlers(s, compoundShapes);
+
+    }
+
     private void createCompoundShape(Shape s) {
-        Map<Shape,javafx.scene.shape.Shape> shapes = new HashMap<>();
+        Map<Shape,javafx.scene.shape.Shape> compoundShapes = new HashMap<>();
         for(Shape shape : ((CompoundShape) s).getShapes()) {
             if (shape instanceof CompoundShape) {
                 createCompoundShape(shape);
             } else if (shape instanceof Rectangle) {
-                shapes.put(shape, createRectangle((Rectangle)shape));
+                compoundShapes.put(shape, createRectangle((Rectangle)shape));
             } else if (shape instanceof Polygon) {
-
-                shapes.put(shape, createPolygon((Polygon)shape));
+                compoundShapes.put(shape, createPolygon((Polygon)shape));
             }
         }
-        compoundShapeHandlers((CompoundShape)s, shapes);
+        compoundShapeHandlers((CompoundShape)s, compoundShapes);
     }
 
 
     @Override
     public void draw(Shape s) {
+
         if (s instanceof CompoundShape) {
             createCompoundShape(s);
         }
         else if (s instanceof Rectangle) {
             javafx.scene.shape.Shape newShape = createRectangle((Rectangle) s);
             commonHandlers(s, newShape);
+            shapes.put(s.getId(), newShape);
+
         }
         else if (s instanceof Polygon) {
             javafx.scene.shape.Shape newShape = createPolygon((Polygon) s);
             commonHandlers(s, newShape);
+            shapes.put(s.getId(), newShape);
+
         }
         return;
     }

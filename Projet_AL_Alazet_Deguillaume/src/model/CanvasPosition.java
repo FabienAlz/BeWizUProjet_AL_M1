@@ -9,11 +9,23 @@ public class CanvasPosition implements PositionI {
         this.y = y;
     }
 
+    @Override
     public double getX() {
         return this.x;
     }
 
+    @Override
     public double getY() {
         return this.y;
+    }
+
+    @Override
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    @Override
+    public void setY(double y) {
+        this.y = y;
     }
 }

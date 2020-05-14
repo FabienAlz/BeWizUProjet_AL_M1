@@ -24,6 +24,20 @@ public final class Canvas {
         return copy;
     }
 
+    public List<Shape> createCompound() {
+        List<Shape> compoundShape = new ArrayList<>();
+        for (Shape s : shapes) {
+            if(s.isSelected()) {
+                s.setSelected(false);
+                compoundShape.add(s);
+            }
+        }
+        for (Shape s : compoundShape) {
+                shapes.remove(s);
+        }
+        return compoundShape;
+    }
+
     public void resetSelection() {
         for(Shape s : shapes) {
             s.setSelected(false);
@@ -31,7 +45,7 @@ public final class Canvas {
     }
 
     public void notifyAllShapes() {
-    for(Shape s : shapes) {
+        for(Shape s : shapes) {
             s.notifyObserver();
         }
     }
@@ -43,7 +57,7 @@ public final class Canvas {
 
     public void remove(Shape s) {
         shapes.remove(s);
-       // s.removeAllObservers();
+        // s.removeAllObservers();
     }
 
     public void clear() {

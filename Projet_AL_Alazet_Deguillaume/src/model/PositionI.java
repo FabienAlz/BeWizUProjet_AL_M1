@@ -2,9 +2,13 @@ package model;
 
 public interface PositionI {
 
-    public double getX();
+    double getX();
 
-    public double getY();
+    double getY();
+
+    void setX(double x);
+
+    void setY(double y);
 
 }
 

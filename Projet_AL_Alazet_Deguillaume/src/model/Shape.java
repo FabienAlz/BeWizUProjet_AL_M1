@@ -23,6 +23,17 @@ public interface Shape extends Cloneable {
 
     Shape clone();
 
+    boolean equals(Shape s);
+
+    void setId();
+
+    long getId();
+
+    float getWidth();
+
+    float getHeight();
+
+
     /**
      * Observable methods
      */
