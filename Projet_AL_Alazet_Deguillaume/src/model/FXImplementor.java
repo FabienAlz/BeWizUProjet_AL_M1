@@ -278,6 +278,8 @@ public final class FXImplementor implements Implementor {
     }
 
     private void addCanvasHandlers() {
+        javafx.scene.shape.Rectangle rectangle = new javafx.scene.shape.Rectangle();
+
         canvas.setOnDragDropped(new EventHandler<DragEvent>() {
             public void handle(DragEvent event) {
                 /* data dropped */
@@ -361,35 +363,40 @@ public final class FXImplementor implements Implementor {
         EventHandler<MouseEvent> setGestureStarted = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                Canvas.getInstance().resetSelection();
-                canvas.getChildren().clear();
-                Canvas.getInstance().notifyAllShapes();
-                Canvas.getInstance().setStartSelectPos(e.getX(), e.getY());
-                Canvas.getInstance().setSelection(true);
-
+                if(!canvas.getChildren().contains(e.getTarget())) {
+                    Canvas.getInstance().resetSelection();
+                    canvas.getChildren().clear();
+                    Canvas.getInstance().notifyAllShapes();
+                    Canvas.getInstance().setStartSelectPos(e.getX(), e.getY());
+                    Canvas.getInstance().setSelection(true);
+                }
             }
         };
 
+        canvas.setOnMousePressed(setGestureStarted);
 
-        canvas.addEventFilter(MouseEvent.MOUSE_PRESSED, setGestureStarted);
-
-        EventHandler<MouseEvent> changeRectangle = new EventHandler<MouseEvent>() {
+        /*EventHandler<MouseEvent> changeRectangle = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
+                System.out.println("BONSOIR PARIS "+Canvas.getInstance().getSelection());
                 if(Canvas.getInstance().getSelection()) {
+                    System.out.println("?????????????");
                     Position start = Canvas.getInstance().getStartSelectPos();
-                    javafx.scene.shape.Rectangle selectionRectangle = new javafx.scene.shape.Rectangle();
-                    selectionRectangle.setX(start.getX());
-                    selectionRectangle.setY(start.getY());
-                    selectionRectangle.setOpacity(0.5);
-                    selectionRectangle.setHeight(e.getX() - start.getX());
-                    selectionRectangle.setWidth(e.getY() - start.getY());
-                    canvas.getChildren().add(selectionRectangle);
+                    *//*canvas.getChildren().remove(rectangle);*//*
+                    //javafx.scene.shape.Rectangle selectionRectangle = new javafx.scene.shape.Rectangle();
+                    rectangle.setX(start.getX());
+                    rectangle.setY(start.getY());
+                    rectangle.setOpacity(0.5);
+                    rectangle.setHeight(e.getX() - start.getX());
+                    rectangle.setWidth(e.getY() - start.getY());
+                   // canvas.getChildren().add(rectangle);
                 }
             }
         };
 
         //canvas.addEventFilter(MouseEvent.MOUSE_MOVED, changeRectangle);
+        canvas.setOnMouseMoved(changeRectangle);*/
+
 
         EventHandler<MouseEvent> endSelection = new EventHandler<MouseEvent>() {
             @Override
@@ -402,6 +409,14 @@ public final class FXImplementor implements Implementor {
                         if(secondPos.getX() > firstPos.getX() && secondPos.getY() > firstPos.getY() && s.isInside(firstPos, secondPos)) {
                             s.setSelected(true);
                             s.notifyObserver();
+
+                            /*rectangle.setX(firstPos.getX());
+                            rectangle.setY(firstPos.getY());
+                            rectangle.setOpacity(0.5);
+                            rectangle.setHeight(e.getY() - firstPos.getY());
+                            rectangle.setWidth(e.getX() - firstPos.getX());
+                            canvas.getChildren().add(rectangle);*/
+
                         }
                         else if(secondPos.getX() < firstPos.getX() && secondPos.getY() < firstPos.getY() && s.isInside(secondPos, firstPos)) {
                             s.setSelected(true);
@@ -426,7 +441,9 @@ public final class FXImplementor implements Implementor {
 
                     }
                 }
+
             }
+
         };
 
         canvas.addEventFilter(MouseEvent.MOUSE_RELEASED, endSelection);
