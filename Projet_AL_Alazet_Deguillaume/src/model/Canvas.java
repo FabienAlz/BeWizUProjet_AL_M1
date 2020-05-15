@@ -6,6 +6,8 @@ import java.util.List;
 public final class Canvas {
     private static Canvas instance;
     private List<Shape> shapes;
+    private Position startSelectPos = new Position(0, 0);
+    private boolean selection = false;
     private Canvas() {
         shapes = new ArrayList<>();
     }
@@ -17,11 +19,24 @@ public final class Canvas {
     }
 
     public List<Shape> getShapes() {
-        List<Shape> copy = new ArrayList<>();
-        for(Shape s : shapes) {
-            copy.add(s.clone());
-        }
         return shapes;
+    }
+
+    public void setStartSelectPos(double x, double y) {
+        startSelectPos.setX(x);
+        startSelectPos.setY(y);
+    }
+
+    public Position getStartSelectPos() {
+        return startSelectPos;
+    }
+
+    public boolean getSelection() {
+        return selection;
+    }
+
+    public void setSelection(boolean selection) {
+        this.selection = selection;
     }
 
     public List<Shape> createCompound() {
@@ -33,7 +48,7 @@ public final class Canvas {
             }
         }
         for (Shape s : compoundShape) {
-                shapes.remove(s);
+            shapes.remove(s);
         }
         return compoundShape;
     }
