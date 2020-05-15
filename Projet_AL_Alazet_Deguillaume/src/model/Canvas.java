@@ -21,7 +21,7 @@ public final class Canvas {
         for(Shape s : shapes) {
             copy.add(s.clone());
         }
-        return copy;
+        return shapes;
     }
 
     public List<Shape> createCompound() {
