@@ -44,6 +44,29 @@ public final class Canvas {
         }
     }
 
+    public boolean contains(long id) {
+        for (Shape s : shapes) {
+            if(s.getId() == id) return true;
+        }
+        return false;
+    }
+
+    public Shape getShape(long id) {
+        for (Shape s : shapes) {
+            if(s.getId() == id) return s;
+        }
+        return null;
+    }
+
+    public void removeById(long id) {
+        for(Shape s : shapes) {
+            if(s.getId() == id) {
+                shapes.remove(s);
+                break;
+            }
+        }
+    }
+
     public void notifyAllShapes() {
         for(Shape s : shapes) {
             s.notifyObserver();

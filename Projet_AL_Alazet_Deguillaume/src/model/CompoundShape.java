@@ -34,6 +34,18 @@ public class CompoundShape extends AbstractShape {
         }
     }
 
+    public void translate(Position translation) {
+        this.setTranslation(translation);
+        CanvasPosition compoundPos = new CanvasPosition(this.getPositionI().getX() + translation.getX(),
+                                                        this.getPositionI().getY() + translation.getY());
+        this.setPosition(compoundPos);
+        for(Shape shape : shapes) {
+            double posX = shape.getPositionI().getX() + translation.getX();
+            double posY = shape.getPositionI().getY() + translation.getY();
+            shape.setPosition(new CanvasPosition(posX, posY));
+        }
+    }
+
     @Override
     public float getWidth() {
         double minX = 0;

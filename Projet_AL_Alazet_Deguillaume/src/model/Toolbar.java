@@ -42,6 +42,20 @@ public final class Toolbar {
         return copy;
     }
 
+    public boolean contains(long id) {
+        for (Shape s : shapes) {
+            if(s.getId() == id) return true;
+        }
+        return false;
+    }
+
+    public Shape getShape(long id) {
+        for (Shape s : shapes) {
+            if(s.getId() == id) return s;
+        }
+        return null;
+    }
+
     public ToolbarPosition getNextPosition() {
         ToolbarPosition currentPosition = new ToolbarPosition(nextPosition.getX(), nextPosition.getY());
         return currentPosition;

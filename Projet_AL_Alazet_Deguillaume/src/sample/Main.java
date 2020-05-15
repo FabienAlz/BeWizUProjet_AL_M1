@@ -32,6 +32,7 @@ public class Main extends Application {
 
         toolbar.add(r);
         toolbar.add(r2);
+        canvas.add(r3);
         //canvas.add(p);
 
 

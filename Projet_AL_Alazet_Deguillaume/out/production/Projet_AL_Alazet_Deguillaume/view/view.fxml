@@ -41,7 +41,7 @@
             <Separator halignment="LEFT" layoutX="124.0" orientation="VERTICAL" prefHeight="900.0" prefWidth="20.0" />
                   <Pane id="leftBar" layoutX="-11.0" layoutY="192.0" prefHeight="386.0" prefWidth="150.0">
                       <children>
-                          <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="59.0" layoutY="340.0" pickOnBounds="true" preserveRatio="true">
+                          <ImageView id="bin" fitHeight="32.0" fitWidth="32.0" layoutX="59.0" layoutY="340.0" pickOnBounds="true" preserveRatio="true">
                               <image>
                                   <Image url="file:ressources/bin.png" />
                               </image>
