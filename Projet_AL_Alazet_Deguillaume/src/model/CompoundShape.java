@@ -46,7 +46,7 @@ public class CompoundShape extends AbstractShape {
 
     public void translate(Position translation) {
         CanvasPosition compoundPos = new CanvasPosition(getTopLeft().getX() + translation.getX(),
-                getTopLeft().getY() + translation.getY());
+                                                        getTopLeft().getY() + translation.getY());
         this.setTranslation(translation);
         this.setPosition(compoundPos);
         for(Shape shape : shapes) {
@@ -142,7 +142,7 @@ public class CompoundShape extends AbstractShape {
 
     @Override
     public CompoundShape clone() {
-        CompoundShape copy = (CompoundShape) super.clone();
+        CompoundShape copy = (CompoundShape)super.clone();
         copy.shapes = new ArrayList<>();
         for(Shape s : this.shapes) {
             Shape sCopy = s.clone();
