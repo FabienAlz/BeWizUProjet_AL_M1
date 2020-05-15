@@ -440,6 +440,78 @@ public final class FXImplementor implements Implementor {
             }
         });
 
+        EventHandler<MouseEvent> setGestureStarted = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                Canvas.getInstance().resetSelection();
+                canvas.getChildren().clear();
+                Canvas.getInstance().notifyAllShapes();
+                Canvas.getInstance().setStartSelectPos(e.getX(), e.getY());
+                Canvas.getInstance().setSelection(true);
+
+            }
+        };
+
+
+        canvas.addEventFilter(MouseEvent.MOUSE_PRESSED, setGestureStarted);
+
+        EventHandler<MouseEvent> changeRectangle = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                if(Canvas.getInstance().getSelection()) {
+                    Position start = Canvas.getInstance().getStartSelectPos();
+                    javafx.scene.shape.Rectangle selectionRectangle = new javafx.scene.shape.Rectangle();
+                    selectionRectangle.setX(start.getX());
+                    selectionRectangle.setY(start.getY());
+                    selectionRectangle.setOpacity(0.5);
+                    selectionRectangle.setHeight(e.getX() - start.getX());
+                    selectionRectangle.setWidth(e.getY() - start.getY());
+                    canvas.getChildren().add(selectionRectangle);
+                }
+            }
+        };
+
+        //canvas.addEventFilter(MouseEvent.MOUSE_MOVED, changeRectangle);
+
+        EventHandler<MouseEvent> endSelection = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                if(Canvas.getInstance().getSelection()) {
+                    Position firstPos = Canvas.getInstance().getStartSelectPos();
+                    Canvas.getInstance().setSelection(false);
+                    Position secondPos = new Position(e.getX(), e.getY());
+                    for(Shape s : Canvas.getInstance().getShapes()) {
+                        if(secondPos.getX() > firstPos.getX() && secondPos.getY() > firstPos.getY() && s.isInside(firstPos, secondPos)) {
+                            s.setSelected(true);
+                            s.notifyObserver();
+                        }
+                        else if(secondPos.getX() < firstPos.getX() && secondPos.getY() < firstPos.getY() && s.isInside(secondPos, firstPos)) {
+                            s.setSelected(true);
+                            s.notifyObserver();
+                        }
+                        else if(secondPos.getX() > firstPos.getX() && secondPos.getY() < firstPos.getY()) {
+                            Position firstIntermediatePos = new Position(secondPos.getX(), firstPos.getY());
+                            Position secondIntermediatePos = new Position(firstPos.getX(),secondPos.getY());
+                            if(s.isInside(secondIntermediatePos, firstIntermediatePos)) {
+                                s.setSelected(true);
+                                s.notifyObserver();
+                            }
+                        }
+                        else if(secondPos.getX() < firstPos.getX() && secondPos.getY() > firstPos.getY()) {
+                            Position firstIntermediatePos = new Position(secondPos.getX(), firstPos.getY());
+                            Position secondIntermediatePos = new Position(firstPos.getX(),secondPos.getY());
+                            if(s.isInside(firstIntermediatePos, secondIntermediatePos)) {
+                                s.setSelected(true);
+                                s.notifyObserver();
+                            }
+                        }
+
+                    }
+                }
+            }
+        };
+
+        canvas.addEventFilter(MouseEvent.MOUSE_RELEASED, endSelection);
     }
 
     private void addBinHandlers() {
