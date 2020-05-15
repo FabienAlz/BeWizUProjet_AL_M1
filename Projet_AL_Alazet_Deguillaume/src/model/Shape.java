@@ -33,6 +33,7 @@ public interface Shape extends Cloneable {
 
     float getHeight();
 
+    boolean isInside(Position startingPoint, Position arrival);
 
     /**
      * Observable methods
