@@ -295,11 +295,8 @@ public final class FXImplementor implements Implementor {
                         Canvas.getInstance().remove(original);
 
                         if(original instanceof CompoundShape) {
-                            System.out.println("ORIGIN "+original.getWidth()+" "+original.getHeight());
-                            System.out.println("COPY " +copy.getWidth()+" "+copy.getHeight());
-
                             ((CompoundShape)copy).translate(new Position(event.getX()-((CompoundShape) original).getTopLeft().getX(),
-                                                                         event.getY()-((CompoundShape) original).getTopLeft().getY()));
+                                    event.getY()-((CompoundShape) original).getTopLeft().getY()));
                             canvas.getChildren().clear();
                             Canvas.getInstance().add(copy);
                             Canvas.getInstance().notifyAllShapes();
@@ -312,21 +309,11 @@ public final class FXImplementor implements Implementor {
                     }
                     else {
                         Shape original = Toolbar.getInstance().getShape(id);
-                        Shape copy;
+                        Shape copy = original.clone();
                         if(original instanceof CompoundShape) {
-                            copy = original.clone();
                             copy.setId();
-//                            copy = new CompoundShape((CompoundShape) original);
-                            /*System.out.println(((CompoundShape) original).getShapes().size());
-                            for(Shape shape : ((CompoundShape) original).getShapes()) {
-                                Shape shapeCopy = shape.clone();
-                                shapeCopy.setId();
-                                ((CompoundShape) copy).add(shapeCopy);
-                            }
-                            System.out.println(((CompoundShape) original).getShapes().size());*/
-                            System.out.println("aaaaaaaaaaaaaaaaaaaaaa"+((CompoundShape)copy).getShapes().size());
                             ((CompoundShape)copy).translate(new Position(event.getX()-((CompoundShape) original).getTopLeft().getX(),
-                                                                         event.getY()-((CompoundShape) original).getTopLeft().getY()));
+                                    event.getY()-((CompoundShape) original).getTopLeft().getY()));
                         }
                         else {
                             copy = original.clone();
