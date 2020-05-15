@@ -225,8 +225,6 @@ public final class FXImplementor implements Implementor {
                             createToolbarCompoundShape((CompoundShape)copy);
                             copy.setPosition(new ToolbarPosition());
                             Toolbar.getInstance().add(copy);
-                            System.out.println(((CompoundShape) copy).getShapes().size());
-                            System.out.println(((CompoundShape) copy).getShapes().size());
                         }
                         else {
                             copy.setPosition(new ToolbarPosition());
