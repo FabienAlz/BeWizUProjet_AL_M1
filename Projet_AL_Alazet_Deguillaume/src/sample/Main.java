@@ -1,11 +1,6 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import model.*;
 
@@ -30,9 +25,9 @@ public class Main extends Application {
         r3.addObserver(obs);
         p.addObserver(obs);
 
-        toolbar.add(r);
-        toolbar.add(r2);
-        canvas.add(r3);
+        toolbar.addAndNotify(r);
+        toolbar.addAndNotify(r2);
+        canvas.addAndNotify(r3);
         //canvas.add(p);
 
 

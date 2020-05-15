@@ -1,6 +1,5 @@
 package model;
 
-import java.util.ArrayList;
 
 public abstract class AbstractShape extends ObservableSuperClass implements Shape {
     private static long generatedId = 0;
@@ -9,7 +8,6 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
     private PositionI position;
     private PositionI translation;
     private boolean isSelected;
-    private float ratio;
 
     public AbstractShape(PositionI position, PositionI translation, Implementor implementor) {
         this.implementor = implementor;
@@ -17,7 +15,6 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
         this.translation = translation;
         this.isSelected = false;
         this.id = generatedId;
-        this.ratio = 1;
         generatedId ++;
     }
 
@@ -39,10 +36,6 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
     public Implementor getImplementor() {
         return this.implementor;
     }
-
-    public float getRatio() { return this.ratio; }
-
-    public void setRatio(float ratio) { this.ratio = ratio; }
 
     public boolean isSelected() {
         return isSelected;

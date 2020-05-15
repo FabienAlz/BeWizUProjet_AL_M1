@@ -11,6 +11,16 @@ public class CompoundShape extends AbstractShape {
         this.shapes = new ArrayList<>();
     }
 
+    public CompoundShape(CompoundShape original) {
+        super(original.getPositionI(), original.getTranslation(), original.getImplementor());
+        this.shapes = new ArrayList<>();
+        for(Shape s : original.getShapes()) {
+            Shape copy = s.clone();
+            copy.setId();
+            shapes.add(copy);
+        }
+    }
+
     @Override
     public float getRotation() {
         return 0;
@@ -35,9 +45,9 @@ public class CompoundShape extends AbstractShape {
     }
 
     public void translate(Position translation) {
+        CanvasPosition compoundPos = new CanvasPosition(getTopLeft().getX() + translation.getX(),
+                                                        getTopLeft().getY() + translation.getY());
         this.setTranslation(translation);
-        CanvasPosition compoundPos = new CanvasPosition(this.getPositionI().getX() + translation.getX(),
-                                                        this.getPositionI().getY() + translation.getY());
         this.setPosition(compoundPos);
         for(Shape shape : shapes) {
             double posX = shape.getPositionI().getX() + translation.getX();
@@ -48,10 +58,9 @@ public class CompoundShape extends AbstractShape {
 
     @Override
     public float getWidth() {
-        double minX = 0;
+        double minX = getTopLeft().getX();
         double maxX = 0;
         for(Shape s : shapes) {
-            if(minX > s.getPositionI().getX()) minX = s.getPositionI().getX();
             if(maxX < s.getPositionI().getX() + s.getWidth()) maxX = s.getPositionI().getX() + s.getWidth();
         }
         return (float)(maxX-minX);
@@ -65,6 +74,16 @@ public class CompoundShape extends AbstractShape {
             if(maxY < s.getPositionI().getY() + s.getWidth()) maxY = s.getPositionI().getY() + s.getHeight();
         }
         return (float)(maxY-minY);
+    }
+
+    public Position getTopLeft() {
+        double minX = shapes.get(0).getPositionI().getX();
+        double minY = shapes.get(0).getPositionI().getY();
+        for(Shape s : shapes) {
+            if(minX > s.getPositionI().getX()) minX = s.getPositionI().getX();
+            if(minY > s.getPositionI().getY()) minY = s.getPositionI().getY();
+        }
+        return new Position(minX, minY);
     }
 
     @Override

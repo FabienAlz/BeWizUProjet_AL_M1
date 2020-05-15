@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,9 +22,13 @@ public final class Toolbar {
         return instance;
     }
 
-    public void add(Shape s) {
+    public void addAndNotify(Shape s) {
         shapes.add(s);
         s.notifyObserver();
+    }
+
+    public void add(Shape s) {
+        shapes.add(s);
     }
 
     public void remove(Shape s) {
