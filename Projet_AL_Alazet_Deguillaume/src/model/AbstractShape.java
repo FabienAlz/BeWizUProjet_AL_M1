@@ -57,9 +57,9 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
         boolean res = false;
 
         if(position.getX() > startingPoint.getX() &&
-           position.getX() + getWidth() < arrival.getX() &&
-           position.getY() > startingPoint.getY() &&
-           position.getY() + getHeight() < arrival.getY()){
+                position.getX() + getWidth() < arrival.getX() &&
+                position.getY() > startingPoint.getY() &&
+                position.getY() + getHeight() < arrival.getY()){
             res = true;
         }
 

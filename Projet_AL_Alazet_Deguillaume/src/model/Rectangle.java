@@ -36,6 +36,7 @@ public class Rectangle extends SingleShape {
         return borderRadius;
     }
 
+
     @Override
     public boolean equals(Shape s) {
         if(s instanceof Rectangle && ((Rectangle) s).getId() == this.getId()) {

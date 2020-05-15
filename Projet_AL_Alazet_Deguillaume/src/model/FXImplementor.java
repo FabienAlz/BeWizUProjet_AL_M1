@@ -70,46 +70,90 @@ public final class FXImplementor implements Implementor {
         contextMenu.setId("contextMenu");
         javafx.scene.control.MenuItem group = new javafx.scene.control.MenuItem("Group");
 
-        GridPane editGrid = new GridPane();
+        GridPane editRectangleGrid = new GridPane();
 
-        editGrid.setPadding(new Insets(10, 10, 10, 10));
+        editRectangleGrid.setPadding(new Insets(10, 10, 10, 10));
         Label widthLabel = new Label("Width:");
         TextField widthTextField = new TextField();
         Label heightLabel = new Label("Height:");
         TextField heightTextField = new TextField ();
         Label borderRadiusLabel = new Label("Border radius:");
         TextField borderRadiusTextField = new TextField ();
+        Label rotationRectangleLabel = new Label("Rotation:");
+        TextField rotationRectangleTextField = new TextField();
 
 
-        HBox hbColorPicked = new HBox();
-        final ColorPicker colorPicker = new ColorPicker();
-        hbColorPicked.getChildren().add(colorPicker);
+        HBox hbRectangleColorPicker = new HBox();
+        final ColorPicker colorPickerRectangle = new ColorPicker();
+        hbRectangleColorPicker.getChildren().add(colorPickerRectangle);
 
-        HBox hbValues = new HBox();
-        hbValues.getChildren().addAll(widthLabel, widthTextField);
-        hbValues.getChildren().addAll(heightLabel, heightTextField);
-        hbValues.getChildren().addAll(borderRadiusLabel, borderRadiusTextField);
-        hbValues.setSpacing(10);
+        HBox hbRectangleValues = new HBox();
+        hbRectangleValues.getChildren().addAll(widthLabel, widthTextField);
+        hbRectangleValues.getChildren().addAll(heightLabel, heightTextField);
+        hbRectangleValues.getChildren().addAll(borderRadiusLabel, borderRadiusTextField);
+        hbRectangleValues.getChildren().addAll(rotationRectangleLabel, rotationRectangleTextField);
+        hbRectangleValues.setSpacing(10);
 
-        HBox hbButtons = new HBox();
-        Button okButton = new Button("Ok");
-        Button applyButton = new Button("Apply");
-        Button cancelButton = new Button("Cancel");
-        hbButtons.getChildren().add(okButton);
-        hbButtons.getChildren().add(applyButton);
-        hbButtons.getChildren().add(cancelButton);
-        hbButtons.setSpacing(15);
-        editGrid.setHgap(10);
-        editGrid.setVgap(10);
-        editGrid.setPadding(new Insets(10, 10, 10, 10));
-        editGrid.add(hbColorPicked,0,0);
-        editGrid.add(hbValues,0,1);
-        editGrid.add(hbButtons, 0,2);
-        editGrid.setStyle("-fx-background-color: #FFFFFF");
-        canvas.getChildren().add(editGrid);
-        editGrid.setVisible(false);
+        HBox hbRectangleButtons = new HBox();
+        Button okRectangleButton = new Button("Ok");
+        Button applyRectangleButton = new Button("Apply");
+        Button cancelRectangleButton = new Button("Cancel");
+        hbRectangleButtons.getChildren().add(okRectangleButton);
+        hbRectangleButtons.getChildren().add(applyRectangleButton);
+        hbRectangleButtons.getChildren().add(cancelRectangleButton);
+        hbRectangleButtons.setSpacing(15);
+        editRectangleGrid.setHgap(10);
+        editRectangleGrid.setVgap(10);
+        editRectangleGrid.setPadding(new Insets(10, 10, 10, 10));
+        editRectangleGrid.add(hbRectangleColorPicker,0,0);
+        editRectangleGrid.add(hbRectangleValues,0,1);
+        editRectangleGrid.add(hbRectangleButtons, 0,2);
+        editRectangleGrid.setStyle("-fx-background-color: #FFFFFF");
+        canvas.getChildren().add(editRectangleGrid);
+        editRectangleGrid.setVisible(false);
 
 
+
+        GridPane editPolygonGrid = new GridPane();
+
+        editRectangleGrid.setPadding(new Insets(10, 10, 10, 10));
+        Label lengthLabel = new Label("Length:");
+        TextField lengthTextField = new TextField();
+        Label edgesLabel = new Label("edges:");
+        TextField edgesTextField = new TextField ();
+        Label rotationPolygonLabel = new Label("Rotation:");
+        TextField rotationPolygonTextField = new TextField ();
+
+        HBox hbPolygonColorPicker = new HBox();
+        final ColorPicker colorPickerPolygon = new ColorPicker();
+        hbPolygonColorPicker.getChildren().add(colorPickerPolygon);
+
+        HBox hbPolygonValues = new HBox();
+        hbPolygonValues.getChildren().addAll(lengthLabel, lengthTextField);
+        hbPolygonValues.getChildren().addAll(edgesLabel, edgesTextField);
+        hbPolygonValues.getChildren().addAll(rotationPolygonLabel, rotationPolygonTextField);
+        hbPolygonValues.setSpacing(10);
+
+        HBox hbPolygonButtons = new HBox();
+        Button okPolygonButton = new Button("Ok");
+        Button applyPolygonButton = new Button("Apply");
+        Button cancelPolygonButton = new Button("Cancel");
+        hbPolygonButtons.getChildren().add(okPolygonButton);
+        hbPolygonButtons.getChildren().add(applyPolygonButton);
+        hbPolygonButtons.getChildren().add(cancelPolygonButton);
+        hbPolygonButtons.setSpacing(15);
+        editPolygonGrid.setHgap(10);
+        editPolygonGrid.setVgap(10);
+        editPolygonGrid.setPadding(new Insets(10, 10, 10, 10));
+        editPolygonGrid.add(hbPolygonColorPicker,0,0);
+        editPolygonGrid.add(hbPolygonValues,0,1);
+        editPolygonGrid.add(hbPolygonButtons, 0,2);
+        editPolygonGrid.setStyle("-fx-background-color: #FFFFFF");
+        canvas.getChildren().add(editPolygonGrid);
+        editPolygonGrid.setVisible(false);
+
+
+        // Handler to create group of shapes
         // Handler to create group of shapes
         group.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -126,23 +170,37 @@ public final class FXImplementor implements Implementor {
                 Canvas.getInstance().addAndNotify(compoundShape);
             }
         });
-        javafx.scene.control.MenuItem edit = new MenuItem("Edit");
 
+        javafx.scene.control.MenuItem edit = new MenuItem("Edit");
         // Handler to edit the shapes
         edit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("EDIT BUTTON ");
-                editGrid.setVisible(true);
                 for(Shape s : Canvas.getInstance().getShapes()) {
                     if (s.isSelected()) {
-                        colorPicker.setValue(Color.valueOf(s.getColor()));
-                        widthTextField.setText(String.valueOf(s.getWidth()));
-                        heightTextField.setText(String.valueOf(s.getHeight()));
-                        borderRadiusTextField.setText(String.valueOf(((Rectangle)s).getBorderRadius()));
+                        if (s instanceof Rectangle) {
+                            colorPickerRectangle.setValue(Color.valueOf(s.getColor()));
+                            widthTextField.setText(String.valueOf(s.getWidth()));
+                            heightTextField.setText(String.valueOf(s.getHeight()));
+                            rotationRectangleTextField.setText(String.valueOf(s.getRotation()));
+                            borderRadiusTextField.setText(String.valueOf(((Rectangle) s).getBorderRadius()));
+                            editRectangleGrid.setVisible(true);
+                            editPolygonGrid.setVisible(false);
+                            editRectangleGrid.toFront();
+                        }
+                        else if (s instanceof Polygon) {
+                            colorPickerPolygon.setValue(Color.valueOf(s.getColor()));
+                            rotationPolygonTextField.setText(String.valueOf(s.getRotation()));
+                            lengthTextField.setText(String.valueOf(((Polygon) s).getLength()));
+                            edgesTextField.setText(String.valueOf(((Polygon) s).getEdges()));
+                            editPolygonGrid.setVisible(true);
+                            editRectangleGrid.setVisible(false);
+                            editPolygonGrid.toFront();
+                        }
                     }
                 }
-                editGrid.toFront();
+
 
             }
         });
@@ -162,48 +220,72 @@ public final class FXImplementor implements Implementor {
             @Override
             public void handle(MouseEvent e) {
                 canvas.getChildren().clear();
-                canvas.getChildren().add(editGrid);
                 for(Shape s : Canvas.getInstance().getShapes()) {
                     if (s.isSelected()) {
-                        ((Rectangle)s).setWidth(Float.parseFloat(widthTextField.getText()));
-                        ((Rectangle)s).setHeight(Float.parseFloat(heightTextField.getText()));
-                        ((Rectangle)s).setBorderRadius(Float.parseFloat(borderRadiusTextField.getText()));
-                        ((Rectangle) s).setColor(String.valueOf(colorPicker.getValue()));
+                        if (s instanceof Rectangle) {
+                            canvas.getChildren().add(editRectangleGrid);
+                            ((Rectangle) s).setWidth(Float.parseFloat(widthTextField.getText()));
+                            ((Rectangle) s).setHeight(Float.parseFloat(heightTextField.getText()));
+                            ((Rectangle) s).setBorderRadius(Float.parseFloat(borderRadiusTextField.getText()));
+                            ((Rectangle) s).setRotation(Float.parseFloat(rotationRectangleTextField.getText()));
+                            ((Rectangle) s).setColor(String.valueOf(colorPickerRectangle.getValue()));
+                            editRectangleGrid.setVisible(false);
+                        } else if (s instanceof Polygon) {
+                            canvas.getChildren().add(editPolygonGrid);
+                            ((Polygon) s).setEdges(Integer.parseInt(edgesTextField.getText()));
+                            ((Polygon) s).setColor(String.valueOf(colorPickerPolygon.getValue()));
+                            ((Polygon) s).setRotation(Float.parseFloat(rotationPolygonTextField.getText()));
+                            ((Polygon) s).setLength(Float.parseFloat(lengthTextField.getText()));
+                            editPolygonGrid.setVisible(false);
+                        }
                     }
                 }
                 Canvas.getInstance().resetSelection();
                 Canvas.getInstance().notifyAllShapes();
-                editGrid.setVisible(false);
             }
         };
-        okButton.addEventFilter(MouseEvent.MOUSE_CLICKED, okButtonClick);
+        okRectangleButton.addEventFilter(MouseEvent.MOUSE_CLICKED, okButtonClick);
+        okPolygonButton.addEventFilter(MouseEvent.MOUSE_CLICKED, okButtonClick);
 
         EventHandler<MouseEvent> applyButtonClick = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
                 canvas.getChildren().clear();
-                canvas.getChildren().add(editGrid);
                 for(Shape s : Canvas.getInstance().getShapes()) {
                     if (s.isSelected()) {
-                        ((Rectangle)s).setWidth(Float.parseFloat(widthTextField.getText()));
-                        ((Rectangle)s).setHeight(Float.parseFloat(heightTextField.getText()));
-                        ((Rectangle)s).setBorderRadius(Float.parseFloat(borderRadiusTextField.getText()));
-                        ((Rectangle) s).setColor(String.valueOf(colorPicker.getValue()));
-                        Canvas.getInstance().notifyAllShapes();
+                        if (s instanceof Rectangle) {
+                            canvas.getChildren().add(editRectangleGrid);
+                            ((Rectangle) s).setWidth(Float.parseFloat(widthTextField.getText()));
+                            ((Rectangle) s).setHeight(Float.parseFloat(heightTextField.getText()));
+                            ((Rectangle) s).setBorderRadius(Float.parseFloat(borderRadiusTextField.getText()));
+                            ((Rectangle) s).setRotation(Float.parseFloat(rotationRectangleTextField.getText()));
+                            ((Rectangle) s).setColor(String.valueOf(colorPickerRectangle.getValue()));
+                            Canvas.getInstance().notifyAllShapes();
+                            editRectangleGrid.toFront();
+                        } else if (s instanceof Polygon) {
+                            canvas.getChildren().add(editPolygonGrid);
+                            ((Polygon) s).setEdges(Integer.parseInt(edgesTextField.getText()));
+                            ((Polygon) s).setColor(String.valueOf(colorPickerPolygon.getValue()));
+                            ((Polygon) s).setRotation(Float.parseFloat(rotationPolygonTextField.getText()));
+                            ((Polygon) s).setLength(Float.parseFloat(lengthTextField.getText()));
+                            Canvas.getInstance().notifyAllShapes();
+                            editPolygonGrid.toFront();
+                        }
                     }
                 }
-                editGrid.toFront();
             }
         };
-        applyButton.addEventFilter(MouseEvent.MOUSE_CLICKED, applyButtonClick);
+        applyRectangleButton.addEventFilter(MouseEvent.MOUSE_CLICKED, applyButtonClick);
+        applyPolygonButton.addEventFilter(MouseEvent.MOUSE_CLICKED, applyButtonClick);
 
         EventHandler<MouseEvent> cancelButtonClick = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                editGrid.setVisible(false);
+                editRectangleGrid.setVisible(false);
             }
         };
-        cancelButton.addEventFilter(MouseEvent.MOUSE_CLICKED, cancelButtonClick);
+        cancelRectangleButton.addEventFilter(MouseEvent.MOUSE_CLICKED, cancelButtonClick);
+        cancelPolygonButton.addEventFilter(MouseEvent.MOUSE_CLICKED, cancelButtonClick);
     }
 
     private void addToolbarHandlers() {
@@ -318,6 +400,8 @@ public final class FXImplementor implements Implementor {
                             copy.setPosition(new CanvasPosition(event.getX(), event.getY()));
                         }
                         Canvas.getInstance().addAndNotify(copy);
+                        System.out.println(Canvas.getInstance().getShapes());
+                        System.out.println(canvas.getChildren());
                     }
 
                     success = true;
@@ -356,84 +440,7 @@ public final class FXImplementor implements Implementor {
             }
         });
 
-
-
-        EventHandler<MouseEvent> setGestureStarted = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-                Canvas.getInstance().resetSelection();
-                canvas.getChildren().clear();
-                Canvas.getInstance().notifyAllShapes();
-                Canvas.getInstance().setStartSelectPos(e.getX(), e.getY());
-                Canvas.getInstance().setSelection(true);
-
-            }
-        };
-
-
-        canvas.addEventFilter(MouseEvent.MOUSE_PRESSED, setGestureStarted);
-
-        EventHandler<MouseEvent> changeRectangle = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-                if(Canvas.getInstance().getSelection()) {
-                    Position start = Canvas.getInstance().getStartSelectPos();
-                    javafx.scene.shape.Rectangle selectionRectangle = new javafx.scene.shape.Rectangle();
-                    selectionRectangle.setX(start.getX());
-                    selectionRectangle.setY(start.getY());
-                    selectionRectangle.setOpacity(0.5);
-                    selectionRectangle.setHeight(e.getX() - start.getX());
-                    selectionRectangle.setWidth(e.getY() - start.getY());
-                    canvas.getChildren().add(selectionRectangle);
-                }
-            }
-        };
-
-        //canvas.addEventFilter(MouseEvent.MOUSE_MOVED, changeRectangle);
-
-        EventHandler<MouseEvent> endSelection = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-                if(Canvas.getInstance().getSelection()) {
-                    Position firstPos = Canvas.getInstance().getStartSelectPos();
-                    Canvas.getInstance().setSelection(false);
-                    Position secondPos = new Position(e.getX(), e.getY());
-                    for(Shape s : Canvas.getInstance().getShapes()) {
-                        if(secondPos.getX() > firstPos.getX() && secondPos.getY() > firstPos.getY() && s.isInside(firstPos, secondPos)) {
-                            s.setSelected(true);
-                            s.notifyObserver();
-                        }
-                        else if(secondPos.getX() < firstPos.getX() && secondPos.getY() < firstPos.getY() && s.isInside(secondPos, firstPos)) {
-                            s.setSelected(true);
-                            s.notifyObserver();
-                        }
-                        else if(secondPos.getX() > firstPos.getX() && secondPos.getY() < firstPos.getY()) {
-                            Position firstIntermediatePos = new Position(secondPos.getX(), firstPos.getY());
-                            Position secondIntermediatePos = new Position(firstPos.getX(),secondPos.getY());
-                            if(s.isInside(secondIntermediatePos, firstIntermediatePos)) {
-                                s.setSelected(true);
-                                s.notifyObserver();
-                            }
-                        }
-                        else if(secondPos.getX() < firstPos.getX() && secondPos.getY() > firstPos.getY()) {
-                            Position firstIntermediatePos = new Position(secondPos.getX(), firstPos.getY());
-                            Position secondIntermediatePos = new Position(firstPos.getX(),secondPos.getY());
-                            if(s.isInside(firstIntermediatePos, secondIntermediatePos)) {
-                                s.setSelected(true);
-                                s.notifyObserver();
-                            }
-                        }
-
-                    }
-                }
-            }
-        };
-
-        canvas.addEventFilter(MouseEvent.MOUSE_RELEASED, endSelection);
-
     }
-
-
 
     private void addBinHandlers() {
         bin.setOnDragDropped(new EventHandler<DragEvent>() {
@@ -682,6 +689,10 @@ public final class FXImplementor implements Implementor {
         EventHandler test = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                System.out.println("CCCCCCCCCCC" + s.getId());
+                for(Shape ss : s.getShapes()){
+                    System.out.println(ss.getId());
+                }
             }
         };
 

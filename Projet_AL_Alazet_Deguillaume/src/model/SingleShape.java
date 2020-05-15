@@ -28,6 +28,9 @@ public abstract class SingleShape extends AbstractShape {
         this.color = color;
     }
 
+    public void setRotation(float rotation) {
+        this.rotation = rotation;
+    }
 
     @Override
     public SingleShape clone() {
