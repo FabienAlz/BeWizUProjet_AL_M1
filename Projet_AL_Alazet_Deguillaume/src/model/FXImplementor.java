@@ -3,13 +3,15 @@ package model;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -68,6 +70,46 @@ public final class FXImplementor implements Implementor {
         contextMenu.setId("contextMenu");
         javafx.scene.control.MenuItem group = new javafx.scene.control.MenuItem("Group");
 
+        GridPane editGrid = new GridPane();
+
+        editGrid.setPadding(new Insets(10, 10, 10, 10));
+        Label widthLabel = new Label("Width:");
+        TextField widthTextField = new TextField();
+        Label heightLabel = new Label("Height:");
+        TextField heightTextField = new TextField ();
+        Label borderRadiusLabel = new Label("Border radius:");
+        TextField borderRadiusTextField = new TextField ();
+
+
+        HBox hbColorPicked = new HBox();
+        final ColorPicker colorPicker = new ColorPicker();
+        hbColorPicked.getChildren().add(colorPicker);
+
+        HBox hbValues = new HBox();
+        hbValues.getChildren().addAll(widthLabel, widthTextField);
+        hbValues.getChildren().addAll(heightLabel, heightTextField);
+        hbValues.getChildren().addAll(borderRadiusLabel, borderRadiusTextField);
+        hbValues.setSpacing(10);
+
+        HBox hbButtons = new HBox();
+        Button okButton = new Button("Ok");
+        Button applyButton = new Button("Apply");
+        Button cancelButton = new Button("Cancel");
+        hbButtons.getChildren().add(okButton);
+        hbButtons.getChildren().add(applyButton);
+        hbButtons.getChildren().add(cancelButton);
+        hbButtons.setSpacing(15);
+        editGrid.setHgap(10);
+        editGrid.setVgap(10);
+        editGrid.setPadding(new Insets(10, 10, 10, 10));
+        editGrid.add(hbColorPicked,0,0);
+        editGrid.add(hbValues,0,1);
+        editGrid.add(hbButtons, 0,2);
+        editGrid.setStyle("-fx-background-color: #FFFFFF");
+        canvas.getChildren().add(editGrid);
+        editGrid.setVisible(false);
+
+
         // Handler to create group of shapes
         group.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -90,17 +132,22 @@ public final class FXImplementor implements Implementor {
         edit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                for(Shape s : Toolbar.getInstance().getShapes()) {
-                    System.out.println(s);
+                System.out.println("EDIT BUTTON ");
+                editGrid.setVisible(true);
+                for(Shape s : Canvas.getInstance().getShapes()) {
+                    if (s.isSelected()) {
+                        System.out.println("YA UN SELECTED");
+                        colorPicker.setValue(Color.valueOf(s.getColor()));
+                        widthTextField.setText(String.valueOf(s.getWidth()));
+                        heightTextField.setText(String.valueOf(s.getHeight()));
+                        borderRadiusTextField.setText(String.valueOf(((Rectangle)s).getBorderRadius()));
+                    }
                 }
-                for(Node n : leftBar.getChildren()) {
-                    System.out.println(n);
-                }
-                System.out.println("EDIT BUTTON");
+                editGrid.toFront();
+
             }
         });
 
-        // Add MenuItem to ContextMenu
         contextMenu.getItems().addAll(group, edit);
 
         addToolbarHandlers();
@@ -111,6 +158,53 @@ public final class FXImplementor implements Implementor {
         primaryStage.setTitle("BeWizU");
         primaryStage.setScene(new Scene(root, 1080, 650));
         primaryStage.show();
+
+        EventHandler<MouseEvent> okButtonClick = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                canvas.getChildren().clear();
+                canvas.getChildren().add(editGrid);
+                for(Shape s : Canvas.getInstance().getShapes()) {
+                    if (s.isSelected()) {
+                        ((Rectangle)s).setWidth(Float.parseFloat(widthTextField.getText()));
+                        ((Rectangle)s).setHeight(Float.parseFloat(heightTextField.getText()));
+                        ((Rectangle)s).setBorderRadius(Float.parseFloat(borderRadiusTextField.getText()));
+                        ((Rectangle) s).setColor(String.valueOf(colorPicker.getValue()));
+                    }
+                }
+                Canvas.getInstance().resetSelection();
+                Canvas.getInstance().notifyAllShapes();
+                editGrid.setVisible(false);
+            }
+        };
+        okButton.addEventFilter(MouseEvent.MOUSE_CLICKED, okButtonClick);
+
+        EventHandler<MouseEvent> applyButtonClick = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                canvas.getChildren().clear();
+                canvas.getChildren().add(editGrid);
+                for(Shape s : Canvas.getInstance().getShapes()) {
+                    if (s.isSelected()) {
+                        ((Rectangle)s).setWidth(Float.parseFloat(widthTextField.getText()));
+                        ((Rectangle)s).setHeight(Float.parseFloat(heightTextField.getText()));
+                        ((Rectangle)s).setBorderRadius(Float.parseFloat(borderRadiusTextField.getText()));
+                        ((Rectangle) s).setColor(String.valueOf(colorPicker.getValue()));
+                        Canvas.getInstance().notifyAllShapes();
+                    }
+                }
+                editGrid.toFront();
+            }
+        };
+        applyButton.addEventFilter(MouseEvent.MOUSE_CLICKED, applyButtonClick);
+
+        EventHandler<MouseEvent> cancelButtonClick = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                editGrid.setVisible(false);
+            }
+        };
+        cancelButton.addEventFilter(MouseEvent.MOUSE_CLICKED, cancelButtonClick);
     }
 
     private void addToolbarHandlers() {
@@ -222,8 +316,6 @@ public final class FXImplementor implements Implementor {
                         if(original instanceof CompoundShape) {
                             copy = original.clone();
                             copy.setId();
-                            ((CompoundShape) original).clear();
-                            System.out.println("COPPPPPPPPPPPPP"+((CompoundShape)copy).getShapes().size());
 //                            copy = new CompoundShape((CompoundShape) original);
                             /*System.out.println(((CompoundShape) original).getShapes().size());
                             for(Shape shape : ((CompoundShape) original).getShapes()) {
@@ -404,6 +496,17 @@ public final class FXImplementor implements Implementor {
 
                 @Override
                 public void handle(ContextMenuEvent event) {
+                    boolean anySelected = false;
+                    for(Shape s : Canvas.getInstance().getShapes()) {
+                        if (s.isSelected()) {
+                            anySelected = true;
+                        }
+                    }
+                    if (!anySelected) {
+                        Canvas.getInstance().resetSelection();
+                        s.setSelected(true);
+                        Canvas.getInstance().notifyAllShapes();
+                    }
                     contextMenu.show(newShape, event.getScreenX(), event.getScreenY());
                 }
             });

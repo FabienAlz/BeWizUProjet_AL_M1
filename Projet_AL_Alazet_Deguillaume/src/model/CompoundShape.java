@@ -142,7 +142,13 @@ public class CompoundShape extends AbstractShape {
 
     @Override
     public CompoundShape clone() {
-        return (CompoundShape) super.clone();
+        CompoundShape c = (CompoundShape)super.clone();
+        for(Shape s : c.getShapes()) {
+            Shape copy = s.clone();
+            copy.setId();
+            c.add(copy);
+        }
+        return c;
     }
 
 }

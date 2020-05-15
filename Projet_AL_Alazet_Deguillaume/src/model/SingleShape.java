@@ -24,6 +24,10 @@ public abstract class SingleShape extends AbstractShape {
         return color;
     }
 
+    public void setColor(String color) {
+        this.color = color;
+    }
+
 
     @Override
     public SingleShape clone() {
