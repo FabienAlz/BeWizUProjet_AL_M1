@@ -280,10 +280,7 @@ public class FXDragAndDropHandlers {
             else {
                 Shape original = Toolbar.getInstance().getShape(id);
                 Toolbar.getInstance().remove(original);
-                System.out.println(implementor.getSHAPES());
                 implementor.getSHAPES().remove(original.getId());
-                System.out.println(implementor.getSHAPES());
-
                 implementor.remove();
             }
 

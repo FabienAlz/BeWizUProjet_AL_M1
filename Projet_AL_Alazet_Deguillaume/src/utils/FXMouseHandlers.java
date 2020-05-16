@@ -59,7 +59,6 @@ public class FXMouseHandlers {
     public void selection(MouseEvent mouseEvent) {
         if (mouseEvent.getButton() == MouseButton.PRIMARY) {
             boolean isSelected = shape.isSelected();
-            System.out.println(implementor.getCanvas().getChildren());
             implementor.getCanvas().getChildren().clear();
             if (!mouseEvent.isControlDown()) {
                 Canvas.getInstance().resetSelection();

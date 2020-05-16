@@ -231,7 +231,6 @@ public final class FXImplementor implements Implementor {
                 }
                 for (Shape s : compoundShape.getShapes()) {
                     canvas.getChildren().remove(SHAPES.get(s.getId()));
-                    System.out.println(s.getId());
                 }
                 ShapeObserver obs = new ConcreteShapeObserver();
                 compoundShape.addObserver(obs);
