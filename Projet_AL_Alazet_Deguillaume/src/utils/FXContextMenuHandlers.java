@@ -34,6 +34,7 @@ public class FXContextMenuHandlers {
                 }
             }
             shape.setSelected(true);
+            FXImplementor.getInstance().setLastSelected(shape, FXShape);
             // Updates the canvas
             implementor.getCanvas().getChildren().clear();
             Canvas.getInstance().notifyAllShapes();
