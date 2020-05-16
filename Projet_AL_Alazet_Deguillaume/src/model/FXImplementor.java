@@ -68,7 +68,6 @@ public final class FXImplementor implements Implementor {
         // Create ContextMenu
         contextMenu = new ContextMenu();
         contextMenu.setId("contextMenu");
-        javafx.scene.control.MenuItem group = new javafx.scene.control.MenuItem("Group");
 
         GridPane editRectangleGrid = new GridPane();
 
@@ -155,6 +154,7 @@ public final class FXImplementor implements Implementor {
 
         // Handler to create group of shapes
         // Handler to create group of shapes
+        javafx.scene.control.MenuItem group = new javafx.scene.control.MenuItem("Group");
         group.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -205,7 +205,40 @@ public final class FXImplementor implements Implementor {
             }
         });
 
-        contextMenu.getItems().addAll(group, edit);
+        javafx.scene.control.MenuItem degroup = new MenuItem("Degroup");
+        // Handler to edit the shapes
+        degroup.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                List<Shape> shapesToRemove = new ArrayList<>();
+                List<Shape> shapesToAdd = new ArrayList<>();
+
+                for(Shape s : Canvas.getInstance().getShapes()) {
+                    if(s.isSelected() && s instanceof CompoundShape) {
+                        for(Shape compoundShape : ((CompoundShape) s).getShapes()) {
+                            Shape copy = compoundShape.clone();
+                            copy.setSelected(false);
+                            copy.setId();
+                            shapesToAdd.add(copy);
+
+                        }
+                        shapesToRemove.add(s);
+                    }
+                    else s.setSelected(false);
+                }
+                for(Shape s : shapesToRemove) {
+                    Canvas.getInstance().remove(s);
+                }
+                for(Shape s : shapesToAdd) {
+                    Canvas.getInstance().add(s);
+                }
+                canvas.getChildren().clear();
+                Canvas.getInstance().notifyAllShapes();
+            }
+        });
+
+
+        contextMenu.getItems().addAll(group, degroup, edit);
 
         addToolbarHandlers();
         addCanvasHandlers();
@@ -700,6 +733,28 @@ public final class FXImplementor implements Implementor {
             }
         };
 
+        /*EventHandler bindContextMenu = new EventHandler<ContextMenuEvent>() {
+
+            @Override
+            public void handle(ContextMenuEvent event) {
+                boolean anySelected = false;
+                for(Shape s : Canvas.getInstance().getShapes()) {
+                    if (s.isSelected()) {
+                        anySelected = true;
+                    }
+                }
+                if (!anySelected) {
+                    Canvas.getInstance().resetSelection();
+                    s.setSelected(true);
+                    Canvas.getInstance().notifyAllShapes();
+                }
+                if(event.getTarget() instanceof javafx.scene.shape.Shape) {
+                    javafx.scene.shape.Shape currentShape = (javafx.scene.shape.Shape) event.getTarget();
+                    contextMenu.show(currentShape, event.getScreenX(), event.getScreenY());
+                }
+            }
+        };*/
+
         if (s.getPositionI() instanceof CanvasPosition) {
             EventHandler<MouseEvent> selection = new EventHandler<MouseEvent>() {
                 @Override
@@ -730,6 +785,26 @@ public final class FXImplementor implements Implementor {
         for (Map.Entry<Shape,javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()){
             newShape.getValue().addEventFilter(MouseEvent.MOUSE_ENTERED, hoverColor);
             newShape.getValue().addEventFilter(MouseEvent.MOUSE_EXITED, setBackColor);
+
+            newShape.getValue().setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+
+                @Override
+                public void handle(ContextMenuEvent event) {
+                    boolean anySelected = false;
+                    for(Shape s : Canvas.getInstance().getShapes()) {
+                        if (s.isSelected()) {
+                            anySelected = true;
+                        }
+                    }
+                    if (!anySelected) {
+                        Canvas.getInstance().resetSelection();
+                        s.setSelected(true);
+                        Canvas.getInstance().notifyAllShapes();
+                    }
+                    contextMenu.show(newShape.getValue(), event.getScreenX(), event.getScreenY());
+                }
+            });
+
         }
     }
 

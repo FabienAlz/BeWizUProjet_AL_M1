@@ -11,25 +11,25 @@
             <items>
             <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="file:ressources/save.png" />
+                  <Image url="file:/C:/Users/Shadow/Desktop/GL/AL/projet/BeWizUProjet_AL_M1/Projet_AL_Alazet_Deguillaume/ressources/save.png" />
                </image>
             </ImageView>
             <Separator orientation="VERTICAL" prefHeight="32.0" prefWidth="20.0" />
             <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="file:ressources/load.png" />
+                  <Image url="file:/C:/Users/Shadow/Desktop/GL/AL/projet/BeWizUProjet_AL_M1/Projet_AL_Alazet_Deguillaume/ressources/load.png" />
                </image>
             </ImageView>
             <Separator orientation="VERTICAL" prefHeight="32.0" prefWidth="20.0" />
             <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="file:ressources/undo.png" />
+                  <Image url="file:/C:/Users/Shadow/Desktop/GL/AL/projet/BeWizUProjet_AL_M1/Projet_AL_Alazet_Deguillaume/ressources/undo.png" />
                </image>
             </ImageView>
             <Separator orientation="VERTICAL" prefHeight="32.0" prefWidth="20.0" />
             <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="file:ressources/redo.png" />
+                  <Image url="file:/C:/Users/Shadow/Desktop/GL/AL/projet/BeWizUProjet_AL_M1/Projet_AL_Alazet_Deguillaume/ressources/redo.png" />
                </image>
             </ImageView>
             </items>
@@ -43,7 +43,7 @@
                       <children>
                           <ImageView id="bin" fitHeight="32.0" fitWidth="32.0" layoutX="59.0" layoutY="340.0" pickOnBounds="true" preserveRatio="true">
                               <image>
-                                  <Image url="file:ressources/bin.png" />
+                                  <Image url="file:/C:/Users/Shadow/Desktop/GL/AL/projet/BeWizUProjet_AL_M1/Projet_AL_Alazet_Deguillaume/ressources/bin.png" />
                               </image>
                           </ImageView>
                       </children>
