@@ -22,6 +22,10 @@ import java.util.*;
 import java.util.List;
 
 public final class FXImplementor implements Implementor {
+
+    Shape lastSelected;
+    javafx.scene.shape.Shape lastFXSelected;
+
     private Pane root;
 
     @FXML
@@ -64,7 +68,9 @@ public final class FXImplementor implements Implementor {
         return leftBar;
     }
 
-    public ContextMenu getContextMenu() { return contextMenu; }
+    public ContextMenu getContextMenu() {
+        return contextMenu;
+    }
 
     public void start(Stage primaryStage) throws Exception {
         root = FXMLLoader.load(getClass().getResource("../view/view.fxml"));
@@ -81,9 +87,9 @@ public final class FXImplementor implements Implementor {
         Label widthLabel = new Label("Width:");
         TextField widthTextField = new TextField();
         Label heightLabel = new Label("Height:");
-        TextField heightTextField = new TextField ();
+        TextField heightTextField = new TextField();
         Label borderRadiusLabel = new Label("Border radius:");
-        TextField borderRadiusTextField = new TextField ();
+        TextField borderRadiusTextField = new TextField();
         Label rotationRectangleLabel = new Label("Rotation:");
         TextField rotationRectangleTextField = new TextField();
 
@@ -109,13 +115,12 @@ public final class FXImplementor implements Implementor {
         hbRectangleButtons.setSpacing(15);
         editRectangleGrid.setHgap(10);
         editRectangleGrid.setVgap(10);
-        editRectangleGrid.add(hbRectangleColorPicker,0,0);
-        editRectangleGrid.add(hbRectangleValues,0,1);
-        editRectangleGrid.add(hbRectangleButtons, 0,2);
+        editRectangleGrid.add(hbRectangleColorPicker, 0, 0);
+        editRectangleGrid.add(hbRectangleValues, 0, 1);
+        editRectangleGrid.add(hbRectangleButtons, 0, 2);
         editRectangleGrid.setStyle("-fx-background-color: #FFFFFF");
         canvas.getChildren().add(editRectangleGrid);
         editRectangleGrid.setVisible(false);
-
 
 
         GridPane editPolygonGrid = new GridPane();
@@ -124,9 +129,9 @@ public final class FXImplementor implements Implementor {
         Label lengthLabel = new Label("Length:");
         TextField lengthTextField = new TextField();
         Label edgesLabel = new Label("edges:");
-        TextField edgesTextField = new TextField ();
+        TextField edgesTextField = new TextField();
         Label rotationPolygonLabel = new Label("Rotation:");
-        TextField rotationPolygonTextField = new TextField ();
+        TextField rotationPolygonTextField = new TextField();
 
         HBox hbPolygonColorPicker = new HBox();
         final ColorPicker colorPickerPolygon = new ColorPicker();
@@ -148,9 +153,9 @@ public final class FXImplementor implements Implementor {
         hbPolygonButtons.setSpacing(15);
         editPolygonGrid.setHgap(10);
         editPolygonGrid.setVgap(10);
-        editPolygonGrid.add(hbPolygonColorPicker,0,0);
-        editPolygonGrid.add(hbPolygonValues,0,1);
-        editPolygonGrid.add(hbPolygonButtons, 0,2);
+        editPolygonGrid.add(hbPolygonColorPicker, 0, 0);
+        editPolygonGrid.add(hbPolygonValues, 0, 1);
+        editPolygonGrid.add(hbPolygonButtons, 0, 2);
         editPolygonGrid.setStyle("-fx-background-color: #FFFFFF");
         canvas.getChildren().add(editPolygonGrid);
         editPolygonGrid.setVisible(false);
@@ -160,7 +165,7 @@ public final class FXImplementor implements Implementor {
 
         editMixedCompoundShapeGrid.setPadding(new Insets(10, 10, 10, 10));
         Label rotationMixedCompoundShapeLabel = new Label("Rotation:");
-        TextField rotationMixedCompoundShapeTextField = new TextField ();
+        TextField rotationMixedCompoundShapeTextField = new TextField();
 
         HBox hbMixedCompoundShapeColorPicker = new HBox();
         final ColorPicker colorPickerMixedCompoundShape = new ColorPicker();
@@ -180,13 +185,12 @@ public final class FXImplementor implements Implementor {
         hbMixedCompoundShapeButtons.setSpacing(15);
         editMixedCompoundShapeGrid.setHgap(10);
         editMixedCompoundShapeGrid.setVgap(10);
-        editMixedCompoundShapeGrid.add(hbMixedCompoundShapeColorPicker,0,0);
-        editMixedCompoundShapeGrid.add(hbMixedCompoundShapeValues,0,1);
-        editMixedCompoundShapeGrid.add(hbMixedCompoundShapeButtons, 0,2);
+        editMixedCompoundShapeGrid.add(hbMixedCompoundShapeColorPicker, 0, 0);
+        editMixedCompoundShapeGrid.add(hbMixedCompoundShapeValues, 0, 1);
+        editMixedCompoundShapeGrid.add(hbMixedCompoundShapeButtons, 0, 2);
         editMixedCompoundShapeGrid.setStyle("-fx-background-color: #FFFFFF");
         canvas.getChildren().add(editMixedCompoundShapeGrid);
         editMixedCompoundShapeGrid.setVisible(false);
-
 
 
         // Handler to create group of shapes
@@ -195,11 +199,11 @@ public final class FXImplementor implements Implementor {
         group.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                CompoundShape compoundShape = new CompoundShape(FXImplementor.getInstance(), new CanvasPosition(0,0));
+                CompoundShape compoundShape = new CompoundShape(FXImplementor.getInstance(), new CanvasPosition(0, 0));
                 for (Shape s : Canvas.getInstance().createCompound()) {
                     compoundShape.add(s);
                 }
-                for(Shape s : compoundShape.getShapes()) {
+                for (Shape s : compoundShape.getShapes()) {
                     canvas.getChildren().remove(SHAPES.get(s.getId()));
                 }
                 ShapeObserver obs = new ConcreteShapeObserver();
@@ -216,80 +220,86 @@ public final class FXImplementor implements Implementor {
                 getCanvas().getChildren().remove(editRectangleGrid);
                 getCanvas().getChildren().remove(editPolygonGrid);
                 getCanvas().getChildren().remove(editMixedCompoundShapeGrid);
-
-
-
-
                 System.out.println("EDIT BUTTON ");
+
+                for (Shape shape : Canvas.getInstance().getShapes()) {
+                    if (!(shape instanceof CompoundShape) && shape.isSelected()) {
+                        Canvas.getInstance().resetSelection();
+                        lastSelected.setSelected(true);
+                        canvas.getChildren().clear();
+                        canvas.getChildren().add(lastFXSelected);
+                        Canvas.getInstance().notifyAllShapes();
+                    }
+                }
+
                 Shape s = null;
-                for(Shape shape : Canvas.getInstance().getShapes()) {
+                for (Shape shape : Canvas.getInstance().getShapes()) {
                     if (shape.isSelected()) s = shape;
                 }
-                    if (s.isSelected()) {
-                        if (s instanceof Rectangle) {
-                            canvas.getChildren().add(editRectangleGrid);
-                            colorPickerRectangle.setValue(Color.valueOf(s.getColor()));
-                            widthTextField.setText(String.valueOf(s.getWidth()));
-                            heightTextField.setText(String.valueOf(s.getHeight()));
-                            rotationRectangleTextField.setText(String.valueOf(s.getRotation()));
-                            borderRadiusTextField.setText(String.valueOf(((Rectangle) s).getBorderRadius()));
-                            editRectangleGrid.setVisible(true);
-                            editPolygonGrid.setVisible(false);
-                            editMixedCompoundShapeGrid.setVisible(false);
-                            editRectangleGrid.toFront();
-                        } else if (s instanceof Polygon) {
-                            canvas.getChildren().add(editPolygonGrid);
-                            colorPickerPolygon.setValue(Color.valueOf(s.getColor()));
-                            rotationPolygonTextField.setText(String.valueOf(s.getRotation()));
-                            lengthTextField.setText(String.valueOf(((Polygon) s).getLength()));
-                            edgesTextField.setText(String.valueOf(((Polygon) s).getEdges()));
-                            editPolygonGrid.setVisible(true);
-                            editRectangleGrid.setVisible(false);
-                            editMixedCompoundShapeGrid.setVisible(false);
-                            editPolygonGrid.toFront();
-                        } else if (s instanceof CompoundShape) {
-                            boolean sameClass = true;
-                            Shape firstShape = ((CompoundShape) s).getShapes().get(0);
-                            for (Shape subShape : ((CompoundShape) s).getShapes()) {
-                                if (!firstShape.getClass().equals(subShape.getClass())) {
-                                    sameClass = false;
-                                }
-                            }
-                            if (sameClass) {
-                                if (firstShape instanceof Rectangle) {
-                                    canvas.getChildren().add(editRectangleGrid);
-                                    colorPickerRectangle.setValue(Color.valueOf(firstShape.getColor()));
-                                    widthTextField.setText(String.valueOf(firstShape.getWidth()));
-                                    heightTextField.setText(String.valueOf(firstShape.getHeight()));
-                                    rotationRectangleTextField.setText(String.valueOf(firstShape.getRotation()));
-                                    borderRadiusTextField.setText(String.valueOf(((Rectangle) firstShape).getBorderRadius()));
-                                    editRectangleGrid.setVisible(true);
-                                    editPolygonGrid.setVisible(false);
-                                    editMixedCompoundShapeGrid.setVisible(false);
-                                    editRectangleGrid.toFront();
-                                } else if (firstShape instanceof Polygon) {
-                                    canvas.getChildren().add(editPolygonGrid);
-                                    colorPickerPolygon.setValue(Color.valueOf(firstShape.getColor()));
-                                    rotationPolygonTextField.setText(String.valueOf(firstShape.getRotation()));
-                                    lengthTextField.setText(String.valueOf(((Polygon) firstShape).getLength()));
-                                    edgesTextField.setText(String.valueOf(((Polygon) firstShape).getEdges()));
-                                    editPolygonGrid.setVisible(true);
-                                    editRectangleGrid.setVisible(false);
-                                    editMixedCompoundShapeGrid.setVisible(false);
-                                    editPolygonGrid.toFront();
-                                }
-                            }
-                            else {
-                                canvas.getChildren().add(editMixedCompoundShapeGrid);
-                                colorPickerMixedCompoundShape.setValue(Color.valueOf(firstShape.getColor()));
-                                rotationMixedCompoundShapeTextField.setText(String.valueOf(firstShape.getRotation()));
-                                editMixedCompoundShapeGrid.setVisible(true);
-                                editPolygonGrid.setVisible(false);
-                                editRectangleGrid.setVisible(false);
-                                editMixedCompoundShapeGrid.toFront();
+                if (s.isSelected()) {
+                    if (s instanceof Rectangle) {
+                        canvas.getChildren().add(editRectangleGrid);
+                        colorPickerRectangle.setValue(Color.valueOf(s.getColor()));
+                        widthTextField.setText(String.valueOf(s.getWidth()));
+                        heightTextField.setText(String.valueOf(s.getHeight()));
+                        rotationRectangleTextField.setText(String.valueOf(s.getRotation()));
+                        borderRadiusTextField.setText(String.valueOf(((Rectangle) s).getBorderRadius()));
+                        editRectangleGrid.setVisible(true);
+                        editPolygonGrid.setVisible(false);
+                        editMixedCompoundShapeGrid.setVisible(false);
+                        editRectangleGrid.toFront();
+                    } else if (s instanceof Polygon) {
+                        canvas.getChildren().add(editPolygonGrid);
+                        colorPickerPolygon.setValue(Color.valueOf(s.getColor()));
+                        rotationPolygonTextField.setText(String.valueOf(s.getRotation()));
+                        lengthTextField.setText(String.valueOf(((Polygon) s).getLength()));
+                        edgesTextField.setText(String.valueOf(((Polygon) s).getEdges()));
+                        editPolygonGrid.setVisible(true);
+                        editRectangleGrid.setVisible(false);
+                        editMixedCompoundShapeGrid.setVisible(false);
+                        editPolygonGrid.toFront();
+                    } else if (s instanceof CompoundShape) {
+                        boolean sameClass = true;
+                        Shape firstShape = ((CompoundShape) s).getShapes().get(0);
+                        for (Shape subShape : ((CompoundShape) s).getShapes()) {
+                            if (!firstShape.getClass().equals(subShape.getClass())) {
+                                sameClass = false;
                             }
                         }
+                        if (sameClass) {
+                            if (firstShape instanceof Rectangle) {
+                                canvas.getChildren().add(editRectangleGrid);
+                                colorPickerRectangle.setValue(Color.valueOf(firstShape.getColor()));
+                                widthTextField.setText(String.valueOf(firstShape.getWidth()));
+                                heightTextField.setText(String.valueOf(firstShape.getHeight()));
+                                rotationRectangleTextField.setText(String.valueOf(firstShape.getRotation()));
+                                borderRadiusTextField.setText(String.valueOf(((Rectangle) firstShape).getBorderRadius()));
+                                editRectangleGrid.setVisible(true);
+                                editPolygonGrid.setVisible(false);
+                                editMixedCompoundShapeGrid.setVisible(false);
+                                editRectangleGrid.toFront();
+                            } else if (firstShape instanceof Polygon) {
+                                canvas.getChildren().add(editPolygonGrid);
+                                colorPickerPolygon.setValue(Color.valueOf(firstShape.getColor()));
+                                rotationPolygonTextField.setText(String.valueOf(firstShape.getRotation()));
+                                lengthTextField.setText(String.valueOf(((Polygon) firstShape).getLength()));
+                                edgesTextField.setText(String.valueOf(((Polygon) firstShape).getEdges()));
+                                editPolygonGrid.setVisible(true);
+                                editRectangleGrid.setVisible(false);
+                                editMixedCompoundShapeGrid.setVisible(false);
+                                editPolygonGrid.toFront();
+                            }
+                        } else {
+                            canvas.getChildren().add(editMixedCompoundShapeGrid);
+                            colorPickerMixedCompoundShape.setValue(Color.valueOf(firstShape.getColor()));
+                            rotationMixedCompoundShapeTextField.setText(String.valueOf(firstShape.getRotation()));
+                            editMixedCompoundShapeGrid.setVisible(true);
+                            editPolygonGrid.setVisible(false);
+                            editRectangleGrid.setVisible(false);
+                            editMixedCompoundShapeGrid.toFront();
+                        }
                     }
+                }
             }
         });
 
@@ -301,9 +311,9 @@ public final class FXImplementor implements Implementor {
                 List<Shape> shapesToRemove = new ArrayList<>();
                 List<Shape> shapesToAdd = new ArrayList<>();
 
-                for(Shape s : Canvas.getInstance().getShapes()) {
-                    if(s.isSelected() && s instanceof CompoundShape) {
-                        for(Shape compoundShape : ((CompoundShape) s).getShapes()) {
+                for (Shape s : Canvas.getInstance().getShapes()) {
+                    if (s.isSelected() && s instanceof CompoundShape) {
+                        for (Shape compoundShape : ((CompoundShape) s).getShapes()) {
                             Shape copy = compoundShape.clone();
                             copy.setSelected(false);
                             copy.setId();
@@ -311,13 +321,12 @@ public final class FXImplementor implements Implementor {
 
                         }
                         shapesToRemove.add(s);
-                    }
-                    else s.setSelected(false);
+                    } else s.setSelected(false);
                 }
-                for(Shape s : shapesToRemove) {
+                for (Shape s : shapesToRemove) {
                     Canvas.getInstance().remove(s);
                 }
-                for(Shape s : shapesToAdd) {
+                for (Shape s : shapesToAdd) {
                     Canvas.getInstance().add(s);
                 }
                 canvas.getChildren().clear();
@@ -341,7 +350,7 @@ public final class FXImplementor implements Implementor {
             @Override
             public void handle(MouseEvent e) {
                 canvas.getChildren().clear();
-                for(Shape s : Canvas.getInstance().getShapes()) {
+                for (Shape s : Canvas.getInstance().getShapes()) {
                     if (s.isSelected()) {
                         if (s instanceof Rectangle) {
                             canvas.getChildren().add(editRectangleGrid);
@@ -358,11 +367,10 @@ public final class FXImplementor implements Implementor {
                             ((Polygon) s).setRotation(Float.parseFloat(rotationPolygonTextField.getText()));
                             ((Polygon) s).setLength(Float.parseFloat(lengthTextField.getText()));
                             editPolygonGrid.setVisible(false);
-                        }
-                        else if (s instanceof CompoundShape) {
+                        } else if (s instanceof CompoundShape) {
                             boolean sameClass = true;
                             Shape firstShape = ((CompoundShape) s).getShapes().get(0);
-                            for (Shape subShape : ((CompoundShape) s).getShapes()){
+                            for (Shape subShape : ((CompoundShape) s).getShapes()) {
                                 if (!firstShape.getClass().equals(subShape.getClass())) {
                                     sameClass = false;
                                 }
@@ -378,8 +386,7 @@ public final class FXImplementor implements Implementor {
                                         ((Rectangle) subShape).setColor(String.valueOf(colorPickerRectangle.getValue()));
                                     }
                                     editRectangleGrid.setVisible(false);
-                                }
-                                else if (firstShape instanceof Polygon) {
+                                } else if (firstShape instanceof Polygon) {
                                     canvas.getChildren().add(editPolygonGrid);
                                     for (Shape subShape : ((CompoundShape) s).getShapes()) {
                                         ((Polygon) subShape).setEdges(Integer.parseInt(edgesTextField.getText()));
@@ -391,9 +398,9 @@ public final class FXImplementor implements Implementor {
                                 }
                             } else {
                                 canvas.getChildren().add(editMixedCompoundShapeGrid);
-                                    s.setRotation(Float.parseFloat(rotationMixedCompoundShapeTextField.getText()));
-                                    s.setColor(String.valueOf(colorPickerMixedCompoundShape.getValue()));
-                                    editMixedCompoundShapeGrid.setVisible(false);
+                                s.setRotation(Float.parseFloat(rotationMixedCompoundShapeTextField.getText()));
+                                s.setColor(String.valueOf(colorPickerMixedCompoundShape.getValue()));
+                                editMixedCompoundShapeGrid.setVisible(false);
                             }
                         }
                     }
@@ -410,7 +417,7 @@ public final class FXImplementor implements Implementor {
             @Override
             public void handle(MouseEvent e) {
                 canvas.getChildren().clear();
-                for(Shape s : Canvas.getInstance().getShapes()) {
+                for (Shape s : Canvas.getInstance().getShapes()) {
                     if (s.isSelected()) {
                         if (s instanceof Rectangle) {
                             canvas.getChildren().add(editRectangleGrid);
@@ -429,10 +436,10 @@ public final class FXImplementor implements Implementor {
                             ((Polygon) s).setLength(Float.parseFloat(lengthTextField.getText()));
                             Canvas.getInstance().notifyAllShapes();
                             editPolygonGrid.toFront();
-                        }   else if (s instanceof CompoundShape) {
+                        } else if (s instanceof CompoundShape) {
                             boolean sameClass = true;
                             Shape firstShape = ((CompoundShape) s).getShapes().get(0);
-                            for (Shape subShape : ((CompoundShape) s).getShapes()){
+                            for (Shape subShape : ((CompoundShape) s).getShapes()) {
                                 if (!firstShape.getClass().equals(subShape.getClass())) {
                                     sameClass = false;
                                 }
@@ -449,8 +456,7 @@ public final class FXImplementor implements Implementor {
                                     }
                                     Canvas.getInstance().notifyAllShapes();
                                     editRectangleGrid.toFront();
-                                }
-                                else if (firstShape instanceof Polygon) {
+                                } else if (firstShape instanceof Polygon) {
                                     canvas.getChildren().add(editPolygonGrid);
                                     for (Shape subShape : ((CompoundShape) s).getShapes()) {
                                         ((Polygon) subShape).setEdges(Integer.parseInt(edgesTextField.getText()));
@@ -499,23 +505,21 @@ public final class FXImplementor implements Implementor {
                 boolean success = false;
                 if (db.hasString()) {
                     long id = Long.parseLong(db.getString());
-                    if(Canvas.getInstance().contains(id)) {
+                    if (Canvas.getInstance().contains(id)) {
                         Shape original = Canvas.getInstance().getShape(id);
                         original.setSelected(false);
                         Shape copy = original.clone();
                         copy.setId();
-                        if(copy instanceof CompoundShape) {
-                            createToolbarCompoundShape((CompoundShape)copy);
+                        if (copy instanceof CompoundShape) {
+                            createToolbarCompoundShape((CompoundShape) copy);
                             copy.setPosition(new ToolbarPosition());
                             Toolbar.getInstance().add(copy);
-                        }
-                        else {
+                        } else {
                             copy.setPosition(new ToolbarPosition());
                             Toolbar.getInstance().addAndNotify(copy);
                         }
 
-                    }
-                    else {
+                    } else {
                         System.out.println("FROM TOOLBAR TO TOOLBAR");
                     }
                     success = true;
@@ -558,14 +562,13 @@ public final class FXImplementor implements Implementor {
         });
 
 
-
     }
 
     private void addCanvasHandlers() {
         javafx.scene.shape.Rectangle rectangleSelection = new javafx.scene.shape.Rectangle();
         rectangleSelection.setOpacity(0.3);
         rectangleSelection.setFill(BORDER_COLOR);
-        rectangleSelection.setStroke(new Color(0,0,1,1));
+        rectangleSelection.setStroke(new Color(0, 0, 1, 1));
         rectangleSelection.setStrokeWidth(2);
         canvas.setOnDragDropped(new EventHandler<DragEvent>() {
             public void handle(DragEvent event) {
@@ -575,33 +578,30 @@ public final class FXImplementor implements Implementor {
                 boolean success = false;
                 if (db.hasString()) {
                     long id = Long.parseLong(db.getString());
-                    if(Canvas.getInstance().contains(id)) {
+                    if (Canvas.getInstance().contains(id)) {
                         Shape original = Canvas.getInstance().getShape(id);
                         Shape copy = original.clone();
                         Canvas.getInstance().remove(original);
 
-                        if(original instanceof CompoundShape) {
-                            ((CompoundShape)copy).translate(new Position(event.getX()-((CompoundShape) original).getTopLeft().getX(),
-                                    event.getY()-((CompoundShape) original).getTopLeft().getY()));
+                        if (original instanceof CompoundShape) {
+                            ((CompoundShape) copy).translate(new Position(event.getX() - ((CompoundShape) original).getTopLeft().getX(),
+                                    event.getY() - ((CompoundShape) original).getTopLeft().getY()));
                             canvas.getChildren().clear();
                             Canvas.getInstance().add(copy);
                             Canvas.getInstance().notifyAllShapes();
-                        }
-                        else {
+                        } else {
                             canvas.getChildren().remove(SHAPES.get(original.getId()));
                             copy.setPosition(new CanvasPosition(event.getX(), event.getY()));
                             Canvas.getInstance().addAndNotify(copy);
                         }
-                    }
-                    else {
+                    } else {
                         Shape original = Toolbar.getInstance().getShape(id);
                         Shape copy = original.clone();
-                        if(original instanceof CompoundShape) {
+                        if (original instanceof CompoundShape) {
                             copy.setId();
-                            ((CompoundShape)copy).translate(new Position(event.getX()-((CompoundShape) original).getTopLeft().getX(),
-                                    event.getY()-((CompoundShape) original).getTopLeft().getY()));
-                        }
-                        else {
+                            ((CompoundShape) copy).translate(new Position(event.getX() - ((CompoundShape) original).getTopLeft().getX(),
+                                    event.getY() - ((CompoundShape) original).getTopLeft().getY()));
+                        } else {
                             copy = original.clone();
                             copy.setId();
                             copy.setPosition(new CanvasPosition(event.getX(), event.getY()));
@@ -648,7 +648,7 @@ public final class FXImplementor implements Implementor {
         EventHandler<MouseEvent> setGestureStarted = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                if(!canvas.getChildren().contains(e.getTarget())) {
+                if (!canvas.getChildren().contains(e.getTarget())) {
                     Canvas.getInstance().resetSelection();
                     canvas.getChildren().clear();
                     Canvas.getInstance().notifyAllShapes();
@@ -705,28 +705,25 @@ public final class FXImplementor implements Implementor {
         EventHandler<MouseEvent> endSelection = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                if(Canvas.getInstance().getSelection()) {
+                if (Canvas.getInstance().getSelection()) {
                     Position firstPos = Canvas.getInstance().getStartSelectPos();
                     Canvas.getInstance().setSelection(false);
                     Position secondPos = new Position(e.getX(), e.getY());
-                    for(Shape s : Canvas.getInstance().getShapes()) {
-                        if(secondPos.getX() > firstPos.getX() && secondPos.getY() > firstPos.getY() && s.isInside(firstPos, secondPos)) {
+                    for (Shape s : Canvas.getInstance().getShapes()) {
+                        if (secondPos.getX() > firstPos.getX() && secondPos.getY() > firstPos.getY() && s.isInside(firstPos, secondPos)) {
                             s.setSelected(true);
-                        }
-                        else if(secondPos.getX() < firstPos.getX() && secondPos.getY() < firstPos.getY() && s.isInside(secondPos, firstPos)) {
+                        } else if (secondPos.getX() < firstPos.getX() && secondPos.getY() < firstPos.getY() && s.isInside(secondPos, firstPos)) {
                             s.setSelected(true);
-                        }
-                        else if(secondPos.getX() > firstPos.getX() && secondPos.getY() < firstPos.getY()) {
+                        } else if (secondPos.getX() > firstPos.getX() && secondPos.getY() < firstPos.getY()) {
                             Position firstIntermediatePos = new Position(secondPos.getX(), firstPos.getY());
-                            Position secondIntermediatePos = new Position(firstPos.getX(),secondPos.getY());
-                            if(s.isInside(secondIntermediatePos, firstIntermediatePos)) {
+                            Position secondIntermediatePos = new Position(firstPos.getX(), secondPos.getY());
+                            if (s.isInside(secondIntermediatePos, firstIntermediatePos)) {
                                 s.setSelected(true);
                             }
-                        }
-                        else if(secondPos.getX() < firstPos.getX() && secondPos.getY() > firstPos.getY()) {
+                        } else if (secondPos.getX() < firstPos.getX() && secondPos.getY() > firstPos.getY()) {
                             Position firstIntermediatePos = new Position(secondPos.getX(), firstPos.getY());
-                            Position secondIntermediatePos = new Position(firstPos.getX(),secondPos.getY());
-                            if(s.isInside(firstIntermediatePos, secondIntermediatePos)) {
+                            Position secondIntermediatePos = new Position(firstPos.getX(), secondPos.getY());
+                            if (s.isInside(firstIntermediatePos, secondIntermediatePos)) {
                                 s.setSelected(true);
                             }
                         }
@@ -753,18 +750,16 @@ public final class FXImplementor implements Implementor {
                 boolean success = false;
                 if (db.hasString()) {
                     long id = Long.parseLong(db.getString());
-                    if(Canvas.getInstance().contains(id)) {
+                    if (Canvas.getInstance().contains(id)) {
                         Shape original = Canvas.getInstance().getShape(id);
                         Canvas.getInstance().remove(original);
-                        if(original instanceof CompoundShape) {
+                        if (original instanceof CompoundShape) {
                             canvas.getChildren().clear();
                             Canvas.getInstance().notifyAllShapes();
-                        }
-                        else {
+                        } else {
                             canvas.getChildren().remove(SHAPES.get(id));
                         }
-                    }
-                    else {
+                    } else {
                         Shape original = Toolbar.getInstance().getShape(id);
                         Toolbar.getInstance().remove(original);
                         remove();
@@ -848,11 +843,11 @@ public final class FXImplementor implements Implementor {
         }
     }
 
-    private void compoundShapeHandlers(CompoundShape s, Map<Shape,javafx.scene.shape.Shape> compoundShapes) {
+    private void compoundShapeHandlers(CompoundShape s, Map<Shape, javafx.scene.shape.Shape> compoundShapes) {
         EventHandler<MouseEvent> hoverColor = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                for (Map.Entry<Shape,javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()) {
+                for (Map.Entry<Shape, javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()) {
                     FXMouseHandlers myHandler = new FXMouseHandlers(newShape.getKey(), newShape.getValue());
                     myHandler.hoverColor(e);
                 }
@@ -862,7 +857,7 @@ public final class FXImplementor implements Implementor {
         EventHandler<MouseEvent> setBackColor = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                for (Map.Entry<Shape,javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()) {
+                for (Map.Entry<Shape, javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()) {
                     FXMouseHandlers myHandler = new FXMouseHandlers(newShape.getKey(), newShape.getValue());
                     myHandler.setBackColor(e);
                 }
@@ -878,12 +873,12 @@ public final class FXImplementor implements Implementor {
 
                 }
             };
-            for (Map.Entry<Shape,javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()){
+            for (Map.Entry<Shape, javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()) {
                 newShape.getValue().addEventFilter(MouseEvent.MOUSE_CLICKED, selection);
             }
         }
 
-        for (Map.Entry<Shape,javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()){
+        for (Map.Entry<Shape, javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()) {
             newShape.getValue().addEventFilter(MouseEvent.MOUSE_ENTERED, hoverColor);
             newShape.getValue().addEventFilter(MouseEvent.MOUSE_EXITED, setBackColor);
             newShape.getValue().setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
@@ -913,7 +908,7 @@ public final class FXImplementor implements Implementor {
         });
     }
 
-    private void dragAndDropHandlersCompound(CompoundShape s, Map<Shape,javafx.scene.shape.Shape> compoundShapes) {
+    private void dragAndDropHandlersCompound(CompoundShape s, Map<Shape, javafx.scene.shape.Shape> compoundShapes) {
         EventHandler setOnDragEntered = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -926,7 +921,6 @@ public final class FXImplementor implements Implementor {
                 }
             }
         };
-
 
 
         for (Map.Entry<Shape, javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()) {
@@ -967,7 +961,7 @@ public final class FXImplementor implements Implementor {
             s.setPosition(Toolbar.getInstance().getNextPosition());
             newShape.setX(s.getPositionI().getX());
             newShape.setY(s.getPositionI().getY());
-            Toolbar.getInstance().setNextPosition((int)newShape.getHeight());
+            Toolbar.getInstance().setNextPosition((int) newShape.getHeight());
             leftBar.getChildren().add(newShape);
 
         } else {
@@ -978,9 +972,9 @@ public final class FXImplementor implements Implementor {
             // Put a stroke to the shape if it's selected
             if (s.isSelected()) {
                 // Change the color of the stroke to avoid having a blue stroke on a blue shape
-                if (r >= (BORDER_COLOR.getRed()*255)-10 && r <= (BORDER_COLOR.getRed()*255)+10 &&
-                        g >= (BORDER_COLOR.getGreen()*255)-10 && g <= (BORDER_COLOR.getGreen()*255)+10 &&
-                        b >= (BORDER_COLOR.getBlue()*255)-10 && b <= (BORDER_COLOR.getBlue()*255)+10)
+                if (r >= (BORDER_COLOR.getRed() * 255) - 10 && r <= (BORDER_COLOR.getRed() * 255) + 10 &&
+                        g >= (BORDER_COLOR.getGreen() * 255) - 10 && g <= (BORDER_COLOR.getGreen() * 255) + 10 &&
+                        b >= (BORDER_COLOR.getBlue() * 255) - 10 && b <= (BORDER_COLOR.getBlue() * 255) + 10)
                     newShape.setStroke(new Color(0, 0, 0, 1));
                 else
                     newShape.setStroke(BORDER_COLOR);
@@ -1030,10 +1024,10 @@ public final class FXImplementor implements Implementor {
             if (s.getWidth() > leftBar.getWidth() - 35) {
                 float ratio = (float) (s.getWidth() / (leftBar.getWidth() - 35));
                 Polygon copy = s.clone();
-                copy.setLength(s.getLength()/ratio);
+                copy.setLength(s.getLength() / ratio);
                 copy.computeVertices();
                 index = 0;
-                for(double vertex : copy.getVertices()) {
+                for (double vertex : copy.getVertices()) {
                     vertices[index] = vertex;
                     index++;
                 }
@@ -1041,8 +1035,7 @@ public final class FXImplementor implements Implementor {
 
                 Toolbar.getInstance().setNextPosition((int) copy.computeRadius() * 2);
 
-            }
-            else {
+            } else {
                 Toolbar.getInstance().setNextPosition((int) s.computeRadius() * 2);
             }
 
@@ -1063,9 +1056,9 @@ public final class FXImplementor implements Implementor {
             // Put a stroke to the shape if it's selected
             if (s.isSelected()) {
                 // Change the color of the stroke to avoid having a blue stroke on a blue shape
-                if (r >= (BORDER_COLOR.getRed()*255)-10 && r <= (BORDER_COLOR.getRed()*255)+10 &&
-                        g >= (BORDER_COLOR.getGreen()*255)-10 && g <= (BORDER_COLOR.getGreen()*255)+10 &&
-                        b >= (BORDER_COLOR.getBlue()*255)-10 && b <= (BORDER_COLOR.getBlue()*255)+10)
+                if (r >= (BORDER_COLOR.getRed() * 255) - 10 && r <= (BORDER_COLOR.getRed() * 255) + 10 &&
+                        g >= (BORDER_COLOR.getGreen() * 255) - 10 && g <= (BORDER_COLOR.getGreen() * 255) + 10 &&
+                        b >= (BORDER_COLOR.getBlue() * 255) - 10 && b <= (BORDER_COLOR.getBlue() * 255) + 10)
                     newShape.setStroke(new Color(0, 0, 0, 1));
                 else
                     newShape.setStroke(BORDER_COLOR);
@@ -1101,34 +1094,34 @@ public final class FXImplementor implements Implementor {
 
 
     private void createToolbarCompoundShape(CompoundShape s) {
-        Map<Shape,javafx.scene.shape.Shape> compoundShapes = new HashMap<>();
+        Map<Shape, javafx.scene.shape.Shape> compoundShapes = new HashMap<>();
         float width = s.getWidth();
         float ratio = 1;
-        if(width > leftBar.getWidth()-35) {
-            ratio = (float)(width/(leftBar.getWidth()-35));
+        if (width > leftBar.getWidth() - 35) {
+            ratio = (float) (width / (leftBar.getWidth() - 35));
         }
 
         for (Shape shape : s.getShapes()) {
-            float posX = (float)(Toolbar.getInstance().getNextPosition().getX() +
-                    (shape.getPositionI().getX()-s.getPositionI().getX())/ratio);
-            float posY = (float)(Toolbar.getInstance().getNextPosition().getY() +
-                    (shape.getPositionI().getY()-s.getPositionI().getY())/ratio);
+            float posX = (float) (Toolbar.getInstance().getNextPosition().getX() +
+                    (shape.getPositionI().getX() - s.getPositionI().getX()) / ratio);
+            float posY = (float) (Toolbar.getInstance().getNextPosition().getY() +
+                    (shape.getPositionI().getY() - s.getPositionI().getY()) / ratio);
 
 
             ToolbarPosition pos = new ToolbarPosition(posX, posY);
             if (shape instanceof Rectangle) {
                 Rectangle copy = (Rectangle) shape.clone();
                 copy.setId();
-                copy.setWidth(shape.getWidth()/ratio);
-                copy.setHeight(shape.getHeight()/ratio);
+                copy.setWidth(shape.getWidth() / ratio);
+                copy.setHeight(shape.getHeight() / ratio);
                 copy.setPosition(pos);
                 javafx.scene.shape.Rectangle rectangle = createToolbarCompoundRectangle(copy);
-                SHAPES.put(copy.getId(),rectangle);
+                SHAPES.put(copy.getId(), rectangle);
                 compoundShapes.put(shape, rectangle);
             } else if (shape instanceof Polygon) {
                 Polygon copy = (Polygon) shape.clone();
                 copy.setId();
-                copy.setLength(copy.getLength()/ratio);
+                copy.setLength(copy.getLength() / ratio);
                 copy.setPosition(pos);
                 javafx.scene.shape.Polygon polygon = createToolbarCompoundPolygon(copy);
                 SHAPES.put(copy.getId(), polygon);
@@ -1137,7 +1130,7 @@ public final class FXImplementor implements Implementor {
         }
 
         s.setPosition(new ToolbarPosition());
-        Toolbar.getInstance().setNextPosition((int)(s.getHeight()/ratio));
+        Toolbar.getInstance().setNextPosition((int) (s.getHeight() / ratio));
         compoundShapeHandlers(s, compoundShapes);
         dragAndDropHandlersCompound(s, compoundShapes);
 
@@ -1191,13 +1184,17 @@ public final class FXImplementor implements Implementor {
         }
         Toolbar.getInstance().resetPosition();
         for (Shape s : Toolbar.getInstance().getShapes()) {
-            if(s instanceof CompoundShape) {
+            if (s instanceof CompoundShape) {
                 createToolbarCompoundShape((CompoundShape) s);
-            }
-            else {
+            } else {
                 s.setPosition(Toolbar.getInstance().getNextPosition());
                 s.notifyObserver();
             }
         }
+    }
+
+    public void setLastSelected(Shape shape, javafx.scene.shape.Shape shapeFX) {
+        lastSelected = shape;
+        lastFXSelected = shapeFX;
     }
 }

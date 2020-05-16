@@ -67,6 +67,7 @@ public class FXContextMenuHandlers {
         }
         else {
             implementor.getContextMenu().show(FXShape, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
+            FXImplementor.getInstance().setLastSelected(shape, FXShape);
         }
     }
 
