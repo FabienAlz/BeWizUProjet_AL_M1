@@ -4,7 +4,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -16,8 +15,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
+import utils.FXContextMenuHandlers;
+import utils.FXMouseHandlers;
 
-import java.sql.SQLOutput;
 import java.util.*;
 import java.util.List;
 
@@ -38,11 +38,14 @@ public final class FXImplementor implements Implementor {
 
     private final Position TOOLBAR_ORIGIN = new Position(10, 10);
 
-    private static Implementor instance;
+    private static FXImplementor instance;
 
     private Map<Long, javafx.scene.shape.Shape> SHAPES = new HashMap<>();
 
-    public static Implementor getInstance() {
+    private FXImplementor() {
+    }
+
+    public static FXImplementor getInstance() {
         if (instance == null) {
             instance = new FXImplementor();
         }
@@ -60,6 +63,8 @@ public final class FXImplementor implements Implementor {
     public Pane getLeftBar() {
         return leftBar;
     }
+
+    public ContextMenu getContextMenu() { return contextMenu; }
 
     public void start(Stage primaryStage) throws Exception {
         root = FXMLLoader.load(getClass().getResource("../view/view.fxml"));
@@ -643,51 +648,29 @@ public final class FXImplementor implements Implementor {
     }
 
     private void commonHandlers(Shape s, javafx.scene.shape.Shape newShape) {
-        newShape.setCursor(Cursor.HAND);
+        FXMouseHandlers myHandler = new FXMouseHandlers(s, newShape);
+        FXContextMenuHandlers myContextMenuHandler = new FXContextMenuHandlers(s, newShape);
         EventHandler<MouseEvent> hoverColor = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                Color c = (Color) newShape.getFill();
-                double r = c.getRed() * 255;
-                double g = c.getGreen() * 255;
-                double b = c.getBlue() * 255;
-                double rt, gt, bt;
-                rt = r + (0.25 * (255 - r));
-                gt = g + (0.25 * (255 - g));
-                bt = b + (0.25 * (255 - b));
-                rt /= 255;
-                gt /= 255;
-                bt /= 255;
-
-                newShape.setFill(new Color(rt, gt, bt, 1));
-
+                myHandler.hoverColor(e);
             }
         };
-
         newShape.addEventFilter(MouseEvent.MOUSE_ENTERED, hoverColor);
 
         EventHandler<MouseEvent> setBackColor = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                newShape.setFill(Color.valueOf(s.getColor()));
+                myHandler.setBackColor(e);
             }
         };
-
         newShape.addEventFilter(MouseEvent.MOUSE_EXITED, setBackColor);
 
         if (s.getPositionI() instanceof CanvasPosition) {
             EventHandler<MouseEvent> selection = new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
-                    if (e.getButton() == MouseButton.PRIMARY) {
-                        boolean isSelected = s.isSelected();
-                        canvas.getChildren().clear();
-                        if (!e.isControlDown()) {
-                            Canvas.getInstance().resetSelection();
-                        }
-                        s.setSelected(!isSelected);
-                        Canvas.getInstance().notifyAllShapes();
-                    }
+                    myHandler.selection(e);
                 }
             };
             newShape.addEventFilter(MouseEvent.MOUSE_CLICKED, selection);
@@ -695,19 +678,8 @@ public final class FXImplementor implements Implementor {
             newShape.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
 
                 @Override
-                public void handle(ContextMenuEvent event) {
-                    boolean anySelected = false;
-                    for(Shape s : Canvas.getInstance().getShapes()) {
-                        if (s.isSelected()) {
-                            anySelected = true;
-                        }
-                    }
-                    if (!anySelected) {
-                        Canvas.getInstance().resetSelection();
-                        s.setSelected(true);
-                        Canvas.getInstance().notifyAllShapes();
-                    }
-                    contextMenu.show(newShape, event.getScreenX(), event.getScreenY());
+                public void handle(ContextMenuEvent e) {
+                    myContextMenuHandler.manageContextMenu(e);
                 }
             });
         }
@@ -717,21 +689,9 @@ public final class FXImplementor implements Implementor {
         EventHandler<MouseEvent> hoverColor = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                for (Map.Entry<Shape,javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()){
-                    newShape.getValue().setCursor(Cursor.HAND);
-                    Color c = (Color) newShape.getValue().getFill();
-                    double r = c.getRed() * 255;
-                    double g = c.getGreen() * 255;
-                    double b = c.getBlue() * 255;
-                    double rt, gt, bt;
-                    rt = r + (0.25 * (255 - r));
-                    gt = g + (0.25 * (255 - g));
-                    bt = b + (0.25 * (255 - b));
-                    rt /= 255;
-                    gt /= 255;
-                    bt /= 255;
-
-                    newShape.getValue().setFill(new Color(rt, gt, bt, 1));
+                for (Map.Entry<Shape,javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()) {
+                    FXMouseHandlers myHandler = new FXMouseHandlers(newShape.getKey(), newShape.getValue());
+                    myHandler.hoverColor(e);
                 }
             }
         };
@@ -740,55 +700,21 @@ public final class FXImplementor implements Implementor {
             @Override
             public void handle(MouseEvent e) {
                 for (Map.Entry<Shape,javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()) {
-                    newShape.getValue().setFill(Color.valueOf(newShape.getKey().getColor()));
+                    FXMouseHandlers myHandler = new FXMouseHandlers(newShape.getKey(), newShape.getValue());
+                    myHandler.setBackColor(e);
                 }
             }
         };
-
-        /*EventHandler bindContextMenu = new EventHandler<ContextMenuEvent>() {
-
-            @Override
-            public void handle(ContextMenuEvent event) {
-                boolean anySelected = false;
-                for(Shape s : Canvas.getInstance().getShapes()) {
-                    if (s.isSelected()) {
-                        anySelected = true;
-                    }
-                }
-                if (!anySelected) {
-                    Canvas.getInstance().resetSelection();
-                    s.setSelected(true);
-                    Canvas.getInstance().notifyAllShapes();
-                }
-                if(event.getTarget() instanceof javafx.scene.shape.Shape) {
-                    javafx.scene.shape.Shape currentShape = (javafx.scene.shape.Shape) event.getTarget();
-                    contextMenu.show(currentShape, event.getScreenX(), event.getScreenY());
-                }
-            }
-        };*/
 
         if (s.getPositionI() instanceof CanvasPosition) {
             EventHandler<MouseEvent> selection = new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
-                    if (e.getButton() == MouseButton.PRIMARY) {
-                        boolean isSelected = s.isSelected();
-                        if (!e.isControlDown()) {
-                            Canvas.getInstance().resetSelection();
-                        }
-                        canvas.getChildren().clear();
-                        s.setSelected(!isSelected);
-                        for (Map.Entry<Shape, javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()) {
-                            newShape.getKey().setSelected(!isSelected);
-                        }
-                        Canvas.getInstance().notifyAllShapes();
-                    }
+                    FXMouseHandlers myHandler = new FXMouseHandlers(s, null);
+                    myHandler.selection(e);
 
                 }
             };
-
-
-
             for (Map.Entry<Shape,javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()){
                 newShape.getValue().addEventFilter(MouseEvent.MOUSE_CLICKED, selection);
             }
@@ -797,23 +723,11 @@ public final class FXImplementor implements Implementor {
         for (Map.Entry<Shape,javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()){
             newShape.getValue().addEventFilter(MouseEvent.MOUSE_ENTERED, hoverColor);
             newShape.getValue().addEventFilter(MouseEvent.MOUSE_EXITED, setBackColor);
-
             newShape.getValue().setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
-
                 @Override
-                public void handle(ContextMenuEvent event) {
-                    boolean anySelected = false;
-                    for(Shape s : Canvas.getInstance().getShapes()) {
-                        if (s.isSelected()) {
-                            anySelected = true;
-                        }
-                    }
-                    if (!anySelected) {
-                        Canvas.getInstance().resetSelection();
-                        s.setSelected(true);
-                        Canvas.getInstance().notifyAllShapes();
-                    }
-                    contextMenu.show(newShape.getValue(), event.getScreenX(), event.getScreenY());
+                public void handle(ContextMenuEvent e) {
+                    FXContextMenuHandlers myContextMenuHandler = new FXContextMenuHandlers(s, newShape.getValue());
+                    myContextMenuHandler.manageContextMenu(e);
                 }
             });
 
@@ -834,18 +748,6 @@ public final class FXImplementor implements Implementor {
 
         newShape.setOnDragDone((t) -> {
         });
-
-        /*newShape.setOnMouseDragged((t) -> {
-            javafx.scene.shape.Rectangle c = (javafx.scene.shape.Rectangle)(t.getSource());
-
-            c.setX(t.getX());
-            c.setY(t.getY());
-
-            s.getPositionI().setX(t.getSceneX());
-            s.getPositionI().setY(t.getSceneY());
-        });*/
-
-
     }
 
     private void dragAndDropHandlersCompound(CompoundShape s, Map<Shape,javafx.scene.shape.Shape> compoundShapes) {
