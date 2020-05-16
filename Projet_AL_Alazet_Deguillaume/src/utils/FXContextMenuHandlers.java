@@ -9,7 +9,7 @@ import model.FXImplementor;
 import model.Shape;
 
 /*
- * THis class contains all the context menu handlers
+ * This class contains all the context menu handlers
  */
 public class FXContextMenuHandlers {
     private final Shape shape;
@@ -21,7 +21,7 @@ public class FXContextMenuHandlers {
         this.implementor = FXImplementor.getInstance();
     }
 
-    /*
+    /**
      * Resets selection and shows the context menu
      */
     public void manageContextMenu(ContextMenuEvent contextMenuEvent) {

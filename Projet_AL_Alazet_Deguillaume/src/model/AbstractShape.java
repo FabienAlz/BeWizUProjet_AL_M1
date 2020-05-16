@@ -9,6 +9,12 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
     private PositionI translation;
     private boolean isSelected;
 
+    /**
+     * Initializes the fields of an AbstractShape
+     * @param position
+     * @param translation
+     * @param implementor
+     */
     public AbstractShape(PositionI position, PositionI translation, Implementor implementor) {
         this.implementor = implementor;
         this.position = position;
@@ -18,20 +24,21 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
         generatedId ++;
     }
 
+    /******************************
+     *           GETTERS          *
+     ******************************/
+
+    abstract public float getWidth();
+
+    abstract  public float getHeight();
+
     public PositionI getPositionI() {
         return position;
     }
 
-    public void setPosition(PositionI position) { this.position = position; }
-
     public PositionI getTranslation() {
         return translation;
     }
-
-    public void setTranslation(PositionI translation) {
-        this.translation = translation;
-    }
-
 
     public Implementor getImplementor() {
         return this.implementor;
@@ -41,18 +48,29 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
         return isSelected;
     }
 
+    public long getId() { return this.id; }
+
+    /******************************
+     *           SETTERS          *
+     ******************************/
+    public void setPosition(PositionI position) { this.position = position; }
+
+    public void setTranslation(PositionI translation) {
+        this.translation = translation;
+    }
+
     public void setSelected(boolean selected) {
         isSelected = selected;
     }
 
-    public long getId() { return this.id; }
-
     public void setId() { this.id = ++generatedId; }
 
-    abstract public float getWidth();
-
-    abstract  public float getHeight();
-
+    /**
+     * Checks if the Shape is inside a Rectangle
+     * @param startingPoint
+     * @param arrival
+     * @return
+     */
     public boolean isInside(Position startingPoint, Position arrival) {
         boolean res = false;
 
@@ -74,6 +92,5 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
         }
         return this;
     }
-
 
 }

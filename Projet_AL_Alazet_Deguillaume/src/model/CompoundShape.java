@@ -6,29 +6,22 @@ import java.util.List;
 public class CompoundShape extends AbstractShape {
     private List<Shape> shapes;
 
+    /**
+     * Creates a CompoundShape
+     * @param implementor
+     * @param position
+     */
     public CompoundShape(Implementor implementor, PositionI position) {
         super(position, new Position(0, 0), implementor);
         this.shapes = new ArrayList<>();
     }
 
-    public CompoundShape(CompoundShape original) {
-        super(original.getPositionI(), original.getTranslation(), original.getImplementor());
-        this.shapes = new ArrayList<>();
-        for(Shape s : original.getShapes()) {
-            Shape copy = s.clone();
-            copy.setId();
-            shapes.add(copy);
-        }
-    }
-
+    /******************************
+     *          GETTERS           *
+     ******************************/
     @Override
     public float getRotation() {
         return 0;
-    }
-
-    @Override
-    public PositionI getRotationCenter() {
-        return null;
     }
 
     @Override
@@ -37,23 +30,8 @@ public class CompoundShape extends AbstractShape {
     }
 
     @Override
-    public void setSelected(boolean b) {
-        super.setSelected(b);
-        for(Shape s : shapes) {
-            s.setSelected(b);
-        }
-    }
-
-    public void translate(Position translation) {
-        CanvasPosition compoundPos = new CanvasPosition(getTopLeft().getX() + translation.getX(),
-                                                        getTopLeft().getY() + translation.getY());
-        this.setTranslation(translation);
-        this.setPosition(compoundPos);
-        for(Shape shape : shapes) {
-            double posX = shape.getPositionI().getX() + translation.getX();
-            double posY = shape.getPositionI().getY() + translation.getY();
-            shape.setPosition(new CanvasPosition(posX, posY));
-        }
+    public PositionI getRotationCenter() {
+        return null;
     }
 
     @Override
@@ -71,7 +49,7 @@ public class CompoundShape extends AbstractShape {
         double maxY = shapes.get(0).getPositionI().getY() + shapes.get(0).getHeight() ;
         for(Shape s : shapes) {
             if(minY > s.getPositionI().getY()) minY = s.getPositionI().getY();
-            if(maxY < s.getPositionI().getY() + s.getWidth()) maxY = s.getPositionI().getY() + s.getHeight();
+            if(maxY < s.getPositionI().getY() + s.getHeight()) maxY = s.getPositionI().getY() + s.getHeight();
         }
         return (float)(maxY-minY);
     }
@@ -86,6 +64,46 @@ public class CompoundShape extends AbstractShape {
         return new Position(minX, minY);
     }
 
+    public List<Shape> getShapes() {
+        List<Shape> copy = new ArrayList<>();
+        for(Shape s : shapes) {
+            copy.add(s.clone());
+        }
+        return copy;
+    }
+
+    /******************************
+     *          SETTERS           *
+     ******************************/
+    @Override
+    public void setSelected(boolean b) {
+        super.setSelected(b);
+        for(Shape s : shapes) {
+            s.setSelected(b);
+        }
+    }
+
+    /**
+     * Translate all the shapes of the CompoundShape to their location + the translation
+     * @param translation
+     */
+    public void translate(Position translation) {
+        CanvasPosition compoundPos = new CanvasPosition(getTopLeft().getX() + translation.getX(),
+                                                        getTopLeft().getY() + translation.getY());
+        this.setTranslation(translation);
+        this.setPosition(compoundPos);
+        for(Shape shape : shapes) {
+            double posX = shape.getPositionI().getX() + translation.getX();
+            double posY = shape.getPositionI().getY() + translation.getY();
+            shape.setPosition(new CanvasPosition(posX, posY));
+        }
+    }
+
+    /**
+     * Compares a Shape with this CompoundShape using the Shapes they're composed of
+     * @param s the Shape to compare
+     * @return
+     */
     @Override
     public boolean equals(Shape s) {
         if(s instanceof CompoundShape) {
@@ -99,15 +117,12 @@ public class CompoundShape extends AbstractShape {
         return false;
     }
 
-    public List<Shape> getShapes() {
-        List<Shape> copy = new ArrayList<>();
-        for(Shape s : shapes) {
-            copy.add(s.clone());
-        }
-        return copy;
-    }
-
+    /**
+     * Add a Shape to the CompoundShape
+     * @param s
+     */
     public void add(Shape s) {
+        // Computes the top-left position
         if(shapes.isEmpty()) {
             this.getPositionI().setX(s.getPositionI().getX());
             this.getPositionI().setY(s.getPositionI().getY());
@@ -120,6 +135,7 @@ public class CompoundShape extends AbstractShape {
                 this.getPositionI().setY(s.getPositionI().getY());
             }
         }
+        // Add all the Shapes of the CompoundShape to this one
         if(s instanceof CompoundShape) {
             for (Shape shape : ((CompoundShape) s).getShapes()) {
                 shape.setSelected(false);
@@ -140,6 +156,10 @@ public class CompoundShape extends AbstractShape {
         shapes.clear();
     }
 
+    /**
+     * Clones this CompoundShape and deep copies its shapes
+     * @return a copy of this CompoundShape
+     */
     @Override
     public CompoundShape clone() {
         CompoundShape copy = (CompoundShape)super.clone();

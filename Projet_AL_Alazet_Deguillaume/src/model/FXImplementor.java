@@ -13,9 +13,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
 import utils.FXContextMenuHandlers;
+import utils.FXDragAndDropHandlers;
 import utils.FXMouseHandlers;
 
 import java.util.*;
@@ -30,26 +32,40 @@ public final class FXImplementor implements Implementor {
     private Pane leftBar;
     @FXML
     private ContextMenu contextMenu;
-
     @FXML
     private ImageView bin;
 
-    private final Color BORDER_COLOR = new Color(68.0 / 255, 114.0 / 255, 196.0 / 255, 1);
-
-    private final Position TOOLBAR_ORIGIN = new Position(10, 10);
+    public final Color BORDER_COLOR = new Color(68.0 / 255, 114.0 / 255, 196.0 / 255, 1);
 
     private static FXImplementor instance;
 
+    public static Stage stage;
+
+    public Popup popup;
+
     private Map<Long, javafx.scene.shape.Shape> SHAPES = new HashMap<>();
 
+    /**
+     * Singleton constructor
+     */
     private FXImplementor() {
     }
 
+    /**
+     * Singleton pattern
+     */
     public static FXImplementor getInstance() {
         if (instance == null) {
             instance = new FXImplementor();
         }
         return instance;
+    }
+
+    /*****************
+     *    GETTERS    *
+     *****************/
+    public Map<Long, javafx.scene.shape.Shape> getSHAPES() {
+        return SHAPES;
     }
 
     public Pane getRoot() {
@@ -64,9 +80,20 @@ public final class FXImplementor implements Implementor {
         return leftBar;
     }
 
+    public ImageView getBin() {
+        return bin;
+    }
+
     public ContextMenu getContextMenu() { return contextMenu; }
 
+    /**
+     * Starts the javafx application
+     * @param primaryStage the stage to start
+     * @throws Exception
+     */
     public void start(Stage primaryStage) throws Exception {
+        popup = new Popup();
+        stage = primaryStage;
         root = FXMLLoader.load(getClass().getResource("../view/view.fxml"));
         canvas = (Pane) root.lookup("#canvas");
         leftBar = (Pane) root.lookup("#leftBar");
@@ -170,6 +197,7 @@ public final class FXImplementor implements Implementor {
                 }
                 for(Shape s : compoundShape.getShapes()) {
                     canvas.getChildren().remove(SHAPES.get(s.getId()));
+                    System.out.println(s.getId());
                 }
                 ShapeObserver obs = new ConcreteShapeObserver();
                 compoundShape.addObserver(obs);
@@ -246,9 +274,9 @@ public final class FXImplementor implements Implementor {
 
         contextMenu.getItems().addAll(group, degroup, edit);
 
-        addToolbarHandlers();
-        addCanvasHandlers();
-        addBinHandlers();
+        setToolbarHandlers();
+        setCanvasHandlers();
+        setBinHandlers();
 
         primaryStage.setResizable(false);
         primaryStage.setTitle("BeWizU");
@@ -326,173 +354,86 @@ public final class FXImplementor implements Implementor {
         cancelRectangleButton.addEventFilter(MouseEvent.MOUSE_CLICKED, cancelButtonClick);
         cancelPolygonButton.addEventFilter(MouseEvent.MOUSE_CLICKED, cancelButtonClick);
     }
-
-    private void addToolbarHandlers() {
+    /**
+     * binds the handlers to the toolbar
+     */
+    private void setToolbarHandlers() {
+        FXDragAndDropHandlers myHandler = new FXDragAndDropHandlers();
         leftBar.setOnDragDropped(new EventHandler<DragEvent>() {
             public void handle(DragEvent event) {
-                /* data dropped */
-                /* if there is a string data on dragboard, read it and use it */
-                Dragboard db = event.getDragboard();
-                boolean success = false;
-                if (db.hasString()) {
-                    long id = Long.parseLong(db.getString());
-                    if(Canvas.getInstance().contains(id)) {
-                        Shape original = Canvas.getInstance().getShape(id);
-                        original.setSelected(false);
-                        Shape copy = original.clone();
-                        copy.setId();
-                        if(copy instanceof CompoundShape) {
-                            createToolbarCompoundShape((CompoundShape)copy);
-                            copy.setPosition(new ToolbarPosition());
-                            Toolbar.getInstance().add(copy);
-                        }
-                        else {
-                            copy.setPosition(new ToolbarPosition());
-                            Toolbar.getInstance().addAndNotify(copy);
-                        }
-
-                    }
-                    else {
-                        System.out.println("FROM TOOLBAR TO TOOLBAR");
-                    }
-                    success = true;
-                }
-                /* let the source know whether the string was successfully
-                 * transferred and used */
-                event.setDropCompleted(success);
-
-                event.consume();
+                myHandler.toolbarOnDragDropped(event);
             }
         });
 
         leftBar.setOnDragOver(new EventHandler<DragEvent>() {
-            public void handle(DragEvent event) {
-                /* data is dragged over the target */
-                /* accept it only if it is not dragged from the same node
-                 * and if it has a string data */
-                if (event.getDragboard().hasString()) {
-                    /* allow for both copying and moving, whatever user chooses */
-                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                }
-
-                event.consume();
+            public void handle(DragEvent dragEvent) {
+                myHandler.toolbarOnDragOver(dragEvent);
             }
         });
 
         leftBar.setOnDragEntered(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent dragEvent) {
-                //leftBar.setOpacity(0.00001);
+                myHandler.toolbarOnDragEntered(dragEvent);
             }
         });
 
         leftBar.setOnDragExited(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent dragEvent) {
-                //leftBar.setOpacity(1);
-
+                myHandler.toolbarOnDragExited(dragEvent);
             }
         });
-
-
-
     }
 
-    private void addCanvasHandlers() {
+    /**
+     * binds the handlers to the canvas
+     */
+    private void setCanvasHandlers() {
         javafx.scene.shape.Rectangle rectangleSelection = new javafx.scene.shape.Rectangle();
         rectangleSelection.setOpacity(0.3);
         rectangleSelection.setFill(BORDER_COLOR);
         rectangleSelection.setStroke(new Color(0,0,1,1));
         rectangleSelection.setStrokeWidth(2);
+        FXMouseHandlers myHandler = new FXMouseHandlers(null, rectangleSelection);
+        FXDragAndDropHandlers myDragAndDropHandler = new FXDragAndDropHandlers();
+
+        /*******************************************************
+         *                    DRAG EVENTS                      *
+         *******************************************************/
         canvas.setOnDragDropped(new EventHandler<DragEvent>() {
             public void handle(DragEvent event) {
-                /* data dropped */
-                /* if there is a string data on dragboard, read it and use it */
-                Dragboard db = event.getDragboard();
-                boolean success = false;
-                if (db.hasString()) {
-                    long id = Long.parseLong(db.getString());
-                    if(Canvas.getInstance().contains(id)) {
-                        Shape original = Canvas.getInstance().getShape(id);
-                        Shape copy = original.clone();
-                        Canvas.getInstance().remove(original);
-
-                        if(original instanceof CompoundShape) {
-                            ((CompoundShape)copy).translate(new Position(event.getX()-((CompoundShape) original).getTopLeft().getX(),
-                                    event.getY()-((CompoundShape) original).getTopLeft().getY()));
-                            canvas.getChildren().clear();
-                            Canvas.getInstance().add(copy);
-                            Canvas.getInstance().notifyAllShapes();
-                        }
-                        else {
-                            canvas.getChildren().remove(SHAPES.get(original.getId()));
-                            copy.setPosition(new CanvasPosition(event.getX(), event.getY()));
-                            Canvas.getInstance().addAndNotify(copy);
-                        }
-                    }
-                    else {
-                        Shape original = Toolbar.getInstance().getShape(id);
-                        Shape copy = original.clone();
-                        if(original instanceof CompoundShape) {
-                            copy.setId();
-                            ((CompoundShape)copy).translate(new Position(event.getX()-((CompoundShape) original).getTopLeft().getX(),
-                                    event.getY()-((CompoundShape) original).getTopLeft().getY()));
-                        }
-                        else {
-                            copy = original.clone();
-                            copy.setId();
-                            copy.setPosition(new CanvasPosition(event.getX(), event.getY()));
-                        }
-                        Canvas.getInstance().addAndNotify(copy);
-                    }
-
-                    success = true;
-                }
-                /* let the source know whether the string was successfully
-                 * transferred and used */
-                event.setDropCompleted(success);
-
-                event.consume();
+                myDragAndDropHandler.canvasOnDragDropped(event);
             }
         });
 
         canvas.setOnDragOver(new EventHandler<DragEvent>() {
             public void handle(DragEvent event) {
-                /* data is dragged over the target */
-                /* accept it only if it is not dragged from the same node
-                 * and if it has a string data */
-                if (event.getDragboard().hasString()) {
-                    /* allow for both copying and moving, whatever user chooses */
-                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                }
-
-                event.consume();
+                myDragAndDropHandler.canvasOnDragOver(event);
             }
         });
 
         canvas.setOnDragEntered(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent dragEvent) {
+                myDragAndDropHandler.canvasOnDragEntered(dragEvent);
             }
         });
 
         canvas.setOnDragExited(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent dragEvent) {
+                myDragAndDropHandler.canvasOnDragExited(dragEvent);
             }
         });
 
+        /*************************************************
+         *          MOUSE HANDLERS FOR SELECTION         *
+         *************************************************/
         EventHandler<MouseEvent> setGestureStarted = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                if(!canvas.getChildren().contains(e.getTarget())) {
-                    Canvas.getInstance().resetSelection();
-                    canvas.getChildren().clear();
-                    Canvas.getInstance().notifyAllShapes();
-                    Canvas.getInstance().setStartSelectPos(e.getX(), e.getY());
-                    Canvas.getInstance().setSelection(true);
-                    canvas.getChildren().add(rectangleSelection);
-                }
+                myHandler.setGestureStarted(e);
             }
         };
 
@@ -501,152 +442,56 @@ public final class FXImplementor implements Implementor {
         EventHandler<MouseEvent> updateSelectionRectangle = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                if (Canvas.getInstance().getSelection()) {
-                    Position firstPos = Canvas.getInstance().getStartSelectPos();
-                    // top-left to bottom-right
-                    if (e.getX() > firstPos.getX() && e.getY() > firstPos.getY()) {
-                        rectangleSelection.setX(firstPos.getX());
-                        rectangleSelection.setY(firstPos.getY());
-                        rectangleSelection.setWidth(e.getX() - firstPos.getX());
-                        rectangleSelection.setHeight(e.getY() - firstPos.getY());
-
-                    }
-                    // bottom-right to top-left
-                    else if (e.getX() < firstPos.getX() && e.getY() < firstPos.getY()) {
-                        rectangleSelection.setX(e.getX());
-                        rectangleSelection.setY(e.getY());
-                        rectangleSelection.setWidth(firstPos.getX() - e.getX());
-                        rectangleSelection.setHeight(firstPos.getY() - e.getY());
-                    }
-                    // bottom-left to top-right
-                    else if (e.getX() > firstPos.getX() && e.getY() < firstPos.getY()) {
-                        rectangleSelection.setX(firstPos.getX());
-                        rectangleSelection.setY(e.getY());
-                        rectangleSelection.setWidth(e.getX() - firstPos.getX());
-                        rectangleSelection.setHeight(firstPos.getY() - e.getY());
-                    }
-                    // top-right to bottom-left
-                    else if (e.getX() < firstPos.getX() && e.getY() > firstPos.getY()) {
-                        rectangleSelection.setX(e.getX());
-                        rectangleSelection.setY(firstPos.getY());
-                        rectangleSelection.setWidth(firstPos.getX() - e.getX());
-                        rectangleSelection.setHeight(e.getY() - firstPos.getY());
-                    }
-                }
+                myHandler.updateSelectionRectangle(e);
             }
         };
-
-
         canvas.setOnMouseDragged(updateSelectionRectangle);
 
         EventHandler<MouseEvent> endSelection = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                if(Canvas.getInstance().getSelection()) {
-                    Position firstPos = Canvas.getInstance().getStartSelectPos();
-                    Canvas.getInstance().setSelection(false);
-                    Position secondPos = new Position(e.getX(), e.getY());
-                    for(Shape s : Canvas.getInstance().getShapes()) {
-                        if(secondPos.getX() > firstPos.getX() && secondPos.getY() > firstPos.getY() && s.isInside(firstPos, secondPos)) {
-                            s.setSelected(true);
-                        }
-                        else if(secondPos.getX() < firstPos.getX() && secondPos.getY() < firstPos.getY() && s.isInside(secondPos, firstPos)) {
-                            s.setSelected(true);
-                        }
-                        else if(secondPos.getX() > firstPos.getX() && secondPos.getY() < firstPos.getY()) {
-                            Position firstIntermediatePos = new Position(secondPos.getX(), firstPos.getY());
-                            Position secondIntermediatePos = new Position(firstPos.getX(),secondPos.getY());
-                            if(s.isInside(secondIntermediatePos, firstIntermediatePos)) {
-                                s.setSelected(true);
-                            }
-                        }
-                        else if(secondPos.getX() < firstPos.getX() && secondPos.getY() > firstPos.getY()) {
-                            Position firstIntermediatePos = new Position(secondPos.getX(), firstPos.getY());
-                            Position secondIntermediatePos = new Position(firstPos.getX(),secondPos.getY());
-                            if(s.isInside(firstIntermediatePos, secondIntermediatePos)) {
-                                s.setSelected(true);
-                            }
-                        }
-
-                    }
-                    canvas.getChildren().clear();
-                    Canvas.getInstance().notifyAllShapes();
-                }
-                rectangleSelection.setWidth(0);
-                rectangleSelection.setHeight(0);
+                myHandler.endSelection(e);
             }
 
         };
 
         canvas.addEventFilter(MouseEvent.MOUSE_RELEASED, endSelection);
     }
-
-    private void addBinHandlers() {
+    /**
+     * binds the handlers to the bin
+     */
+    private void setBinHandlers() {
+        FXDragAndDropHandlers myDragAndDropHandler = new FXDragAndDropHandlers();
         bin.setOnDragDropped(new EventHandler<DragEvent>() {
             public void handle(DragEvent event) {
-                /* data dropped */
-                /* if there is a string data on dragboard, read it and use it */
-                Dragboard db = event.getDragboard();
-                boolean success = false;
-                if (db.hasString()) {
-                    long id = Long.parseLong(db.getString());
-                    if(Canvas.getInstance().contains(id)) {
-                        Shape original = Canvas.getInstance().getShape(id);
-                        Canvas.getInstance().remove(original);
-                        if(original instanceof CompoundShape) {
-                            canvas.getChildren().clear();
-                            Canvas.getInstance().notifyAllShapes();
-                        }
-                        else {
-                            canvas.getChildren().remove(SHAPES.get(id));
-                        }
-                    }
-                    else {
-                        Shape original = Toolbar.getInstance().getShape(id);
-                        Toolbar.getInstance().remove(original);
-                        remove();
-                    }
-
-                    success = true;
-                }
-                /* let the source know whether the string was successfully
-                 * transferred and used */
-                event.setDropCompleted(success);
-
-                event.consume();
+                myDragAndDropHandler.binOnDragDropped(event);
             }
         });
 
         bin.setOnDragOver(new EventHandler<DragEvent>() {
             public void handle(DragEvent event) {
-                /* data is dragged over the target */
-                /* accept it only if it is not dragged from the same node
-                 * and if it has a string data */
-                if (event.getDragboard().hasString()) {
-                    /* allow for both copying and moving, whatever user chooses */
-                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                }
-
-                event.consume();
+                myDragAndDropHandler.binOnDragOver(event);
             }
         });
 
         bin.setOnDragEntered(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent dragEvent) {
-                bin.setOpacity(0.5);
+                myDragAndDropHandler.binOnDragEntered(dragEvent);
             }
         });
 
         bin.setOnDragExited(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent dragEvent) {
-                bin.setOpacity(1);
+                myDragAndDropHandler.binOnDragExited(dragEvent);
             }
         });
 
     }
-
+    /**
+     * binds the handlers to single shapes
+     */
     private void commonHandlers(Shape s, javafx.scene.shape.Shape newShape) {
         FXMouseHandlers myHandler = new FXMouseHandlers(s, newShape);
         FXContextMenuHandlers myContextMenuHandler = new FXContextMenuHandlers(s, newShape);
@@ -684,7 +529,9 @@ public final class FXImplementor implements Implementor {
             });
         }
     }
-
+    /**
+     * binds the handlers to the compound shapes
+     */
     private void compoundShapeHandlers(CompoundShape s, Map<Shape,javafx.scene.shape.Shape> compoundShapes) {
         EventHandler<MouseEvent> hoverColor = new EventHandler<MouseEvent>() {
             @Override
@@ -734,15 +581,14 @@ public final class FXImplementor implements Implementor {
         }
     }
 
-    private void dragAndDropHandlers(Shape shape, javafx.scene.shape.Shape newShape) {
-
+    /**
+     * binds the drop handlers to the single shapes
+     */
+    private void dragHandlers(Shape shape, javafx.scene.shape.Shape newShape) {
+        FXMouseHandlers myHandler = new FXMouseHandlers(shape, newShape);
         newShape.setOnDragDetected(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
-                String id = Long.toString(shape.getId());
-                Dragboard db = newShape.startDragAndDrop(TransferMode.ANY);
-                ClipboardContent cp = new ClipboardContent();
-                cp.putString(id);
-                db.setContent(cp);
+                myHandler.onDragDetected(event);
             }
         });
 
@@ -750,40 +596,31 @@ public final class FXImplementor implements Implementor {
         });
     }
 
-    private void dragAndDropHandlersCompound(CompoundShape s, Map<Shape,javafx.scene.shape.Shape> compoundShapes) {
-        EventHandler setOnDragEntered = new EventHandler<MouseEvent>() {
+    /**
+     * binds the drop handlers to the compound shapes
+     */
+    private void dragHandlersCompound(CompoundShape s, Map<Shape,javafx.scene.shape.Shape> compoundShapes) {
+        EventHandler setOnDragDetected = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 for (Map.Entry<Shape, javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()) {
-                    String id = Long.toString(s.getId());
-                    Dragboard db = newShape.getValue().startDragAndDrop(TransferMode.ANY);
-                    ClipboardContent cp = new ClipboardContent();
-                    cp.putString(id);
-                    db.setContent(cp);
+                    FXMouseHandlers myHandler = new FXMouseHandlers(s, newShape.getValue());
+                    myHandler.onDragDetected(event);
                 }
             }
         };
 
-
-
         for (Map.Entry<Shape, javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()) {
-            newShape.getValue().setOnDragDetected(setOnDragEntered);
+            newShape.getValue().setOnDragDetected(setOnDragDetected);
         }
-
-
-        /*newShape.setOnMouseDragged((t) -> {
-            javafx.scene.shape.Rectangle c = (javafx.scene.shape.Rectangle)(t.getSource());
-
-            c.setX(t.getX());
-            c.setY(t.getY());
-
-            s.getPositionI().setX(t.getSceneX());
-            s.getPositionI().setY(t.getSceneY());
-        });*/
-
 
     }
 
+    /**
+     * Computes a javafx.scene.shape.Rectangle from a shape
+     * @param s the Shape to create in javafx.scene.shape.Rectangle
+     * @return the javafx.scene.shape.Rectangle of the given shape
+     */
     private javafx.scene.shape.Rectangle createRectangle(Rectangle s) {
         javafx.scene.shape.Rectangle newShape = new javafx.scene.shape.Rectangle();
         newShape.setX(s.getPositionI().getX());
@@ -827,6 +664,11 @@ public final class FXImplementor implements Implementor {
         return newShape;
     }
 
+    /**
+     * Computes a javafx.scene.shape.Rectangle from a given Rectangle in a CompoundShape
+     * @param s Rectangle from a CompoundShape
+     * @return a javafx.scene.shape.Rectangle in the Toolbar
+     */
     private javafx.scene.shape.Rectangle createToolbarCompoundRectangle(Rectangle s) {
         javafx.scene.shape.Rectangle newShape = new javafx.scene.shape.Rectangle();
         newShape.setX(s.getPositionI().getX());
@@ -850,6 +692,11 @@ public final class FXImplementor implements Implementor {
         return newShape;
     }
 
+    /**
+     * Computes a javafx.scene.shape.Polygon from a shape
+     * @param s the Shape to create in javafx.scene.shape.Polygon
+     * @return the javafx.scene.shape.Polygon of the given shape
+     */
     private javafx.scene.shape.Polygon createPolygon(Polygon s) {
         double[] vertices = new double[s.getEdges() * 2];
         int index = 0;
@@ -914,6 +761,11 @@ public final class FXImplementor implements Implementor {
         return newShape;
     }
 
+    /**
+     * Computes a javafx.scene.shape.Polygon from a given Rectangle in a CompoundShape
+     * @param s Rectangle from a CompoundShape
+     * @return a javafx.scene.shape.Polygon in the Toolbar
+     */
     private javafx.scene.shape.Polygon createToolbarCompoundPolygon(Polygon s) {
         double[] vertices = new double[s.getEdges() * 2];
         int index = 0;
@@ -931,12 +783,14 @@ public final class FXImplementor implements Implementor {
         newShape.setFill(Color.valueOf(s.getColor()));
 
         leftBar.getChildren().add(newShape);
-
         return newShape;
     }
 
-
-    private void createToolbarCompoundShape(CompoundShape s) {
+    /**
+     * Puts a CompoundShape in the Toolbar and resize it if necessary
+     * @param s CompoundShape to put in the Toolbar
+     */
+    public void createToolbarCompoundShape(CompoundShape s) {
         Map<Shape,javafx.scene.shape.Shape> compoundShapes = new HashMap<>();
         float width = s.getWidth();
         float ratio = 1;
@@ -960,7 +814,7 @@ public final class FXImplementor implements Implementor {
                 copy.setPosition(pos);
                 javafx.scene.shape.Rectangle rectangle = createToolbarCompoundRectangle(copy);
                 SHAPES.put(copy.getId(),rectangle);
-                compoundShapes.put(shape, rectangle);
+                compoundShapes.put(copy, rectangle);
             } else if (shape instanceof Polygon) {
                 Polygon copy = (Polygon) shape.clone();
                 copy.setId();
@@ -975,45 +829,55 @@ public final class FXImplementor implements Implementor {
         s.setPosition(new ToolbarPosition());
         Toolbar.getInstance().setNextPosition((int)(s.getHeight()/ratio));
         compoundShapeHandlers(s, compoundShapes);
-        dragAndDropHandlersCompound(s, compoundShapes);
+        dragHandlersCompound(s, compoundShapes);
 
     }
 
-    private void createCompoundShape(Shape s) {
+    /**
+     * Creates a javafx CompoundShape from one or many Shapes
+     * @param s the CompoundShape to copy in javafx
+     */
+    private void createCompoundShape(CompoundShape s) {
         Map<Shape, javafx.scene.shape.Shape> compoundShapes = new HashMap<>();
-        for (Shape shape : ((CompoundShape) s).getShapes()) {
+        for (Shape shape : s.getShapes()) {
             if (shape instanceof Rectangle) {
                 compoundShapes.put(shape, createRectangle((Rectangle) shape));
             } else if (shape instanceof Polygon) {
                 compoundShapes.put(shape, createPolygon((Polygon) shape));
             }
         }
-
-        compoundShapeHandlers((CompoundShape) s, compoundShapes);
-        dragAndDropHandlersCompound((CompoundShape) s, compoundShapes);
+        for(Map.Entry<Shape, javafx.scene.shape.Shape> shape : compoundShapes.entrySet()) {
+            SHAPES.put(shape.getKey().getId(), shape.getValue());
+        }
+        compoundShapeHandlers(s, compoundShapes);
+        dragHandlersCompound(s, compoundShapes);
     }
 
+    /**
+     * Creates a javafx Shape of a given Shape
+     * @param s a Shape to draw in javafx
+     */
     @Override
     public void draw(Shape s) {
         if (s instanceof CompoundShape) {
-            createCompoundShape(s);
+            createCompoundShape((CompoundShape) s);
         } else if (s instanceof Rectangle) {
             javafx.scene.shape.Shape newShape = createRectangle((Rectangle) s);
             commonHandlers(s, newShape);
-            dragAndDropHandlers(s, newShape);
-
+            dragHandlers(s, newShape);
             SHAPES.put(s.getId(), newShape);
-
         } else if (s instanceof Polygon) {
             javafx.scene.shape.Shape newShape = createPolygon((Polygon) s);
             commonHandlers(s, newShape);
-            dragAndDropHandlers(s, newShape);
+            dragHandlers(s, newShape);
             SHAPES.put(s.getId(), newShape);
-
         }
         return;
     }
 
+    /**
+     * Removes a shape from the toolbar and adjust it
+     */
     @Override
     public void remove() {
         List<Node> nodes = new ArrayList<>();
