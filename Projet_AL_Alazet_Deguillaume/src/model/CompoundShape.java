@@ -27,6 +27,20 @@ public class CompoundShape extends AbstractShape {
     }
 
     @Override
+    public void setRotation(float rotation) {
+        for (Shape s : shapes) {
+            s.setRotation(rotation);
+        }
+    }
+
+    @Override
+    public void setColor(String color) {
+        for (Shape s : shapes) {
+            s.setColor(color);
+        }
+    }
+
+    @Override
     public PositionI getRotationCenter() {
         return null;
     }
@@ -100,11 +114,12 @@ public class CompoundShape extends AbstractShape {
     }
 
     public List<Shape> getShapes() {
-        List<Shape> copy = new ArrayList<>();
-        for(Shape s : shapes) {
-            copy.add(s.clone());
-        }
-        return copy;
+//        List<Shape> copy = new ArrayList<>();
+////        for(Shape s : shapes) {
+////            copy.add(s.clone());
+////        }
+////        return copy;
+        return shapes;
     }
 
     public void add(Shape s) {
