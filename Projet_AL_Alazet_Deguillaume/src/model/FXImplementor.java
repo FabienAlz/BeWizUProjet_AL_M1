@@ -7,12 +7,17 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
@@ -20,6 +25,7 @@ import utils.FXContextMenuHandlers;
 import utils.FXDragAndDropHandlers;
 import utils.FXMouseHandlers;
 
+import java.io.File;
 import java.util.*;
 import java.util.List;
 
@@ -28,8 +34,8 @@ public final class FXImplementor implements Implementor {
     Shape lastSelected;
     javafx.scene.shape.Shape lastFXSelected;
 
+    @FXML
     private Pane root;
-
     @FXML
     private Pane canvas;
     @FXML
@@ -38,6 +44,8 @@ public final class FXImplementor implements Implementor {
     private ContextMenu contextMenu;
     @FXML
     private ImageView bin;
+    @FXML
+    private ImageView save;
 
     public final Color BORDER_COLOR = new Color(68.0 / 255, 114.0 / 255, 196.0 / 255, 1);
 
@@ -88,11 +96,14 @@ public final class FXImplementor implements Implementor {
         return bin;
     }
 
-    public ContextMenu getContextMenu() { return contextMenu; }
+    public ContextMenu getContextMenu() {
+        return contextMenu;
+    }
 
 
     /**
      * Starts the javafx application
+     *
      * @param primaryStage the stage to start
      * @throws Exception
      */
@@ -103,6 +114,8 @@ public final class FXImplementor implements Implementor {
         canvas = (Pane) root.lookup("#canvas");
         leftBar = (Pane) root.lookup("#leftBar");
         bin = (ImageView) root.lookup("#bin");
+        save = (ImageView) root.lookup("#bin");
+
         // Create ContextMenu
         contextMenu = new ContextMenu();
         contextMenu.setId("contextMenu");
@@ -238,6 +251,7 @@ public final class FXImplementor implements Implementor {
             }
         });
 
+        Map<Long, Shape> shapeSaves = new HashMap<>();
         javafx.scene.control.MenuItem edit = new MenuItem("Edit");
         // Handler to edit the shapes
         edit.setOnAction(new EventHandler<ActionEvent>() {
@@ -246,8 +260,6 @@ public final class FXImplementor implements Implementor {
                 getCanvas().getChildren().remove(editRectangleGrid);
                 getCanvas().getChildren().remove(editPolygonGrid);
                 getCanvas().getChildren().remove(editMixedCompoundShapeGrid);
-                System.out.println("EDIT BUTTON ");
-
                 for (Shape shape : Canvas.getInstance().getShapes()) {
                     if (!(shape instanceof CompoundShape) && shape.isSelected()) {
                         Canvas.getInstance().resetSelection();
@@ -443,8 +455,10 @@ public final class FXImplementor implements Implementor {
             @Override
             public void handle(MouseEvent e) {
                 canvas.getChildren().clear();
+                shapeSaves.clear();
                 for (Shape s : Canvas.getInstance().getShapes()) {
                     if (s.isSelected()) {
+                        shapeSaves.put(s.getId(), s.clone());
                         if (s instanceof Rectangle) {
                             canvas.getChildren().add(editRectangleGrid);
                             ((Rectangle) s).setWidth(Float.parseFloat(widthTextField.getText()));
@@ -512,15 +526,37 @@ public final class FXImplementor implements Implementor {
         EventHandler<MouseEvent> cancelButtonClick = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                canvas.getChildren().remove(editRectangleGrid);
-                canvas.getChildren().remove(editPolygonGrid);
-                canvas.getChildren().remove(editMixedCompoundShapeGrid);
+                Map.Entry<Long, Shape> entry = shapeSaves.entrySet().iterator().next();
+                Long key = entry.getKey();
+                Shape shapeToRevert = shapeSaves.get(key);
+                Canvas.getInstance().getShapes().remove(Canvas.getInstance().getShape(key));
+                Canvas.getInstance().getShapes().add(shapeToRevert);
+                canvas.getChildren().clear();
+                Canvas.getInstance().notifyAllShapes();
             }
         };
         cancelRectangleButton.addEventFilter(MouseEvent.MOUSE_CLICKED, cancelButtonClick);
         cancelPolygonButton.addEventFilter(MouseEvent.MOUSE_CLICKED, cancelButtonClick);
         cancelMixedCompoundShapeButton.addEventFilter(MouseEvent.MOUSE_CLICKED, cancelButtonClick);
+
+
+        save.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                FileChooser fileChooser = new FileChooser();
+
+                //Set extension filter
+                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+                fileChooser.getExtensionFilters().add(extFilter);
+
+                //Show save file dialog
+                File file = fileChooser.showSaveDialog(primaryStage);
+
+            }
+        });
+
     }
+
     /**
      * binds the handlers to the toolbar
      */
@@ -624,6 +660,7 @@ public final class FXImplementor implements Implementor {
 
         canvas.addEventFilter(MouseEvent.MOUSE_RELEASED, endSelection);
     }
+
     /**
      * binds the handlers to the bin
      */
@@ -656,6 +693,7 @@ public final class FXImplementor implements Implementor {
         });
 
     }
+
     /**
      * binds the handlers to single shapes
      */
@@ -700,7 +738,7 @@ public final class FXImplementor implements Implementor {
     /**
      * binds the handlers to the compound shapes
      */
-    private void compoundShapeHandlers(CompoundShape s, Map<Shape,javafx.scene.shape.Shape> compoundShapes) {
+    private void compoundShapeHandlers(CompoundShape s, Map<Shape, javafx.scene.shape.Shape> compoundShapes) {
         EventHandler<MouseEvent> hoverColor = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
@@ -730,22 +768,22 @@ public final class FXImplementor implements Implementor {
 
                 }
             };
+
             for (Map.Entry<Shape, javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()) {
                 newShape.getValue().addEventFilter(MouseEvent.MOUSE_CLICKED, selection);
+                newShape.getValue().setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+                    @Override
+                    public void handle(ContextMenuEvent e) {
+                        FXContextMenuHandlers myContextMenuHandler = new FXContextMenuHandlers(s, newShape.getValue());
+                        myContextMenuHandler.manageContextMenu(e);
+                    }
+                });
             }
         }
 
         for (Map.Entry<Shape, javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()) {
             newShape.getValue().addEventFilter(MouseEvent.MOUSE_ENTERED, hoverColor);
             newShape.getValue().addEventFilter(MouseEvent.MOUSE_EXITED, setBackColor);
-            newShape.getValue().setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
-                @Override
-                public void handle(ContextMenuEvent e) {
-                    FXContextMenuHandlers myContextMenuHandler = new FXContextMenuHandlers(s, newShape.getValue());
-                    myContextMenuHandler.manageContextMenu(e);
-                }
-            });
-
         }
     }
 
@@ -767,7 +805,7 @@ public final class FXImplementor implements Implementor {
     /**
      * binds the drop handlers to the compound shapes
      */
-    private void dragHandlersCompound(CompoundShape s, Map<Shape,javafx.scene.shape.Shape> compoundShapes) {
+    private void dragHandlersCompound(CompoundShape s, Map<Shape, javafx.scene.shape.Shape> compoundShapes) {
         EventHandler setOnDragDetected = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -785,6 +823,7 @@ public final class FXImplementor implements Implementor {
 
     /**
      * Computes a javafx.scene.shape.Rectangle from a shape
+     *
      * @param s the Shape to create in javafx.scene.shape.Rectangle
      * @return the javafx.scene.shape.Rectangle of the given shape
      */
@@ -834,6 +873,7 @@ public final class FXImplementor implements Implementor {
 
     /**
      * Computes a javafx.scene.shape.Rectangle from a given Rectangle in a CompoundShape
+     *
      * @param s Rectangle from a CompoundShape
      * @return a javafx.scene.shape.Rectangle in the Toolbar
      */
@@ -862,6 +902,7 @@ public final class FXImplementor implements Implementor {
 
     /**
      * Computes a javafx.scene.shape.Polygon from a shape
+     *
      * @param s the Shape to create in javafx.scene.shape.Polygon
      * @return the javafx.scene.shape.Polygon of the given shape
      */
@@ -930,6 +971,7 @@ public final class FXImplementor implements Implementor {
 
     /**
      * Computes a javafx.scene.shape.Polygon from a given Rectangle in a CompoundShape
+     *
      * @param s Rectangle from a CompoundShape
      * @return a javafx.scene.shape.Polygon in the Toolbar
      */
@@ -955,10 +997,11 @@ public final class FXImplementor implements Implementor {
 
     /**
      * Puts a CompoundShape in the Toolbar and resize it if necessary
+     *
      * @param s CompoundShape to put in the Toolbar
      */
     public void createToolbarCompoundShape(CompoundShape s) {
-        Map<Shape,javafx.scene.shape.Shape> compoundShapes = new HashMap<>();
+        Map<Shape, javafx.scene.shape.Shape> compoundShapes = new HashMap<>();
         float width = s.getWidth();
         float ratio = 1;
         if (width > leftBar.getWidth() - 35) {
@@ -980,7 +1023,7 @@ public final class FXImplementor implements Implementor {
                 copy.setHeight(shape.getHeight() / ratio);
                 copy.setPosition(pos);
                 javafx.scene.shape.Rectangle rectangle = createToolbarCompoundRectangle(copy);
-                SHAPES.put(copy.getId(),rectangle);
+                SHAPES.put(copy.getId(), rectangle);
                 compoundShapes.put(copy, rectangle);
             } else if (shape instanceof Polygon) {
                 Polygon copy = (Polygon) shape.clone();
@@ -1002,6 +1045,7 @@ public final class FXImplementor implements Implementor {
 
     /**
      * Creates a javafx CompoundShape from one or many Shapes
+     *
      * @param s the CompoundShape to copy in javafx
      */
     private void createCompoundShape(CompoundShape s) {
@@ -1013,7 +1057,7 @@ public final class FXImplementor implements Implementor {
                 compoundShapes.put(shape, createPolygon((Polygon) shape));
             }
         }
-        for(Map.Entry<Shape, javafx.scene.shape.Shape> shape : compoundShapes.entrySet()) {
+        for (Map.Entry<Shape, javafx.scene.shape.Shape> shape : compoundShapes.entrySet()) {
             SHAPES.put(shape.getKey().getId(), shape.getValue());
         }
         compoundShapeHandlers(s, compoundShapes);
@@ -1022,6 +1066,7 @@ public final class FXImplementor implements Implementor {
 
     /**
      * Creates a javafx Shape of a given Shape
+     *
      * @param s a Shape to draw in javafx
      */
     @Override

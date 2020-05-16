@@ -16,6 +16,7 @@ public class FXMouseHandlers {
     private final Shape shape;
     private final javafx.scene.shape.Shape FXShape;
     private final FXImplementor implementor;
+
     public FXMouseHandlers(Shape s, javafx.scene.shape.Shape FXShape) {
         this.shape = s;
         this.FXShape = FXShape;
@@ -76,8 +77,8 @@ public class FXMouseHandlers {
      * Initializes the selection rectangle
      */
     public void setGestureStarted(MouseEvent mouseEvent) {
-        if(FXShape instanceof  Rectangle) {
-            if(!implementor.getCanvas().getChildren().contains(mouseEvent.getTarget())) {
+        if (FXShape instanceof Rectangle) {
+            if (!implementor.getCanvas().getChildren().contains(mouseEvent.getTarget())) {
                 Canvas.getInstance().resetSelection();
                 implementor.getCanvas().getChildren().clear();
                 Canvas.getInstance().notifyAllShapes();
@@ -85,8 +86,7 @@ public class FXMouseHandlers {
                 Canvas.getInstance().setSelection(true);
                 implementor.getCanvas().getChildren().add(FXShape);
             }
-        }
-        else {
+        } else {
             throw new IllegalArgumentException();
         }
     }
@@ -138,7 +138,7 @@ public class FXMouseHandlers {
      */
 
     public void endSelection(MouseEvent mouseEvent) {
-        if(FXShape instanceof Rectangle) {
+        if (FXShape instanceof Rectangle) {
             if (Canvas.getInstance().getSelection()) {
                 Position firstPos = Canvas.getInstance().getStartSelectPos();
                 Canvas.getInstance().setSelection(false);
@@ -175,8 +175,7 @@ public class FXMouseHandlers {
             }
             ((Rectangle) FXShape).setWidth(0);
             ((Rectangle) FXShape).setHeight(0);
-        }
-        else {
+        } else {
             throw new IllegalArgumentException();
         }
     }
