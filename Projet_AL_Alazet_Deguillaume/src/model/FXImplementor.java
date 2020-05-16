@@ -216,6 +216,10 @@ public final class FXImplementor implements Implementor {
                 getCanvas().getChildren().remove(editRectangleGrid);
                 getCanvas().getChildren().remove(editPolygonGrid);
                 getCanvas().getChildren().remove(editMixedCompoundShapeGrid);
+
+
+
+
                 System.out.println("EDIT BUTTON ");
                 Shape s = null;
                 for(Shape shape : Canvas.getInstance().getShapes()) {
@@ -808,7 +812,7 @@ public final class FXImplementor implements Implementor {
 
     private void commonHandlers(Shape s, javafx.scene.shape.Shape newShape) {
         FXMouseHandlers myHandler = new FXMouseHandlers(s, newShape);
-        FXContextMenuHandlers myContextMenuHandler = new FXContextMenuHandlers(s, newShape, canvas);
+        FXContextMenuHandlers myContextMenuHandler = new FXContextMenuHandlers(s, newShape);
         EventHandler<MouseEvent> hoverColor = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
@@ -885,7 +889,7 @@ public final class FXImplementor implements Implementor {
             newShape.getValue().setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
                 @Override
                 public void handle(ContextMenuEvent e) {
-                    FXContextMenuHandlers myContextMenuHandler = new FXContextMenuHandlers(s, newShape.getValue(), canvas);
+                    FXContextMenuHandlers myContextMenuHandler = new FXContextMenuHandlers(s, newShape.getValue());
                     myContextMenuHandler.manageContextMenu(e);
                 }
             });
