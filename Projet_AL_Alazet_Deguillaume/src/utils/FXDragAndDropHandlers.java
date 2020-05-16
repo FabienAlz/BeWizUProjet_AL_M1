@@ -4,7 +4,6 @@ import javafx.scene.control.Label;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.paint.Color;
 import model.*;
 
 import java.util.ArrayList;
@@ -57,6 +56,7 @@ public class FXDragAndDropHandlers {
                         if (s.isSelected()) {
                             Shape copy = s.clone();
                             copy.setId();
+                            s.setSelected(false);
                             if (copy instanceof CompoundShape) {
                                 implementor.createToolbarCompoundShape((CompoundShape) copy);
                                 copy.setPosition(new ToolbarPosition());
@@ -68,7 +68,9 @@ public class FXDragAndDropHandlers {
                         }
                     }
                 }
+                implementor.getCanvas().getChildren().clear();
                 Canvas.getInstance().resetSelection();
+                Canvas.getInstance().notifyAllShapes();
             }
             success = true;
         }

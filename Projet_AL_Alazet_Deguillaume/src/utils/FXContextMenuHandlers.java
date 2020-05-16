@@ -2,6 +2,7 @@ package utils;
 
 import javafx.scene.Node;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import model.Canvas;
@@ -33,6 +34,7 @@ public class FXContextMenuHandlers {
                 }
             }
             shape.setSelected(true);
+            FXImplementor.getInstance().setLastSelected(shape, FXShape);
             // Updates the canvas
             implementor.getCanvas().getChildren().clear();
             Canvas.getInstance().notifyAllShapes();
@@ -64,7 +66,10 @@ public class FXContextMenuHandlers {
                 }
             }
         }
-        else implementor.getContextMenu().show(FXShape, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
+        else {
+            implementor.getContextMenu().show(FXShape, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
+            FXImplementor.getInstance().setLastSelected(shape, FXShape);
+        }
     }
 
 

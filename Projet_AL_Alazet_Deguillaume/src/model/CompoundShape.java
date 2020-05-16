@@ -65,11 +65,12 @@ public class CompoundShape extends AbstractShape {
     }
 
     public List<Shape> getShapes() {
-        List<Shape> copy = new ArrayList<>();
+        /*List<Shape> copy = new ArrayList<>();
         for(Shape s : shapes) {
             copy.add(s.clone());
         }
-        return copy;
+        return copy;*/
+        return shapes;
     }
 
     /******************************
@@ -80,6 +81,20 @@ public class CompoundShape extends AbstractShape {
         super.setSelected(b);
         for(Shape s : shapes) {
             s.setSelected(b);
+        }
+    }
+
+    @Override
+    public void setRotation(float rotation) {
+        for (Shape s : shapes) {
+            s.setRotation(rotation);
+        }
+    }
+
+    @Override
+    public void setColor(String color) {
+        for (Shape s : shapes) {
+            s.setColor(color);
         }
     }
 
