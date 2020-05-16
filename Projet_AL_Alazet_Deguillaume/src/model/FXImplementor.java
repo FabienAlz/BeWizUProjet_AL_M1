@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
 
+import java.sql.SQLOutput;
 import java.util.*;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public final class FXImplementor implements Implementor {
 
     private static Implementor instance;
 
-    private Map<Long, javafx.scene.shape.Shape> SHAPES = new HashMap<>();;
+    private Map<Long, javafx.scene.shape.Shape> SHAPES = new HashMap<>();
 
     public static Implementor getInstance() {
         if (instance == null) {
@@ -393,8 +394,11 @@ public final class FXImplementor implements Implementor {
     }
 
     private void addCanvasHandlers() {
-        javafx.scene.shape.Rectangle rectangle = new javafx.scene.shape.Rectangle();
-
+        javafx.scene.shape.Rectangle rectangleSelection = new javafx.scene.shape.Rectangle();
+        rectangleSelection.setOpacity(0.3);
+        rectangleSelection.setFill(BORDER_COLOR);
+        rectangleSelection.setStroke(new Color(0,0,1,1));
+        rectangleSelection.setStrokeWidth(2);
         canvas.setOnDragDropped(new EventHandler<DragEvent>() {
             public void handle(DragEvent event) {
                 /* data dropped */
@@ -435,8 +439,6 @@ public final class FXImplementor implements Implementor {
                             copy.setPosition(new CanvasPosition(event.getX(), event.getY()));
                         }
                         Canvas.getInstance().addAndNotify(copy);
-                        System.out.println(Canvas.getInstance().getShapes());
-                        System.out.println(canvas.getChildren());
                     }
 
                     success = true;
@@ -484,34 +486,53 @@ public final class FXImplementor implements Implementor {
                     Canvas.getInstance().notifyAllShapes();
                     Canvas.getInstance().setStartSelectPos(e.getX(), e.getY());
                     Canvas.getInstance().setSelection(true);
+                    canvas.getChildren().add(rectangleSelection);
                 }
             }
         };
 
         canvas.setOnMousePressed(setGestureStarted);
 
-        /*EventHandler<MouseEvent> changeRectangle = new EventHandler<MouseEvent>() {
+        EventHandler<MouseEvent> updateSelectionRectangle = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
-                System.out.println("BONSOIR PARIS "+Canvas.getInstance().getSelection());
-                if(Canvas.getInstance().getSelection()) {
-                    System.out.println("?????????????");
-                    Position start = Canvas.getInstance().getStartSelectPos();
-                    *//*canvas.getChildren().remove(rectangle);*//*
-                    //javafx.scene.shape.Rectangle selectionRectangle = new javafx.scene.shape.Rectangle();
-                    rectangle.setX(start.getX());
-                    rectangle.setY(start.getY());
-                    rectangle.setOpacity(0.5);
-                    rectangle.setHeight(e.getX() - start.getX());
-                    rectangle.setWidth(e.getY() - start.getY());
-                   // canvas.getChildren().add(rectangle);
+                if (Canvas.getInstance().getSelection()) {
+                    Position firstPos = Canvas.getInstance().getStartSelectPos();
+                    // top-left to bottom-right
+                    if (e.getX() > firstPos.getX() && e.getY() > firstPos.getY()) {
+                        rectangleSelection.setX(firstPos.getX());
+                        rectangleSelection.setY(firstPos.getY());
+                        rectangleSelection.setWidth(e.getX() - firstPos.getX());
+                        rectangleSelection.setHeight(e.getY() - firstPos.getY());
+
+                    }
+                    // bottom-right to top-left
+                    else if (e.getX() < firstPos.getX() && e.getY() < firstPos.getY()) {
+                        rectangleSelection.setX(e.getX());
+                        rectangleSelection.setY(e.getY());
+                        rectangleSelection.setWidth(firstPos.getX() - e.getX());
+                        rectangleSelection.setHeight(firstPos.getY() - e.getY());
+                    }
+                    // bottom-left to top-right
+                    else if (e.getX() > firstPos.getX() && e.getY() < firstPos.getY()) {
+                        rectangleSelection.setX(firstPos.getX());
+                        rectangleSelection.setY(e.getY());
+                        rectangleSelection.setWidth(e.getX() - firstPos.getX());
+                        rectangleSelection.setHeight(firstPos.getY() - e.getY());
+                    }
+                    // top-right to bottom-left
+                    else if (e.getX() < firstPos.getX() && e.getY() > firstPos.getY()) {
+                        rectangleSelection.setX(e.getX());
+                        rectangleSelection.setY(firstPos.getY());
+                        rectangleSelection.setWidth(firstPos.getX() - e.getX());
+                        rectangleSelection.setHeight(e.getY() - firstPos.getY());
+                    }
                 }
             }
         };
 
-        //canvas.addEventFilter(MouseEvent.MOUSE_MOVED, changeRectangle);
-        canvas.setOnMouseMoved(changeRectangle);*/
 
+        canvas.setOnMouseDragged(updateSelectionRectangle);
 
         EventHandler<MouseEvent> endSelection = new EventHandler<MouseEvent>() {
             @Override
@@ -523,26 +544,15 @@ public final class FXImplementor implements Implementor {
                     for(Shape s : Canvas.getInstance().getShapes()) {
                         if(secondPos.getX() > firstPos.getX() && secondPos.getY() > firstPos.getY() && s.isInside(firstPos, secondPos)) {
                             s.setSelected(true);
-                            s.notifyObserver();
-
-                            /*rectangle.setX(firstPos.getX());
-                            rectangle.setY(firstPos.getY());
-                            rectangle.setOpacity(0.5);
-                            rectangle.setHeight(e.getY() - firstPos.getY());
-                            rectangle.setWidth(e.getX() - firstPos.getX());
-                            canvas.getChildren().add(rectangle);*/
-
                         }
                         else if(secondPos.getX() < firstPos.getX() && secondPos.getY() < firstPos.getY() && s.isInside(secondPos, firstPos)) {
                             s.setSelected(true);
-                            s.notifyObserver();
                         }
                         else if(secondPos.getX() > firstPos.getX() && secondPos.getY() < firstPos.getY()) {
                             Position firstIntermediatePos = new Position(secondPos.getX(), firstPos.getY());
                             Position secondIntermediatePos = new Position(firstPos.getX(),secondPos.getY());
                             if(s.isInside(secondIntermediatePos, firstIntermediatePos)) {
                                 s.setSelected(true);
-                                s.notifyObserver();
                             }
                         }
                         else if(secondPos.getX() < firstPos.getX() && secondPos.getY() > firstPos.getY()) {
@@ -550,13 +560,15 @@ public final class FXImplementor implements Implementor {
                             Position secondIntermediatePos = new Position(firstPos.getX(),secondPos.getY());
                             if(s.isInside(firstIntermediatePos, secondIntermediatePos)) {
                                 s.setSelected(true);
-                                s.notifyObserver();
                             }
                         }
 
                     }
+                    canvas.getChildren().clear();
+                    Canvas.getInstance().notifyAllShapes();
                 }
-
+                rectangleSelection.setWidth(0);
+                rectangleSelection.setHeight(0);
             }
 
         };
@@ -850,20 +862,10 @@ public final class FXImplementor implements Implementor {
             }
         };
 
-        EventHandler test = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                System.out.println("CCCCCCCCCCC" + s.getId());
-                for(Shape ss : s.getShapes()){
-                    System.out.println(ss.getId());
-                }
-            }
-        };
 
 
         for (Map.Entry<Shape, javafx.scene.shape.Shape> newShape : compoundShapes.entrySet()) {
             newShape.getValue().setOnDragDetected(setOnDragEntered);
-            newShape.getValue().setOnMouseEntered(test);
         }
 
 
