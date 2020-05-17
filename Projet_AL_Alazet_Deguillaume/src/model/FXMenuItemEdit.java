@@ -33,7 +33,6 @@ public class FXMenuItemEdit extends FXMenuItem {
                     if (shape.isSelected()) s = shape;
                 }
                 if (s.isSelected()) {
-                        createSharedComponents(s);
                     if (s instanceof Rectangle) {
                         createRectangleEditor((Rectangle)s);
 
@@ -49,12 +48,12 @@ public class FXMenuItemEdit extends FXMenuItem {
                         }
                         if (sameClass) {
                             if (firstShape instanceof Rectangle) {
-                                createRectangleEditor((Rectangle)s);
+                                createRectangleEditor(s);
                             } else if (firstShape instanceof Polygon) {
-                                createPolygonEditor((Polygon)s);
+                                createPolygonEditor(s);
                             }
                         } else {
-                            createMixedEditor(s);
+                            createMixedEditor(firstShape);
                         }
                     }
                 }
@@ -62,29 +61,36 @@ public class FXMenuItemEdit extends FXMenuItem {
         });
     }
 
-    private void createRectangleEditor(Rectangle s) {
+    private void createRectangleEditor(Shape s) {
+        if (s instanceof CompoundShape) s = ((CompoundShape) s).getShapes().get(0);
+        createSharedComponents(s);
         mediator.registerComponent(new Label("Width"));
         mediator.registerComponent(new TextField("Width", String.valueOf(s.getWidth())));
         mediator.registerComponent(new Label("Height"));
         mediator.registerComponent(new TextField("Height", String.valueOf(s.getHeight())));
         mediator.registerComponent(new Label("Border radius"));
-        mediator.registerComponent(new TextField("Border radius", String.valueOf(s.getBorderRadius())));
+        mediator.registerComponent(new TextField("Border radius", String.valueOf(((Rectangle)s).getBorderRadius())));
         mediator.createRectangleEditor();
     }
 
-    private void createPolygonEditor(Polygon s) {
+    private void createPolygonEditor(Shape s) {
+        if (s instanceof CompoundShape) s = ((CompoundShape) s).getShapes().get(0);
+        createSharedComponents(s);
         mediator.registerComponent(new Label("Edges"));
-        mediator.registerComponent(new TextField("Edges",String.valueOf(s.getEdges())));
+        mediator.registerComponent(new TextField("Edges",String.valueOf(((Polygon)s).getEdges())));
         mediator.registerComponent(new Label("Length"));
-        mediator.registerComponent(new TextField("Length",String.valueOf(s.getLength())));
+        mediator.registerComponent(new TextField("Length",String.valueOf(((Polygon)s).getLength())));
         mediator.createPolygonEditor();
     }
 
     private void createMixedEditor(Shape s) {
+        createSharedComponents(s);
         mediator.createMixedEditor();
     }
 
     private void createSharedComponents(Shape s) {
+        if (s instanceof CompoundShape) s = ((CompoundShape) s).getShapes().get(0);
+
         mediator.registerComponent(new GridPane());
         mediator.registerComponent(new ColorPicker(Color.valueOf(s.getColor())));
         mediator.registerComponent(new Label("Rotation"));
