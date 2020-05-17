@@ -1,9 +1,12 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompoundShape extends AbstractShape {
+public class CompoundShape extends AbstractShape implements Serializable {
+    private static final long serialVersionUID = 7L;
+
     private List<Shape> shapes;
 
     /**

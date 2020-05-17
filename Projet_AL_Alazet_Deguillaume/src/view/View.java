@@ -91,9 +91,11 @@ public final class View implements Mediator {
         concreteMenu.setPrefHeight(MENU_HEIGHT);
 
         concreteMenu.getItems().add(save);
+        save.setStage(primaryStage);
         concreteMenu.getItems().add(new Separator());
 
         concreteMenu.getItems().add(load);
+        load.setStage(primaryStage);
         concreteMenu.getItems().add(new Separator());
 
         concreteMenu.getItems().add(undo);

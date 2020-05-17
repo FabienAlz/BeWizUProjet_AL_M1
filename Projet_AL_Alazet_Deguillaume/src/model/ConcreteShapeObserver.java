@@ -1,6 +1,8 @@
 package model;
 
-public class ConcreteShapeObserver implements ShapeObserver {
+import java.io.Serializable;
+
+public class ConcreteShapeObserver implements ShapeObserver, Serializable {
 
     /**
      * Draws the Shapes

@@ -10,7 +10,7 @@ public class OkButton extends javafx.scene.control.Button implements Component {
 
     public OkButton() {
         super("Ok");
-        OkButtonHandler();
+        okButtonHandler();
     }
 
     @Override
@@ -23,7 +23,7 @@ public class OkButton extends javafx.scene.control.Button implements Component {
         return "OkButton";
     }
 
-    private void OkButtonHandler() {
+    private void okButtonHandler() {
         setOnAction(e -> {
             for (Shape s : Canvas.getInstance().getShapes()) {
                 if (s.isSelected()) {

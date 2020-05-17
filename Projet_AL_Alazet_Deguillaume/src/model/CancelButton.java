@@ -12,7 +12,7 @@ public class CancelButton extends javafx.scene.control.Button implements Compone
 
     public CancelButton(){
         super("Cancel");
-        CancelButtonHandler();
+        cancelButtonHandler();
     }
 
     @Override
@@ -25,7 +25,7 @@ public class CancelButton extends javafx.scene.control.Button implements Compone
         return "CancelButton";
     }
 
-    private void CancelButtonHandler() {
+    private void cancelButtonHandler() {
         setOnAction(e -> {
             if (EditorView.getInstance().shapeSaves.size() != 0) {
                 Map.Entry<Long, Shape> entry = EditorView.getInstance().shapeSaves.entrySet().iterator().next();

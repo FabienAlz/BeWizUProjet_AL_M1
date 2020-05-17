@@ -1,6 +1,8 @@
 package model;
 
-public abstract class SingleShape extends AbstractShape {
+import java.io.Serializable;
+
+public abstract class SingleShape extends AbstractShape implements Serializable {
     private float rotation;
     private PositionI rotationCenter;
     private String color;

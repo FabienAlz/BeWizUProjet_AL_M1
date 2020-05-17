@@ -14,36 +14,29 @@ import utils.FXContextMenuHandlers;
 import utils.FXMouseHandlers;
 import view.View;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.List;
 
-public final class FXImplementor implements Implementor {
+public final class FXImplementor implements Implementor, Serializable {
+    private static final long serialVersionUID = 3734212650399506405L;
 
-    public Shape lastSelected;
-    public javafx.scene.shape.Shape lastFXSelected;
+    public transient Shape lastSelected;
+    public transient javafx.scene.shape.Shape lastFXSelected;
 
-    @FXML
-    private Pane root;
-    @FXML
-    private Pane canvas;
-    @FXML
-    private Pane leftBar;
-    @FXML
-    private ContextMenu contextMenu;
-    @FXML
-    private Pane bin;
-    @FXML
-    private ImageView save;
+    private transient Pane canvas;
+    private transient Pane leftBar;
+    private transient Pane bin;
 
-    public final Color BORDER_COLOR = new Color(68.0 / 255, 114.0 / 255, 196.0 / 255, 1);
+    public transient final Color BORDER_COLOR = new Color(68.0 / 255, 114.0 / 255, 196.0 / 255, 1);
 
     private static FXImplementor instance;
 
-    public static Stage stage;
+    public transient static Stage stage;
 
-    public Popup popup;
+    public transient Popup popup;
 
-    private Map<Long, javafx.scene.shape.Shape> SHAPES = new HashMap<>();
+    private transient Map<Long, javafx.scene.shape.Shape> SHAPES;
 
     /**
      * Singleton constructor
@@ -66,10 +59,6 @@ public final class FXImplementor implements Implementor {
      *****************/
     public Map<Long, javafx.scene.shape.Shape> getSHAPES() {
         return SHAPES;
-    }
-
-    public Pane getRoot() {
-        return root;
     }
 
     public Pane getCanvas() {
@@ -97,13 +86,16 @@ public final class FXImplementor implements Implementor {
      */
 
     public void start(Stage primaryStage) throws Exception {
+
+        SHAPES = new HashMap<>();
+
         View mediator = View.getInstance();
 
-        mediator.registerComponent(new SaveButton("", "Projet_AL_Alazet_Deguillaume/ressources/save.png"));
-        mediator.registerComponent(new LoadButton("", "Projet_AL_Alazet_Deguillaume/ressources/load.png"));
-        mediator.registerComponent(new UndoButton("", "Projet_AL_Alazet_Deguillaume/ressources/undo.png"));
-        mediator.registerComponent(new RedoButton("", "Projet_AL_Alazet_Deguillaume/ressources/redo.png"));
-        mediator.registerComponent(new Bin("Projet_AL_Alazet_Deguillaume/ressources/bin.png"));
+        mediator.registerComponent(new SaveButton("", "Projet_AL_Alazet_Deguillaume/ressources/ico/save.png"));
+        mediator.registerComponent(new LoadButton("", "Projet_AL_Alazet_Deguillaume/ressources/ico/load.png"));
+        mediator.registerComponent(new UndoButton("", "Projet_AL_Alazet_Deguillaume/ressources/ico/undo.png"));
+        mediator.registerComponent(new RedoButton("", "Projet_AL_Alazet_Deguillaume/ressources/ico/redo.png"));
+        mediator.registerComponent(new Bin("Projet_AL_Alazet_Deguillaume/ressources/ico/bin.png"));
         List<Node> toolbarComponent = new ArrayList<>();
         mediator.registerComponent(new FXToolbar(toolbarComponent));
         mediator.registerComponent(new FXCanvas(toolbarComponent));
@@ -112,8 +104,6 @@ public final class FXImplementor implements Implementor {
         menu.addItem(new FXMenuItemGroup("Group"));
         menu.addItem(new FXMenuItemDegroup("Degroup"));
         menu.addItem(new FXMenuItemEdit("Edit"));
-        //menu.addItem(new MenuItem("Deroup"));
-        //menu.addItem(new MenuItem("Edit"));
         mediator.registerComponent(menu);
         leftBar = mediator.toolbar;
         canvas = mediator.canvas;
@@ -121,575 +111,7 @@ public final class FXImplementor implements Implementor {
         popup = mediator.popup;
         stage = primaryStage;
         mediator.createGUI(primaryStage);
-//        setToolbarHandlers();
-        //setBinHandlers();
     }
-
-    /*public void start(Stage primaryStage) throws Exception {
-
-        stage = primaryStage;
-        root = FXMLLoader.load(getClass().getResource("../view/view.fxml"));
-        canvas = (Pane) root.lookup("#canvas");
-        leftBar = (Pane) root.lookup("#leftBar");
-        bin = (ImageView) root.lookup("#bin");
-
-        // Create ContextMenu
-        contextMenu = new ContextMenu();
-        contextMenu.setId("contextMenu");
-
-        GridPane editRectangleGrid = new GridPane();
-
-        editRectangleGrid.setPadding(new Insets(10, 10, 10, 10));
-        Label widthLabel = new Label("Width:");
-        TextField widthTextField = new TextField();
-        Label heightLabel = new Label("Height:");
-        TextField heightTextField = new TextField();
-        Label borderRadiusLabel = new Label("Border radius:");
-        TextField borderRadiusTextField = new TextField();
-        Label rotationRectangleLabel = new Label("Rotation:");
-        TextField rotationRectangleTextField = new TextField();
-
-
-        HBox hbRectangleColorPicker = new HBox();
-        final ColorPicker colorPickerRectangle = new ColorPicker();
-        hbRectangleColorPicker.getChildren().add(colorPickerRectangle);
-
-        HBox hbRectangleValues = new HBox();
-        hbRectangleValues.getChildren().addAll(widthLabel, widthTextField);
-        hbRectangleValues.getChildren().addAll(heightLabel, heightTextField);
-        hbRectangleValues.getChildren().addAll(borderRadiusLabel, borderRadiusTextField);
-        hbRectangleValues.getChildren().addAll(rotationRectangleLabel, rotationRectangleTextField);
-        hbRectangleValues.setSpacing(10);
-
-        HBox hbRectangleButtons = new HBox();
-        Button okRectangleButton = new Button("Ok");
-        Button applyRectangleButton = new Button("Apply");
-        Button cancelRectangleButton = new Button("Cancel");
-        hbRectangleButtons.getChildren().add(okRectangleButton);
-        hbRectangleButtons.getChildren().add(applyRectangleButton);
-        hbRectangleButtons.getChildren().add(cancelRectangleButton);
-        hbRectangleButtons.setSpacing(15);
-        editRectangleGrid.setHgap(10);
-        editRectangleGrid.setVgap(10);
-        editRectangleGrid.add(hbRectangleColorPicker, 0, 0);
-        editRectangleGrid.add(hbRectangleValues, 0, 1);
-        editRectangleGrid.add(hbRectangleButtons, 0, 2);
-        editRectangleGrid.setStyle("-fx-background-color: #FFFFFF");
-        canvas.getChildren().add(editRectangleGrid);
-        editRectangleGrid.setVisible(false);
-
-
-        GridPane editPolygonGrid = new GridPane();
-
-        editPolygonGrid.setPadding(new Insets(10, 10, 10, 10));
-        Label lengthLabel = new Label("Length:");
-        TextField lengthTextField = new TextField();
-        Label edgesLabel = new Label("edges:");
-        TextField edgesTextField = new TextField();
-        Label rotationPolygonLabel = new Label("Rotation:");
-        TextField rotationPolygonTextField = new TextField();
-
-        HBox hbPolygonColorPicker = new HBox();
-        final ColorPicker colorPickerPolygon = new ColorPicker();
-        hbPolygonColorPicker.getChildren().add(colorPickerPolygon);
-
-        HBox hbPolygonValues = new HBox();
-        hbPolygonValues.getChildren().addAll(lengthLabel, lengthTextField);
-        hbPolygonValues.getChildren().addAll(edgesLabel, edgesTextField);
-        hbPolygonValues.getChildren().addAll(rotationPolygonLabel, rotationPolygonTextField);
-        hbPolygonValues.setSpacing(10);
-
-        HBox hbPolygonButtons = new HBox();
-        Button okPolygonButton = new Button("Ok");
-        Button applyPolygonButton = new Button("Apply");
-        Button cancelPolygonButton = new Button("Cancel");
-        hbPolygonButtons.getChildren().add(okPolygonButton);
-        hbPolygonButtons.getChildren().add(applyPolygonButton);
-        hbPolygonButtons.getChildren().add(cancelPolygonButton);
-        hbPolygonButtons.setSpacing(15);
-        editPolygonGrid.setHgap(10);
-        editPolygonGrid.setVgap(10);
-        editPolygonGrid.add(hbPolygonColorPicker, 0, 0);
-        editPolygonGrid.add(hbPolygonValues, 0, 1);
-        editPolygonGrid.add(hbPolygonButtons, 0, 2);
-        editPolygonGrid.setStyle("-fx-background-color: #FFFFFF");
-        canvas.getChildren().add(editPolygonGrid);
-        editPolygonGrid.setVisible(false);
-
-
-        GridPane editMixedCompoundShapeGrid = new GridPane();
-
-        editMixedCompoundShapeGrid.setPadding(new Insets(10, 10, 10, 10));
-        Label rotationMixedCompoundShapeLabel = new Label("Rotation:");
-        TextField rotationMixedCompoundShapeTextField = new TextField();
-
-        HBox hbMixedCompoundShapeColorPicker = new HBox();
-        final ColorPicker colorPickerMixedCompoundShape = new ColorPicker();
-        hbMixedCompoundShapeColorPicker.getChildren().add(colorPickerMixedCompoundShape);
-
-        HBox hbMixedCompoundShapeValues = new HBox();
-        hbMixedCompoundShapeValues.getChildren().addAll(rotationMixedCompoundShapeLabel, rotationMixedCompoundShapeTextField);
-        hbMixedCompoundShapeValues.setSpacing(10);
-
-        HBox hbMixedCompoundShapeButtons = new HBox();
-        Button okMixedCompoundShapeButton = new Button("Ok");
-        Button applyMixedCompoundShapeButton = new Button("Apply");
-        Button cancelMixedCompoundShapeButton = new Button("Cancel");
-        hbMixedCompoundShapeButtons.getChildren().add(okMixedCompoundShapeButton);
-        hbMixedCompoundShapeButtons.getChildren().add(applyMixedCompoundShapeButton);
-        hbMixedCompoundShapeButtons.getChildren().add(cancelMixedCompoundShapeButton);
-        hbMixedCompoundShapeButtons.setSpacing(15);
-        editMixedCompoundShapeGrid.setHgap(10);
-        editMixedCompoundShapeGrid.setVgap(10);
-        editMixedCompoundShapeGrid.add(hbMixedCompoundShapeColorPicker, 0, 0);
-        editMixedCompoundShapeGrid.add(hbMixedCompoundShapeValues, 0, 1);
-        editMixedCompoundShapeGrid.add(hbMixedCompoundShapeButtons, 0, 2);
-        editMixedCompoundShapeGrid.setStyle("-fx-background-color: #FFFFFF");
-        canvas.getChildren().add(editMixedCompoundShapeGrid);
-        editMixedCompoundShapeGrid.setVisible(false);
-
-
-        // Handler to create group of shapes
-        // Handler to create group of shapes
-        javafx.scene.control.MenuItem group = new javafx.scene.control.MenuItem("Group");
-        group.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                CompoundShape compoundShape = new CompoundShape(FXImplementor.getInstance(), new CanvasPosition(0, 0));
-                for (Shape s : Canvas.getInstance().createCompound()) {
-                    compoundShape.add(s);
-                }
-                for (Shape s : compoundShape.getShapes()) {
-                    canvas.getChildren().remove(SHAPES.get(s.getId()));
-                }
-                ShapeObserver obs = new ConcreteShapeObserver();
-                compoundShape.addObserver(obs);
-                Canvas.getInstance().addAndNotify(compoundShape);
-            }
-        });
-
-        Map<Long, Shape> shapeSaves = new HashMap<>();
-        javafx.scene.control.MenuItem edit = new MenuItem("Edit");
-        // Handler to edit the shapes
-        edit.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                getCanvas().getChildren().remove(editRectangleGrid);
-                getCanvas().getChildren().remove(editPolygonGrid);
-                getCanvas().getChildren().remove(editMixedCompoundShapeGrid);
-                for (Shape shape : Canvas.getInstance().getShapes()) {
-                    if (!(shape instanceof CompoundShape) && shape.isSelected()) {
-                        Canvas.getInstance().resetSelection();
-                        lastSelected.setSelected(true);
-                        canvas.getChildren().clear();
-                        canvas.getChildren().add(lastFXSelected);
-                        Canvas.getInstance().notifyAllShapes();
-                    }
-                }
-
-                Shape s = null;
-                for (Shape shape : Canvas.getInstance().getShapes()) {
-                    if (shape.isSelected()) s = shape;
-                }
-                if (s.isSelected()) {
-                    if (s instanceof Rectangle) {
-                        canvas.getChildren().add(editRectangleGrid);
-                        colorPickerRectangle.setValue(Color.valueOf(s.getColor()));
-                        widthTextField.setText(String.valueOf(s.getWidth()));
-                        heightTextField.setText(String.valueOf(s.getHeight()));
-                        rotationRectangleTextField.setText(String.valueOf(s.getRotation()));
-                        borderRadiusTextField.setText(String.valueOf(((Rectangle) s).getBorderRadius()));
-                        editRectangleGrid.setVisible(true);
-                        editPolygonGrid.setVisible(false);
-                        editMixedCompoundShapeGrid.setVisible(false);
-                        editRectangleGrid.toFront();
-                    } else if (s instanceof Polygon) {
-                        canvas.getChildren().add(editPolygonGrid);
-                        colorPickerPolygon.setValue(Color.valueOf(s.getColor()));
-                        rotationPolygonTextField.setText(String.valueOf(s.getRotation()));
-                        lengthTextField.setText(String.valueOf(((Polygon) s).getLength()));
-                        edgesTextField.setText(String.valueOf(((Polygon) s).getEdges()));
-                        editPolygonGrid.setVisible(true);
-                        editRectangleGrid.setVisible(false);
-                        editMixedCompoundShapeGrid.setVisible(false);
-                        editPolygonGrid.toFront();
-                    } else if (s instanceof CompoundShape) {
-                        boolean sameClass = true;
-                        Shape firstShape = ((CompoundShape) s).getShapes().get(0);
-                        for (Shape subShape : ((CompoundShape) s).getShapes()) {
-                            if (!firstShape.getClass().equals(subShape.getClass())) {
-                                sameClass = false;
-                            }
-                        }
-                        if (sameClass) {
-                            if (firstShape instanceof Rectangle) {
-                                canvas.getChildren().add(editRectangleGrid);
-                                colorPickerRectangle.setValue(Color.valueOf(firstShape.getColor()));
-                                widthTextField.setText(String.valueOf(firstShape.getWidth()));
-                                heightTextField.setText(String.valueOf(firstShape.getHeight()));
-                                rotationRectangleTextField.setText(String.valueOf(firstShape.getRotation()));
-                                borderRadiusTextField.setText(String.valueOf(((Rectangle) firstShape).getBorderRadius()));
-                                editRectangleGrid.setVisible(true);
-                                editPolygonGrid.setVisible(false);
-                                editMixedCompoundShapeGrid.setVisible(false);
-                                editRectangleGrid.toFront();
-                            } else if (firstShape instanceof Polygon) {
-                                canvas.getChildren().add(editPolygonGrid);
-                                colorPickerPolygon.setValue(Color.valueOf(firstShape.getColor()));
-                                rotationPolygonTextField.setText(String.valueOf(firstShape.getRotation()));
-                                lengthTextField.setText(String.valueOf(((Polygon) firstShape).getLength()));
-                                edgesTextField.setText(String.valueOf(((Polygon) firstShape).getEdges()));
-                                editPolygonGrid.setVisible(true);
-                                editRectangleGrid.setVisible(false);
-                                editMixedCompoundShapeGrid.setVisible(false);
-                                editPolygonGrid.toFront();
-                            }
-                        } else {
-                            canvas.getChildren().add(editMixedCompoundShapeGrid);
-                            colorPickerMixedCompoundShape.setValue(Color.valueOf(firstShape.getColor()));
-                            rotationMixedCompoundShapeTextField.setText(String.valueOf(firstShape.getRotation()));
-                            editMixedCompoundShapeGrid.setVisible(true);
-                            editPolygonGrid.setVisible(false);
-                            editRectangleGrid.setVisible(false);
-                            editMixedCompoundShapeGrid.toFront();
-                        }
-                    }
-                }
-            }
-        });
-
-        javafx.scene.control.MenuItem degroup = new MenuItem("Degroup");
-        // Handler to edit the shapes
-        degroup.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                List<Shape> shapesToRemove = new ArrayList<>();
-                List<Shape> shapesToAdd = new ArrayList<>();
-
-                for (Shape s : Canvas.getInstance().getShapes()) {
-                    if (s.isSelected() && s instanceof CompoundShape) {
-                        for (Shape compoundShape : ((CompoundShape) s).getShapes()) {
-                            Shape copy = compoundShape.clone();
-                            copy.setSelected(false);
-                            copy.setId();
-                            shapesToAdd.add(copy);
-
-                        }
-                        shapesToRemove.add(s);
-                    } else s.setSelected(false);
-                }
-                for (Shape s : shapesToRemove) {
-                    Canvas.getInstance().remove(s);
-                }
-                for (Shape s : shapesToAdd) {
-                    Canvas.getInstance().add(s);
-                }
-                canvas.getChildren().clear();
-                Canvas.getInstance().notifyAllShapes();
-            }
-        });
-
-
-        contextMenu.getItems().addAll(group, degroup, edit);
-
-        setToolbarHandlers();
-        setCanvasHandlers();
-        setBinHandlers();
-
-        primaryStage.setResizable(false);
-        primaryStage.setTitle("BeWizU");
-        primaryStage.setScene(new Scene(root, 1080, 650));
-        primaryStage.show();
-
-        save = (ImageView) root.lookup("#save");
-
-        EventHandler<MouseEvent> okButtonClick = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-                canvas.getChildren().clear();
-                for (Shape s : Canvas.getInstance().getShapes()) {
-                    if (s.isSelected()) {
-                        if (s instanceof Rectangle) {
-                            canvas.getChildren().add(editRectangleGrid);
-                            ((Rectangle) s).setWidth(Float.parseFloat(widthTextField.getText()));
-                            ((Rectangle) s).setHeight(Float.parseFloat(heightTextField.getText()));
-                            ((Rectangle) s).setBorderRadius(Float.parseFloat(borderRadiusTextField.getText()));
-                            ((Rectangle) s).setRotation(Float.parseFloat(rotationRectangleTextField.getText()));
-                            ((Rectangle) s).setColor(String.valueOf(colorPickerRectangle.getValue()));
-                            editRectangleGrid.setVisible(false);
-                        } else if (s instanceof Polygon) {
-                            canvas.getChildren().add(editPolygonGrid);
-                            ((Polygon) s).setEdges(Integer.parseInt(edgesTextField.getText()));
-                            ((Polygon) s).setColor(String.valueOf(colorPickerPolygon.getValue()));
-                            ((Polygon) s).setRotation(Float.parseFloat(rotationPolygonTextField.getText()));
-                            ((Polygon) s).setLength(Float.parseFloat(lengthTextField.getText()));
-                            editPolygonGrid.setVisible(false);
-                        } else if (s instanceof CompoundShape) {
-                            boolean sameClass = true;
-                            Shape firstShape = ((CompoundShape) s).getShapes().get(0);
-                            for (Shape subShape : ((CompoundShape) s).getShapes()) {
-                                if (!firstShape.getClass().equals(subShape.getClass())) {
-                                    sameClass = false;
-                                }
-                            }
-                            if (sameClass) {
-                                if (firstShape instanceof Rectangle) {
-                                    canvas.getChildren().add(editRectangleGrid);
-                                    for (Shape subShape : ((CompoundShape) s).getShapes()) {
-                                        ((Rectangle) subShape).setWidth(Float.parseFloat(widthTextField.getText()));
-                                        ((Rectangle) subShape).setHeight(Float.parseFloat(heightTextField.getText()));
-                                        ((Rectangle) subShape).setBorderRadius(Float.parseFloat(borderRadiusTextField.getText()));
-                                        ((Rectangle) subShape).setRotation(Float.parseFloat(rotationRectangleTextField.getText()));
-                                        ((Rectangle) subShape).setColor(String.valueOf(colorPickerRectangle.getValue()));
-                                    }
-                                    editRectangleGrid.setVisible(false);
-                                } else if (firstShape instanceof Polygon) {
-                                    canvas.getChildren().add(editPolygonGrid);
-                                    for (Shape subShape : ((CompoundShape) s).getShapes()) {
-                                        ((Polygon) subShape).setEdges(Integer.parseInt(edgesTextField.getText()));
-                                        ((Polygon) subShape).setColor(String.valueOf(colorPickerPolygon.getValue()));
-                                        ((Polygon) subShape).setRotation(Float.parseFloat(rotationPolygonTextField.getText()));
-                                        ((Polygon) subShape).setLength(Float.parseFloat(lengthTextField.getText()));
-                                    }
-                                    editPolygonGrid.setVisible(false);
-                                }
-                            } else {
-                                canvas.getChildren().add(editMixedCompoundShapeGrid);
-                                s.setRotation(Float.parseFloat(rotationMixedCompoundShapeTextField.getText()));
-                                s.setColor(String.valueOf(colorPickerMixedCompoundShape.getValue()));
-                                editMixedCompoundShapeGrid.setVisible(false);
-                            }
-                        }
-                    }
-                }
-                Canvas.getInstance().resetSelection();
-                Canvas.getInstance().notifyAllShapes();
-            }
-        };
-        okRectangleButton.addEventFilter(MouseEvent.MOUSE_CLICKED, okButtonClick);
-        okPolygonButton.addEventFilter(MouseEvent.MOUSE_CLICKED, okButtonClick);
-        okMixedCompoundShapeButton.addEventFilter(MouseEvent.MOUSE_CLICKED, okButtonClick);
-
-        EventHandler<MouseEvent> applyButtonClick = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-                canvas.getChildren().clear();
-                shapeSaves.clear();
-                for (Shape s : Canvas.getInstance().getShapes()) {
-                    if (s.isSelected()) {
-                        shapeSaves.put(s.getId(), s.clone());
-                        if (s instanceof Rectangle) {
-                            canvas.getChildren().add(editRectangleGrid);
-                            ((Rectangle) s).setWidth(Float.parseFloat(widthTextField.getText()));
-                            ((Rectangle) s).setHeight(Float.parseFloat(heightTextField.getText()));
-                            ((Rectangle) s).setBorderRadius(Float.parseFloat(borderRadiusTextField.getText()));
-                            ((Rectangle) s).setRotation(Float.parseFloat(rotationRectangleTextField.getText()));
-                            ((Rectangle) s).setColor(String.valueOf(colorPickerRectangle.getValue()));
-                            Canvas.getInstance().notifyAllShapes();
-                            editRectangleGrid.toFront();
-                        } else if (s instanceof Polygon) {
-                            canvas.getChildren().add(editPolygonGrid);
-                            ((Polygon) s).setEdges(Integer.parseInt(edgesTextField.getText()));
-                            ((Polygon) s).setColor(String.valueOf(colorPickerPolygon.getValue()));
-                            ((Polygon) s).setRotation(Float.parseFloat(rotationPolygonTextField.getText()));
-                            ((Polygon) s).setLength(Float.parseFloat(lengthTextField.getText()));
-                            Canvas.getInstance().notifyAllShapes();
-                            editPolygonGrid.toFront();
-                        } else if (s instanceof CompoundShape) {
-                            boolean sameClass = true;
-                            Shape firstShape = ((CompoundShape) s).getShapes().get(0);
-                            for (Shape subShape : ((CompoundShape) s).getShapes()) {
-                                if (!firstShape.getClass().equals(subShape.getClass())) {
-                                    sameClass = false;
-                                }
-                            }
-                            if (sameClass) {
-                                if (firstShape instanceof Rectangle) {
-                                    canvas.getChildren().add(editRectangleGrid);
-                                    for (Shape subShape : ((CompoundShape) s).getShapes()) {
-                                        ((Rectangle) subShape).setWidth(Float.parseFloat(widthTextField.getText()));
-                                        ((Rectangle) subShape).setHeight(Float.parseFloat(heightTextField.getText()));
-                                        ((Rectangle) subShape).setBorderRadius(Float.parseFloat(borderRadiusTextField.getText()));
-                                        ((Rectangle) subShape).setRotation(Float.parseFloat(rotationRectangleTextField.getText()));
-                                        ((Rectangle) subShape).setColor(String.valueOf(colorPickerRectangle.getValue()));
-                                    }
-                                    Canvas.getInstance().notifyAllShapes();
-                                    editRectangleGrid.toFront();
-                                } else if (firstShape instanceof Polygon) {
-                                    canvas.getChildren().add(editPolygonGrid);
-                                    for (Shape subShape : ((CompoundShape) s).getShapes()) {
-                                        ((Polygon) subShape).setEdges(Integer.parseInt(edgesTextField.getText()));
-                                        ((Polygon) subShape).setColor(String.valueOf(colorPickerPolygon.getValue()));
-                                        ((Polygon) subShape).setRotation(Float.parseFloat(rotationPolygonTextField.getText()));
-                                        ((Polygon) subShape).setLength(Float.parseFloat(lengthTextField.getText()));
-                                    }
-                                    Canvas.getInstance().notifyAllShapes();
-                                    editPolygonGrid.toFront();
-                                }
-                            } else {
-                                canvas.getChildren().add(editMixedCompoundShapeGrid);
-                                s.setRotation(Float.parseFloat(rotationMixedCompoundShapeTextField.getText()));
-                                s.setColor(String.valueOf(colorPickerMixedCompoundShape.getValue()));
-                                Canvas.getInstance().notifyAllShapes();
-                                editMixedCompoundShapeGrid.toFront();
-                            }
-                        }
-                    }
-                }
-            }
-        };
-        applyRectangleButton.addEventFilter(MouseEvent.MOUSE_CLICKED, applyButtonClick);
-        applyPolygonButton.addEventFilter(MouseEvent.MOUSE_CLICKED, applyButtonClick);
-        applyMixedCompoundShapeButton.addEventFilter(MouseEvent.MOUSE_CLICKED, applyButtonClick);
-
-        EventHandler<MouseEvent> cancelButtonClick = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-                Map.Entry<Long, Shape> entry = shapeSaves.entrySet().iterator().next();
-                Long key = entry.getKey();
-                Shape shapeToRevert = shapeSaves.get(key);
-                Canvas.getInstance().getShapes().remove(Canvas.getInstance().getShape(key));
-                Canvas.getInstance().getShapes().add(shapeToRevert);
-                canvas.getChildren().clear();
-                Canvas.getInstance().notifyAllShapes();
-            }
-        };
-        cancelRectangleButton.addEventFilter(MouseEvent.MOUSE_CLICKED, cancelButtonClick);
-        cancelPolygonButton.addEventFilter(MouseEvent.MOUSE_CLICKED, cancelButtonClick);
-        cancelMixedCompoundShapeButton.addEventFilter(MouseEvent.MOUSE_CLICKED, cancelButtonClick);
-
-
-        save.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                Shape r = new Rectangle(new CanvasPosition(20,20), 0, new Position(0,0), new Position(0,0), "#4472c4", 30, 20, 0, FXImplementor.getInstance());
-                Rectangle read = null;
-                File f = new File("MyFile.txt");
-                FileOutputStream fos = null;
-                try {
-                    fos = new FileOutputStream(f);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                ObjectOutputStream oos = null;
-                try {
-                    oos = new ObjectOutputStream(fos);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    oos.writeObject(r);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    oos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                FileInputStream fis = null;
-                ObjectInputStream ois = null;
-                try {
-                    fis = new FileInputStream(f);
-                    ois = new ObjectInputStream(fis);
-                    read = (Rectangle) ois.readObject();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    ois.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                System.out.println(read+"slt");
-            }
-        });
-
-    }
-*/
-
-
-    /**
-     * binds the handlers to the canvas
-     */
-   /* private void setCanvasHandlers() {
-        javafx.scene.shape.Rectangle rectangleSelection = new javafx.scene.shape.Rectangle();
-        rectangleSelection.setOpacity(0.3);
-        rectangleSelection.setFill(BORDER_COLOR);
-        rectangleSelection.setStroke(new Color(0, 0, 1, 1));
-        rectangleSelection.setStrokeWidth(2);
-        FXMouseHandlers myHandler = new FXMouseHandlers(null, rectangleSelection);
-        FXDragAndDropHandlers myDragAndDropHandler = new FXDragAndDropHandlers();
-
-        *//*******************************************************
-         *                    DRAG EVENTS                      *
-         *******************************************************//*
-       *//* canvas.setOnDragDropped(new EventHandler<DragEvent>() {
-            public void handle(DragEvent event) {
-                myDragAndDropHandler.canvasOnDragDropped(event);
-            }
-        });
-
-        canvas.setOnDragOver(new EventHandler<DragEvent>() {
-            public void handle(DragEvent event) {
-                System.out.println("TEST");
-                myDragAndDropHandler.canvasOnDragOver(event);
-            }
-        });
-
-        canvas.setOnDragEntered(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent dragEvent) {
-
-                System.out.println("TEST");
-                myDragAndDropHandler.canvasOnDragEntered(dragEvent);
-            }
-        });
-
-        canvas.setOnDragExited(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent dragEvent) {
-                myDragAndDropHandler.canvasOnDragExited(dragEvent);
-            }
-        });*//*
-
-        *//*************************************************
-         *          MOUSE HANDLERS FOR SELECTION         *
-         *************************************************//*
-        EventHandler<MouseEvent> setGestureStarted = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-                myHandler.setGestureStarted(e);
-            }
-        };
-
-        canvas.setOnMousePressed(setGestureStarted);
-
-        EventHandler<MouseEvent> updateSelectionRectangle = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-                myHandler.updateSelectionRectangle(e);
-            }
-        };
-        canvas.setOnMouseDragged(updateSelectionRectangle);
-
-        EventHandler<MouseEvent> endSelection = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-                myHandler.endSelection(e);
-                  }
-
-        };
-
-        canvas.addEventFilter(MouseEvent.MOUSE_RELEASED, endSelection);
-    }*/
-
 
     /**
      * binds the handlers to single shapes
