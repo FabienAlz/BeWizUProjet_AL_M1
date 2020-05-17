@@ -11,8 +11,10 @@ import java.util.Map;
 
 public final class EditorView implements Mediator {
 
+
+    public Map<Long, Shape> shapeSaves = new HashMap<>();
     private static EditorView instance;
-    private GridPane gridPane;
+    public GridPane gridPane;
     /**
      * Singleton pattern
      * @return
@@ -25,13 +27,12 @@ public final class EditorView implements Mediator {
     }
 
 
-    private TextField widthTextField;
-    private ColorPicker colorPicker;
+    public ColorPicker colorPicker;
     private OkButton ok;
     private ApplyButton apply;
     private CancelButton cancel;
-    private Map<String, Label> labels = new HashMap<>();
-    private Map<String, TextField> textFields = new HashMap<>();
+    public Map<String, Label> labels = new HashMap<>();
+    public Map<String, TextField> textFields = new HashMap<>();
 
     @Override
     public void registerComponent(Component component) {
@@ -73,70 +74,33 @@ public final class EditorView implements Mediator {
 
 
     public void createRectangleEditor() {
-        System.out.println("CREATE RECTANGLE EDITOR");
-
-        HBox hbColorPicker = new HBox();
-        hbColorPicker.getChildren().add(colorPicker);
-
         HBox hbValues = new HBox();
         hbValues.getChildren().addAll(labels.get("Width"),textFields.get("Width"));
         hbValues.getChildren().addAll(labels.get("Height"),textFields.get("Height"));
-        hbValues.getChildren().addAll(labels.get("Rotation"),textFields.get("Rotation"));
         hbValues.getChildren().addAll(labels.get("Border radius"),textFields.get("Border radius"));
-        hbValues.setSpacing(10);
-
-        HBox hbButtons = new HBox();
-        hbButtons.getChildren().add(ok);
-        hbButtons.getChildren().add(apply);
-        hbButtons.getChildren().add(cancel);
-        hbButtons.setSpacing(15);
-
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
-        gridPane.add(hbColorPicker,0,0);
-        gridPane.add(hbValues,0,1);
-        gridPane.add(hbButtons,0,2);
-        View.getInstance().canvas.getChildren().addAll(gridPane);
+        createSharedComponents(hbValues);
 
     }
 
 
     public void createPolygonEditor() {
-        System.out.println("CREATE POLYGON EDITOR");
-
-        HBox hbColorPicker = new HBox();
-        hbColorPicker.getChildren().add(colorPicker);
-
         HBox hbValues = new HBox();
         hbValues.getChildren().addAll(labels.get("Edges"),textFields.get("Edges"));
         hbValues.getChildren().addAll(labels.get("Length"),textFields.get("Length"));
-        hbValues.getChildren().addAll(labels.get("Rotation"),textFields.get("Rotation"));
-        hbValues.setSpacing(10);
-
-        HBox hbButtons = new HBox();
-        hbButtons.getChildren().add(ok);
-        hbButtons.getChildren().add(apply);
-        hbButtons.getChildren().add(cancel);
-        hbButtons.setSpacing(15);
-
-        gridPane.setHgap(10);
-        gridPane.setVgap(10);
-        gridPane.add(hbColorPicker,0,0);
-        gridPane.add(hbValues,0,1);
-        gridPane.add(hbButtons,0,2);
-        View.getInstance().canvas.getChildren().addAll(gridPane);
-
+        createSharedComponents(hbValues);
     }
 
     public void createMixedEditor() {
-        System.out.println("CREATE MIXED EDITOR");
+        createSharedComponents(new HBox());
+    }
+
+    public void createSharedComponents(HBox hbValues) {
+        hbValues.setSpacing(10);
+        hbValues.getChildren().addAll(labels.get("Rotation"),textFields.get("Rotation"));
 
         HBox hbColorPicker = new HBox();
         hbColorPicker.getChildren().add(colorPicker);
 
-        HBox hbValues = new HBox();
-        hbValues.getChildren().addAll(labels.get("Rotation"),textFields.get("Rotation"));
-        hbValues.setSpacing(10);
 
         HBox hbButtons = new HBox();
         hbButtons.getChildren().add(ok);
@@ -149,17 +113,8 @@ public final class EditorView implements Mediator {
         gridPane.add(hbColorPicker,0,0);
         gridPane.add(hbValues,0,1);
         gridPane.add(hbButtons,0,2);
+        gridPane.setStyle("-fx-background-color: #FFFFFF");
         View.getInstance().canvas.getChildren().addAll(gridPane);
     }
 
 }
-/*
-    RECT
-    Colorpicker width height rotation border radius ok apply cancel
-
-    POLY
-    Colorpicker edges length rotation ok apply cancel
-
-    MIXED
-    Colorpicker rotation? ok apply cancel
- */
