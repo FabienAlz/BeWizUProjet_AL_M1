@@ -60,8 +60,6 @@ public class FXCanvas extends javafx.scene.layout.Pane implements Component {
         this.setOnDragEntered(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent dragEvent) {
-
-                System.out.println("TEST");
                 myDragAndDropHandler.canvasOnDragEntered(dragEvent);
             }
         });

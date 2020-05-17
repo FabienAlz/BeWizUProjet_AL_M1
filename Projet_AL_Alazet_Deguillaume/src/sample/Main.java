@@ -32,8 +32,6 @@ public class Main extends Application {
         canvas.addAndNotify(r3);
         canvas.addAndNotify(p);
         canvas.addAndNotify(r4);
-
-
     }
 
     @Override
@@ -41,6 +39,7 @@ public class Main extends Application {
         implementor = FXImplementor.getInstance();
         implementor.start(primaryStage);
         initialize();
+        Caretaker.getInstance().saveState();
     }
 
 

@@ -58,6 +58,15 @@ public final class Toolbar {
     }
 
     /**
+     * Notifies the observers of each Shape
+     */
+    public void notifyAllShapes() {
+        for(Shape s : shapes) {
+            s.notifyObserver();
+        }
+    }
+
+    /**
      * Adds a Shape in the toolbar and notifies its observers
      * @param s the Shape to add and notify
      */
@@ -83,10 +92,11 @@ public final class Toolbar {
     }
 
     /**
-     * Clears the toolbar of all its Shapes
+     * Clears the toolbar of all its Shapes and resets position of the next Shape
      */
     public void clear() {
         shapes.clear();
+        resetPosition();
     }
 
     /**

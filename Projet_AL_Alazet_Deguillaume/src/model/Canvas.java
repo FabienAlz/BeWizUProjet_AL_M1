@@ -8,7 +8,6 @@ public final class Canvas {
     private List<Shape> shapes;
     private Position startSelectPos = new Position(0, 0);
     private boolean selection = false;
-
     /**
      * Singleton constructor
      */
@@ -21,8 +20,10 @@ public final class Canvas {
      * @return a new Cnvas if it's the first time it's called, the previously created instance otherwise
      */
     public static Canvas getInstance() {
-        if(instance == null)
+        if(instance == null) {
             instance = new Canvas();
+        }
+
         return instance;
     }
     /******************************

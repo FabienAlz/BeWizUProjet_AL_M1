@@ -1,13 +1,19 @@
 package model;
 
-public class Memento {
-    private Shape state;
+import java.util.ArrayList;
+import java.util.List;
 
-    public Memento(Shape state) {
-        this.state = state;
+public class Memento {
+    private List<Shape> state;
+
+    public Memento(List<Shape> state) {
+        this.state = new ArrayList<>();
+        for(Shape s : state) {
+            this.state.add(s.clone());
+        }
     }
 
-    public Shape getState() {
+    public List<Shape>  getState() {
         return this.state;
     }
 }

@@ -98,6 +98,7 @@ public final class FXImplementor implements Implementor {
 
     public void start(Stage primaryStage) throws Exception {
         View mediator = View.getInstance();
+
         mediator.registerComponent(new SaveButton("", "Projet_AL_Alazet_Deguillaume/ressources/save.png"));
         mediator.registerComponent(new LoadButton("", "Projet_AL_Alazet_Deguillaume/ressources/load.png"));
         mediator.registerComponent(new UndoButton("", "Projet_AL_Alazet_Deguillaume/ressources/undo.png"));
@@ -111,7 +112,6 @@ public final class FXImplementor implements Implementor {
         menu.addItem(new FXMenuItemGroup("Group"));
         menu.addItem(new FXMenuItemDegroup("Degroup"));
         menu.addItem(new FXMenuItemEdit("Edit"));
-
         //menu.addItem(new MenuItem("Deroup"));
         //menu.addItem(new MenuItem("Edit"));
         mediator.registerComponent(menu);
