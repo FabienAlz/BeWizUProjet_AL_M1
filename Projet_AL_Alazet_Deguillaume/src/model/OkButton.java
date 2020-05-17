@@ -65,6 +65,7 @@ public class OkButton extends javafx.scene.control.Button implements Component {
                     Canvas.getInstance().notifyAllShapes();
                 }
             }
+            Caretaker.getInstance().saveState();
         });
     }
 }
