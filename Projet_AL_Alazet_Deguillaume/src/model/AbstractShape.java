@@ -24,6 +24,8 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
         generatedId ++;
     }
 
+    public AbstractShape(){}
+
     /******************************
      *           GETTERS          *
      ******************************/

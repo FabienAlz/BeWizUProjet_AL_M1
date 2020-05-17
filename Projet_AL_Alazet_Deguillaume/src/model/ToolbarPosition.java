@@ -1,6 +1,8 @@
 package model;
 
-public class ToolbarPosition implements PositionI {
+import java.io.Serializable;
+
+public class ToolbarPosition implements PositionI, Serializable {
 
     private double x, y;
 

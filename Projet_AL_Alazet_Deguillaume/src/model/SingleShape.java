@@ -20,6 +20,9 @@ public abstract class SingleShape extends AbstractShape {
         this.rotationCenter = rotationCenter;
         this.color = color;
     }
+
+    public SingleShape(){}
+
     /******************************
      *          GETTERS           *
      ******************************/

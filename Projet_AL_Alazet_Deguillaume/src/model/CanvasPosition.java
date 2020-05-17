@@ -1,6 +1,8 @@
 package model;
 
-public class CanvasPosition implements PositionI {
+import java.io.Serializable;
+
+public class CanvasPosition implements PositionI, Serializable {
 
     private double x, y;
 

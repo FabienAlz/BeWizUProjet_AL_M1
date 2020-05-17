@@ -209,8 +209,8 @@ public class FXDragAndDropHandlers {
         label.setStyle("-fx-background-color: #8a7876;");
         implementor.popup.getContent().clear();
         implementor.popup.getContent().add(label);
-        dragEvent.consume();
 
+        dragEvent.consume();
     }
 
     /**
@@ -244,7 +244,7 @@ public class FXDragAndDropHandlers {
                     List<Shape> selectedShapes = new ArrayList<>();
                     for(Shape s : Canvas.getInstance().getShapes()) {
                         if(s.isSelected()) {
-                           selectedShapes.add(s);
+                            selectedShapes.add(s);
                         }
                     }
                     for(Shape s : selectedShapes) {
@@ -317,10 +317,10 @@ public class FXDragAndDropHandlers {
             implementor.popup.getContent().clear();
             implementor.popup.getContent().add(label);
             implementor.getBin().setOpacity(1);
-            long id = Long.parseLong(db.getString());
-            if (Toolbar.getInstance().contains(id)) {
+//            long id = Long.parseLong(db.getString());
+//            if (Toolbar.getInstance().contains(id)) {
                 implementor.popup.hide();
-            }
+//            }
         }
         dragEvent.consume();
     }
@@ -335,11 +335,7 @@ public class FXDragAndDropHandlers {
             implementor.popup.setX((int) (dragEvent.getScreenX()) - implementor.popup.getWidth()/2);
             implementor.popup.setY((int) (dragEvent.getScreenY())- implementor.popup.getHeight()*2);
             dragEvent.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-
-            long id = Long.parseLong(db.getString());
-            if (Toolbar.getInstance().contains(id)) {
-                implementor.popup.show(implementor.stage);
-            }
+            implementor.popup.show(implementor.stage);
         }
         dragEvent.consume();
     }

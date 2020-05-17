@@ -1,38 +1,26 @@
 package model;
 
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.fxml.FXML;
 import utils.FXContextMenuHandlers;
-import utils.FXDragAndDropHandlers;
 import utils.FXMouseHandlers;
+import view.View;
 
-import java.io.File;
 import java.util.*;
 import java.util.List;
 
 public final class FXImplementor implements Implementor {
 
-    Shape lastSelected;
-    javafx.scene.shape.Shape lastFXSelected;
+    public Shape lastSelected;
+    public javafx.scene.shape.Shape lastFXSelected;
 
     @FXML
     private Pane root;
@@ -43,7 +31,7 @@ public final class FXImplementor implements Implementor {
     @FXML
     private ContextMenu contextMenu;
     @FXML
-    private ImageView bin;
+    private Pane bin;
     @FXML
     private ImageView save;
 
@@ -92,12 +80,12 @@ public final class FXImplementor implements Implementor {
         return leftBar;
     }
 
-    public ImageView getBin() {
+    public Pane getBin() {
         return bin;
     }
 
     public ContextMenu getContextMenu() {
-        return contextMenu;
+        return View.getInstance().contextMenu;
     }
 
 
@@ -107,14 +95,43 @@ public final class FXImplementor implements Implementor {
      * @param primaryStage the stage to start
      * @throws Exception
      */
+
     public void start(Stage primaryStage) throws Exception {
-        popup = new Popup();
+        View mediator = View.getInstance();
+        mediator.registerComponent(new SaveButton("", "Projet_AL_Alazet_Deguillaume/ressources/save.png"));
+        mediator.registerComponent(new LoadButton("", "Projet_AL_Alazet_Deguillaume/ressources/load.png"));
+        mediator.registerComponent(new UndoButton("", "Projet_AL_Alazet_Deguillaume/ressources/undo.png"));
+        mediator.registerComponent(new RedoButton("", "Projet_AL_Alazet_Deguillaume/ressources/redo.png"));
+        mediator.registerComponent(new Bin("Projet_AL_Alazet_Deguillaume/ressources/bin.png"));
+        List<Node> toolbarComponent = new ArrayList<>();
+        mediator.registerComponent(new FXToolbar(toolbarComponent));
+        mediator.registerComponent(new FXCanvas(toolbarComponent));
+        mediator.registerComponent(new model.Popup());
+        FXContextMenu menu = new FXContextMenu("contextMenu");
+        menu.addItem(new FXMenuItemGroup("Group"));
+        menu.addItem(new FXMenuItemDegroup("Degroup"));
+        menu.addItem(new FXMenuItemEdit("Edit"));
+
+        //menu.addItem(new MenuItem("Deroup"));
+        //menu.addItem(new MenuItem("Edit"));
+        mediator.registerComponent(menu);
+        leftBar = mediator.toolbar;
+        canvas = mediator.canvas;
+        bin = mediator.bin;
+        popup = mediator.popup;
+        stage = primaryStage;
+        mediator.createGUI(primaryStage);
+//        setToolbarHandlers();
+        //setBinHandlers();
+    }
+
+    /*public void start(Stage primaryStage) throws Exception {
+
         stage = primaryStage;
         root = FXMLLoader.load(getClass().getResource("../view/view.fxml"));
         canvas = (Pane) root.lookup("#canvas");
         leftBar = (Pane) root.lookup("#leftBar");
         bin = (ImageView) root.lookup("#bin");
-        save = (ImageView) root.lookup("#bin");
 
         // Create ContextMenu
         contextMenu = new ContextMenu();
@@ -384,6 +401,8 @@ public final class FXImplementor implements Implementor {
         primaryStage.setScene(new Scene(root, 1080, 650));
         primaryStage.show();
 
+        save = (ImageView) root.lookup("#save");
+
         EventHandler<MouseEvent> okButtonClick = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
@@ -543,56 +562,63 @@ public final class FXImplementor implements Implementor {
         save.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                FileChooser fileChooser = new FileChooser();
+                Shape r = new Rectangle(new CanvasPosition(20,20), 0, new Position(0,0), new Position(0,0), "#4472c4", 30, 20, 0, FXImplementor.getInstance());
+                Rectangle read = null;
+                File f = new File("MyFile.txt");
+                FileOutputStream fos = null;
+                try {
+                    fos = new FileOutputStream(f);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                ObjectOutputStream oos = null;
+                try {
+                    oos = new ObjectOutputStream(fos);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    oos.writeObject(r);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    oos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-                //Set extension filter
-                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
-                fileChooser.getExtensionFilters().add(extFilter);
+                FileInputStream fis = null;
+                ObjectInputStream ois = null;
+                try {
+                    fis = new FileInputStream(f);
+                    ois = new ObjectInputStream(fis);
+                    read = (Rectangle) ois.readObject();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
 
-                //Show save file dialog
-                File file = fileChooser.showSaveDialog(primaryStage);
-
+                try {
+                    ois.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(read+"slt");
             }
         });
 
     }
+*/
 
-    /**
-     * binds the handlers to the toolbar
-     */
-    private void setToolbarHandlers() {
-        FXDragAndDropHandlers myHandler = new FXDragAndDropHandlers();
-        leftBar.setOnDragDropped(new EventHandler<DragEvent>() {
-            public void handle(DragEvent event) {
-                myHandler.toolbarOnDragDropped(event);
-            }
-        });
-
-        leftBar.setOnDragOver(new EventHandler<DragEvent>() {
-            public void handle(DragEvent dragEvent) {
-                myHandler.toolbarOnDragOver(dragEvent);
-            }
-        });
-
-        leftBar.setOnDragEntered(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent dragEvent) {
-                myHandler.toolbarOnDragEntered(dragEvent);
-            }
-        });
-
-        leftBar.setOnDragExited(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent dragEvent) {
-                myHandler.toolbarOnDragExited(dragEvent);
-            }
-        });
-    }
 
     /**
      * binds the handlers to the canvas
      */
-    private void setCanvasHandlers() {
+   /* private void setCanvasHandlers() {
         javafx.scene.shape.Rectangle rectangleSelection = new javafx.scene.shape.Rectangle();
         rectangleSelection.setOpacity(0.3);
         rectangleSelection.setFill(BORDER_COLOR);
@@ -601,10 +627,10 @@ public final class FXImplementor implements Implementor {
         FXMouseHandlers myHandler = new FXMouseHandlers(null, rectangleSelection);
         FXDragAndDropHandlers myDragAndDropHandler = new FXDragAndDropHandlers();
 
-        /*******************************************************
+        *//*******************************************************
          *                    DRAG EVENTS                      *
-         *******************************************************/
-        canvas.setOnDragDropped(new EventHandler<DragEvent>() {
+         *******************************************************//*
+       *//* canvas.setOnDragDropped(new EventHandler<DragEvent>() {
             public void handle(DragEvent event) {
                 myDragAndDropHandler.canvasOnDragDropped(event);
             }
@@ -612,6 +638,7 @@ public final class FXImplementor implements Implementor {
 
         canvas.setOnDragOver(new EventHandler<DragEvent>() {
             public void handle(DragEvent event) {
+                System.out.println("TEST");
                 myDragAndDropHandler.canvasOnDragOver(event);
             }
         });
@@ -619,6 +646,8 @@ public final class FXImplementor implements Implementor {
         canvas.setOnDragEntered(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent dragEvent) {
+
+                System.out.println("TEST");
                 myDragAndDropHandler.canvasOnDragEntered(dragEvent);
             }
         });
@@ -628,11 +657,11 @@ public final class FXImplementor implements Implementor {
             public void handle(DragEvent dragEvent) {
                 myDragAndDropHandler.canvasOnDragExited(dragEvent);
             }
-        });
+        });*//*
 
-        /*************************************************
+        *//*************************************************
          *          MOUSE HANDLERS FOR SELECTION         *
-         *************************************************/
+         *************************************************//*
         EventHandler<MouseEvent> setGestureStarted = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
@@ -654,45 +683,13 @@ public final class FXImplementor implements Implementor {
             @Override
             public void handle(MouseEvent e) {
                 myHandler.endSelection(e);
-            }
+                  }
 
         };
 
         canvas.addEventFilter(MouseEvent.MOUSE_RELEASED, endSelection);
-    }
+    }*/
 
-    /**
-     * binds the handlers to the bin
-     */
-    private void setBinHandlers() {
-        FXDragAndDropHandlers myDragAndDropHandler = new FXDragAndDropHandlers();
-        bin.setOnDragDropped(new EventHandler<DragEvent>() {
-            public void handle(DragEvent event) {
-                myDragAndDropHandler.binOnDragDropped(event);
-            }
-        });
-
-        bin.setOnDragOver(new EventHandler<DragEvent>() {
-            public void handle(DragEvent event) {
-                myDragAndDropHandler.binOnDragOver(event);
-            }
-        });
-
-        bin.setOnDragEntered(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent dragEvent) {
-                myDragAndDropHandler.binOnDragEntered(dragEvent);
-            }
-        });
-
-        bin.setOnDragExited(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent dragEvent) {
-                myDragAndDropHandler.binOnDragExited(dragEvent);
-            }
-        });
-
-    }
 
     /**
      * binds the handlers to single shapes

@@ -1,8 +1,9 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Vector;
 
-public class Polygon extends SingleShape {
+public class Polygon extends SingleShape implements Serializable {
     private int edges;
     private float length;
     private Vector<Double> vertices;

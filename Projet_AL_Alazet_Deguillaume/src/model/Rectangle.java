@@ -1,6 +1,8 @@
 package model;
 
-public class Rectangle extends SingleShape {
+import java.io.Serializable;
+
+public class Rectangle extends SingleShape implements Serializable {
     private float width;
     private float height;
     private float borderRadius;
@@ -23,6 +25,8 @@ public class Rectangle extends SingleShape {
         this.height = height;
         this.borderRadius = borderRadius;
     }
+
+    public Rectangle(){}
 
     /******************************
      *          GETTERS           *
