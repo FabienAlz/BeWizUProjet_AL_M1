@@ -65,11 +65,6 @@ public class CompoundShape extends AbstractShape {
     }
 
     public List<Shape> getShapes() {
-        /*List<Shape> copy = new ArrayList<>();
-        for(Shape s : shapes) {
-            copy.add(s.clone());
-        }
-        return copy;*/
         return shapes;
     }
 

@@ -6,6 +6,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import model.*;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -140,19 +141,17 @@ public class FXDragAndDropHandlers {
             // If the shape comes from the canvas, changes its position
             if(Canvas.getInstance().contains(id)) {
                 Shape original = Canvas.getInstance().getShape(id);
-                Shape copy = original.clone();
-                Canvas.getInstance().remove(original);
                 if(original instanceof CompoundShape) {
-                    ((CompoundShape)copy).translate(new Position(dragEvent.getX()-((CompoundShape) original).getTopLeft().getX(),
+                    ((CompoundShape)original).translate(new Position(dragEvent.getX()-((CompoundShape) original).getTopLeft().getX(),
                             dragEvent.getY()-((CompoundShape) original).getTopLeft().getY()));
                     implementor.getCanvas().getChildren().clear();
-                    Canvas.getInstance().add(copy);
+                    //Canvas.getInstance().add(original);
                     Canvas.getInstance().notifyAllShapes();
                 }
                 else {
                     implementor.getCanvas().getChildren().remove(implementor.getSHAPES().get(original.getId()));
-                    copy.setPosition(new CanvasPosition(dragEvent.getX(), dragEvent.getY()));
-                    Canvas.getInstance().addAndNotify(copy);
+                    original.setPosition(new CanvasPosition(dragEvent.getX(), dragEvent.getY()));
+                    original.notifyObserver();
                 }
             }
             // If the shape comes from the toolbar, adds it to the canvas

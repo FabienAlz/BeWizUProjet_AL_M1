@@ -23,24 +23,29 @@ public class FXMenuItemDegroup extends FXMenuItem {
 
                 for (Shape s : Canvas.getInstance().getShapes()) {
                     if (s.isSelected() && s instanceof CompoundShape) {
-                        for (Shape compoundShape : ((CompoundShape) s).getShapes()) {
-                            Shape copy = compoundShape.clone();
+                        for (Shape shape : ((CompoundShape) s).getShapes()) {
+                            Shape copy = shape.clone();
                             copy.setSelected(false);
                             copy.setId();
                             shapesToAdd.add(copy);
-
+                            shapesToRemove.add(shape);
                         }
                         shapesToRemove.add(s);
                     } else s.setSelected(false);
                 }
+                System.out.println(Canvas.getInstance().getShapes());
                 for (Shape s : shapesToRemove) {
+                    FXImplementor.getInstance().getSHAPES().remove(s.getId());
                     Canvas.getInstance().remove(s);
                 }
+                System.out.println(Canvas.getInstance().getShapes());
                 for (Shape s : shapesToAdd) {
                     Canvas.getInstance().add(s);
                 }
                 View.getInstance().canvas.getChildren().clear();
                 Canvas.getInstance().notifyAllShapes();
+                System.out.println(Canvas.getInstance().getShapes());
+                System.out.println(FXImplementor.getInstance().getSHAPES());
             }
         });
     }

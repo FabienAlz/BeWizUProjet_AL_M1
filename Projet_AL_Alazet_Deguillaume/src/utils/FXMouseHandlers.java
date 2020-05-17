@@ -8,6 +8,7 @@ import model.Canvas;
 import model.FXImplementor;
 import model.Position;
 import model.Shape;
+import view.View;
 
 /**
  * This class contains all the mouse handlers used by the implementor
@@ -43,7 +44,6 @@ public class FXMouseHandlers {
         rt /= 255;
         gt /= 255;
         bt /= 255;
-
         FXShape.setFill(new Color(rt, gt, bt, 1));
     }
 
@@ -136,7 +136,6 @@ public class FXMouseHandlers {
     /**
      * Selects the shapes inside the rectangle selection
      */
-
     public void endSelection(MouseEvent mouseEvent) {
         if (FXShape instanceof Rectangle) {
             if (Canvas.getInstance().getSelection()) {

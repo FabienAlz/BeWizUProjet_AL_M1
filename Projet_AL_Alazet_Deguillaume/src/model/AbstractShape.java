@@ -20,8 +20,7 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
         this.position = position;
         this.translation = translation;
         this.isSelected = false;
-        this.id = generatedId;
-        generatedId ++;
+        this.id = ++generatedId;
     }
 
     public AbstractShape(){}
@@ -65,7 +64,8 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
         isSelected = selected;
     }
 
-    public void setId() { this.id = ++generatedId; }
+    public void setId() {
+        this.id = ++generatedId; }
 
     /**
      * Checks if the Shape is inside a Rectangle
