@@ -15,11 +15,8 @@ import java.util.List;
 
 public class FXCanvas extends javafx.scene.layout.Pane implements Component {
     private Mediator mediator;
-    private List<Node> subComponents;
 
-    public FXCanvas(List<Node> subComponents) {
-        this.subComponents = new ArrayList<>();
-        this.subComponents.addAll(subComponents);
+    public FXCanvas() {
         setCanvasHandlers();
     }
 

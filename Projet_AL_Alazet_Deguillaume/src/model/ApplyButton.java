@@ -24,10 +24,8 @@ public class ApplyButton extends javafx.scene.control.Button implements Componen
 
     private void applyButtonHandler() {
         setOnAction(e -> {
-            EditorView.getInstance().shapeSaves.clear();
             for (Shape s : Canvas.getInstance().getShapes()) {
                 if (s.isSelected()) {
-                    EditorView.getInstance().shapeSaves.put(s.getId(), s.clone());
                     s.setColor(String.valueOf(EditorView.getInstance().colorPicker.getValue()));
                     s.setRotation(Float.parseFloat(EditorView.getInstance().textFields.get("Rotation").getText()));
                     if (s instanceof Rectangle) {

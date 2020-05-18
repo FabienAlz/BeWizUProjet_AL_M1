@@ -4,6 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.Pane;
@@ -23,6 +24,7 @@ public final class View implements Mediator {
     private RedoButton redo;
     public Bin bin;
     private FXMenu menu;
+    public ScrollPane toolbarWrapper;
     public FXToolbar toolbar;
     public FXCanvas canvas;
     public ContextMenu contextMenu;
@@ -105,6 +107,12 @@ public final class View implements Mediator {
         toolbar.setStyle("-fx-background-color: #ebeee6");
         toolbar.setLayoutY(concreteMenu.getPrefHeight());
 
+        toolbarWrapper = new ScrollPane(toolbar);
+        toolbarWrapper.fitToWidthProperty().set(true);
+        toolbarWrapper.setPrefSize(TOOLBAR_WIDTH,TOOLBAR_HEIGHT);
+        toolbarWrapper.setStyle("-fx-background-color: #ebeee6");
+        toolbarWrapper.setLayoutY(concreteMenu.getPrefHeight());
+
         bin.setPrefSize(TOOLBAR_WIDTH,SCENE_HEIGHT - (MENU_HEIGHT + TOOLBAR_HEIGHT));
         bin.setLayoutY(MENU_HEIGHT + TOOLBAR_HEIGHT);
         bin.setStyle("-fx-background-color: #ebeee6");
@@ -112,7 +120,7 @@ public final class View implements Mediator {
 
         concreteMenu.getItems().add(redo);
         root.getChildren().add(concreteMenu);
-        root.getChildren().add(toolbar);
+        root.getChildren().add(toolbarWrapper);
         root.getChildren().add(bin);
         root.requestFocus();
 

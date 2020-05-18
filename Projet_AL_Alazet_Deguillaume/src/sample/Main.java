@@ -14,7 +14,7 @@ public class Main extends Application {
 
 
     public void initialize() {
-               Canvas canvas = Canvas.getInstance();
+        Canvas canvas = Canvas.getInstance();
         Toolbar toolbar = Toolbar.getInstance();
 
         Shape r = new Rectangle(new ToolbarPosition(), 0, new Position(0,0), new Translation(0,0), "#4472c4", 30, 20, 0, implementor);

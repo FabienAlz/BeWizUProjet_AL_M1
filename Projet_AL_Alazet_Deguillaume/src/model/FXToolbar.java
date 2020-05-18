@@ -11,12 +11,9 @@ import java.util.List;
 
 public class FXToolbar extends javafx.scene.layout.Pane implements Component {
     private Mediator mediator;
-    private List<Node> subComponents;
 
-    public FXToolbar(List<Node> subComponents) {
+    public FXToolbar() {
         super();
-        this.subComponents = new ArrayList<>();
-        this.subComponents.addAll(subComponents);
         setToolbarHandlers();
     }
 

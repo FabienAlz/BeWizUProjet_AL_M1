@@ -18,6 +18,8 @@ public class FXMenuItemEdit extends FXMenuItem {
             @Override
             public void handle(ActionEvent event) {
                 mediator = EditorView.getInstance();
+                EditorView.getInstance().shapeSaves.clear();
+
                 for (Shape shape : Canvas.getInstance().getShapes()) {
                     if (!(shape instanceof CompoundShape) && shape.isSelected()) {
                         Canvas.getInstance().resetSelection();
@@ -33,6 +35,7 @@ public class FXMenuItemEdit extends FXMenuItem {
                     if (shape.isSelected()) s = shape;
                 }
                 if (s.isSelected()) {
+                    EditorView.getInstance().shapeSaves.put(s.getId(), s.clone());
                     if (s instanceof Rectangle) {
                         createRectangleEditor((Rectangle)s);
 
@@ -58,7 +61,9 @@ public class FXMenuItemEdit extends FXMenuItem {
                     }
                 }
             }
-        });
+
+
+    });
     }
 
     private void createRectangleEditor(Shape s) {

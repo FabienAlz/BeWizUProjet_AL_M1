@@ -42,7 +42,7 @@ public class RedoButton extends FXButton {
                     Canvas.getInstance().clear();
                     Toolbar.getInstance().clear();
                     implementor.getCanvas().getChildren().clear();
-                    implementor.getLeftBar().getChildren().clear();
+                    implementor.getToolbar().getChildren().clear();
                     // Recreates the saved state
                     for (Shape s : state) {
                         if (s.getPositionI() instanceof CanvasPosition) {

@@ -57,9 +57,20 @@ public class LoadButton extends FXButton {
                             } catch (Exception ex) {
                                 ex.printStackTrace();
                             }
+                            if (s instanceof CompoundShape) {
+                                for (Shape subShape : ((CompoundShape) s).getShapes()) {
+                                    subShape.addObserver(obs);
+                                }
+                            }
                             s.addObserver(obs);
-                            if (s.getPositionI() instanceof ToolbarPosition)
+
+                            if (s.getPositionI() instanceof ToolbarPosition) {
                                 Toolbar.getInstance().addAndNotify(s);
+                                float ratio = (float) (s.getWidth() / (View.getInstance().toolbar.getPrefWidth() - 24));
+                                if(View.getInstance().toolbar.getHeight() < Toolbar.getInstance().getNextPosition().getY() + s.getHeight() / ratio ) {
+                                    View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight() + (s.getHeight() / ratio) +10 );
+                                }
+                            }
                             else if (s.getPositionI() instanceof CanvasPosition)
                                 Canvas.getInstance().addAndNotify(s);
                         }
@@ -69,7 +80,6 @@ public class LoadButton extends FXButton {
                         i.printStackTrace();
                         return;
                     } catch (ClassNotFoundException c) {
-                        System.out.println("List<Shape> class not found");
                         c.printStackTrace();
                         return;
                     }
