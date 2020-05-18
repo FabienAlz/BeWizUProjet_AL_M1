@@ -6,6 +6,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import model.*;
 
+import javax.tools.Tool;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,9 +70,6 @@ public class FXDragAndDropHandlers {
                         }
                     }
                 }
-                implementor.getCanvas().getChildren().clear();
-                Canvas.getInstance().resetSelection();
-                Canvas.getInstance().notifyAllShapes();
             }
             success = true;
             Caretaker.getInstance().saveState();
@@ -79,7 +77,9 @@ public class FXDragAndDropHandlers {
         /* let the source know whether the string was successfully
          * transferred and used */
         dragEvent.setDropCompleted(success);
-
+        implementor.getCanvas().getChildren().clear();
+        Canvas.getInstance().resetSelection();
+        Canvas.getInstance().notifyAllShapes();
         dragEvent.consume();
     }
 
@@ -145,7 +145,6 @@ public class FXDragAndDropHandlers {
                     ((CompoundShape)original).translate(new Translation(dragEvent.getX()-((CompoundShape) original).getTopLeft().getX(),
                             dragEvent.getY()-((CompoundShape) original).getTopLeft().getY()));
                     implementor.getCanvas().getChildren().clear();
-                    //Canvas.getInstance().add(original);
                     Canvas.getInstance().notifyAllShapes();
                 }
                 else {
@@ -168,8 +167,7 @@ public class FXDragAndDropHandlers {
                 }
                 Canvas.getInstance().resetSelection();
                 Canvas.getInstance().add(copy);
-                implementor.getCanvas().getChildren().clear();
-                Canvas.getInstance().notifyAllShapes();
+
             }
 
             success = true;
@@ -179,8 +177,10 @@ public class FXDragAndDropHandlers {
         /* let the source know whether the string was successfully
          * transferred and used */
         dragEvent.setDropCompleted(success);
-
+        implementor.getCanvas().getChildren().clear();
+        Canvas.getInstance().notifyAllShapes();
         dragEvent.consume();
+
     }
 
     /**
@@ -293,6 +293,10 @@ public class FXDragAndDropHandlers {
         /* let the source know whether the string was successfully
          * transferred and used */
         dragEvent.setDropCompleted(success);
+        implementor.getCanvas().getChildren().clear();
+
+        Canvas.getInstance().resetSelection();
+        Canvas.getInstance().notifyAllShapes();
         dragEvent.consume();
     }
 
@@ -323,7 +327,7 @@ public class FXDragAndDropHandlers {
             implementor.getBin().setOpacity(1);
 //            long id = Long.parseLong(db.getString());
 //            if (Toolbar.getInstance().contains(id)) {
-                implementor.popup.hide();
+            implementor.popup.hide();
 //            }
         }
         dragEvent.consume();

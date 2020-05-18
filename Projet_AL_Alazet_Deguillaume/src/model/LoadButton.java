@@ -36,7 +36,7 @@ public class LoadButton extends FXButton {
     private void loadButtonHandler() {
         setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setInitialDirectory(new File("Projet_AL_Alazet_Deguillaume/ressources/saves"));
+            fileChooser.setInitialDirectory(new File("C:/Users/Shadow/Desktop/GL/AL/projet/BeWizUProjet_AL_M1/Projet_AL_Alazet_Deguillaume/ressources/saves"));
             File file = fileChooser.showOpenDialog(primaryStage);
             List<Shape> loadShapes = null;
             if(file!=null) {
@@ -47,6 +47,7 @@ public class LoadButton extends FXButton {
                         loadShapes = (List<Shape>) in.readObject();
                         Canvas.getInstance().getShapes().clear();
                         Toolbar.getInstance().getShapes().clear();
+                        Toolbar.getInstance().resetPosition();
                         View.getInstance().canvas.getChildren().clear();
                         View.getInstance().toolbar.getChildren().clear();
                         ShapeObserver obs = new ConcreteShapeObserver();
@@ -57,10 +58,11 @@ public class LoadButton extends FXButton {
                         }
                         for (Shape s : loadShapes) {
                             s.addObserver(obs);
-                            if (s.getPositionI() instanceof ToolbarPosition) Toolbar.getInstance().addAndNotify(s);
-                            else if (s.getPositionI() instanceof CanvasPosition) Canvas.getInstance().addAndNotify(s);
+                            if (s.getPositionI() instanceof ToolbarPosition)
+                                Toolbar.getInstance().addAndNotify(s);
+                            else if (s.getPositionI() instanceof CanvasPosition)
+                                Canvas.getInstance().addAndNotify(s);
                         }
-
                         in.close();
                         fileIn.close();
                     } catch (IOException i) {
@@ -71,6 +73,7 @@ public class LoadButton extends FXButton {
                         c.printStackTrace();
                         return;
                     }
+                    Caretaker.getInstance().saveState();
                 }
             }
         });

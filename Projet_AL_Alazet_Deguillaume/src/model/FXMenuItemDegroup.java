@@ -42,6 +42,8 @@ public class FXMenuItemDegroup extends FXMenuItem {
                 }
                 View.getInstance().canvas.getChildren().clear();
                 Canvas.getInstance().notifyAllShapes();
+                Caretaker.getInstance().saveState();
+
             }
         });
     }

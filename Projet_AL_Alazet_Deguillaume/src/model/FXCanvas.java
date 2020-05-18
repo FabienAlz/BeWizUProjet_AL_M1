@@ -35,36 +35,36 @@ public class FXCanvas extends javafx.scene.layout.Pane implements Component {
 
     private void setCanvasHandlers() {
         javafx.scene.shape.Rectangle rectangleSelection = new javafx.scene.shape.Rectangle();
-        rectangleSelection.setOpacity(0.3);
         rectangleSelection.setFill(new Color(1,0,1,1));
         rectangleSelection.setStroke(new Color(0, 0, 1, 1));
-        rectangleSelection.setStrokeWidth(2);
+        rectangleSelection.setOpacity(0.3);
+        rectangleSelection.setVisible(false);
         FXMouseHandlers myHandler = new FXMouseHandlers(null, rectangleSelection);
         FXDragAndDropHandlers myDragAndDropHandler = new FXDragAndDropHandlers();
 
         /*******************************************************
          *                    DRAG EVENTS                      *
          *******************************************************/
-        this.setOnDragDropped(new EventHandler<DragEvent>() {
+        setOnDragDropped(new EventHandler<DragEvent>() {
             public void handle(DragEvent event) {
                 myDragAndDropHandler.canvasOnDragDropped(event);
             }
         });
 
-        ((Pane)this).setOnDragOver(new EventHandler<DragEvent>() {
+        setOnDragOver(new EventHandler<DragEvent>() {
             public void handle(DragEvent event) {
                 myDragAndDropHandler.canvasOnDragOver(event);
             }
         });
 
-        this.setOnDragEntered(new EventHandler<DragEvent>() {
+        setOnDragEntered(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent dragEvent) {
                 myDragAndDropHandler.canvasOnDragEntered(dragEvent);
             }
         });
 
-        this.setOnDragExited(new EventHandler<DragEvent>() {
+        setOnDragExited(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent dragEvent) {
                 myDragAndDropHandler.canvasOnDragExited(dragEvent);
@@ -81,7 +81,7 @@ public class FXCanvas extends javafx.scene.layout.Pane implements Component {
             }
         };
 
-        this.setOnMousePressed(setGestureStarted);
+        setOnMousePressed(setGestureStarted);
 
         EventHandler<MouseEvent> updateSelectionRectangle = new EventHandler<MouseEvent>() {
             @Override
@@ -89,7 +89,8 @@ public class FXCanvas extends javafx.scene.layout.Pane implements Component {
                 myHandler.updateSelectionRectangle(e);
             }
         };
-        this.setOnMouseDragged(updateSelectionRectangle);
+
+        setOnMouseDragged(updateSelectionRectangle);
 
         EventHandler<MouseEvent> endSelection = new EventHandler<MouseEvent>() {
             @Override
@@ -99,6 +100,6 @@ public class FXCanvas extends javafx.scene.layout.Pane implements Component {
 
         };
 
-        this.addEventFilter(MouseEvent.MOUSE_RELEASED, endSelection);
+        addEventFilter(MouseEvent.MOUSE_RELEASED, endSelection);
     }
 }

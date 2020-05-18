@@ -25,12 +25,12 @@ public final class FXImplementor implements Implementor, Serializable {
     public transient javafx.scene.shape.Shape lastFXSelected;
 
     private transient Pane canvas;
-    private transient Pane leftBar;
+    private transient Pane toolBar;
     private transient Pane bin;
 
-    public transient final Color BORDER_COLOR = new Color(68.0 / 255, 114.0 / 255, 196.0 / 255, 1);
+    public transient Color BORDER_COLOR;
 
-    private static FXImplementor instance;
+    private transient static FXImplementor instance;
 
     public transient static Stage stage;
 
@@ -66,7 +66,7 @@ public final class FXImplementor implements Implementor, Serializable {
     }
 
     public Pane getLeftBar() {
-        return leftBar;
+        return toolBar;
     }
 
     public Pane getBin() {
@@ -79,16 +79,11 @@ public final class FXImplementor implements Implementor, Serializable {
 
 
     /**
-     * Starts the javafx application
+     * Initialize the javafx application
      *
-     * @param primaryStage the stage to start
-     * @throws Exception
      */
-
-    public void start(Stage primaryStage) throws Exception {
-
-        SHAPES = new HashMap<>();
-
+    @Override
+    public void initialize() {
         View mediator = View.getInstance();
 
         mediator.registerComponent(new SaveButton("", "Projet_AL_Alazet_Deguillaume/ressources/ico/save.png"));
@@ -105,12 +100,26 @@ public final class FXImplementor implements Implementor, Serializable {
         menu.addItem(new FXMenuItemDegroup("Degroup"));
         menu.addItem(new FXMenuItemEdit("Edit"));
         mediator.registerComponent(menu);
-        leftBar = mediator.toolbar;
-        canvas = mediator.canvas;
-        bin = mediator.bin;
-        popup = mediator.popup;
+    }
+
+
+    /**
+     * Starts the javafx application
+     *
+     * @param primaryStage the stage to start
+     * @throws Exception
+     */
+
+    public void start(Stage primaryStage) throws Exception {
+
+        SHAPES = new HashMap<>();
+        BORDER_COLOR = new Color(68.0 / 255, 114.0 / 255, 196.0 / 255, 1);
+        toolBar = View.getInstance().toolbar;
+        canvas = View.getInstance().canvas;
+        bin = View.getInstance().bin;
+        popup = View.getInstance().popup;
         stage = primaryStage;
-        mediator.createGUI(primaryStage);
+        View.getInstance().createGUI(primaryStage);
     }
 
     /**
@@ -258,8 +267,8 @@ public final class FXImplementor implements Implementor, Serializable {
         newShape.setRotate(s.getRotation());
         if (s.getPositionI() instanceof ToolbarPosition) {
             newShape.setStrokeWidth(0);
-            if (s.getWidth() > leftBar.getWidth() - 24) {
-                float ratio = (float) (s.getWidth() / (leftBar.getWidth() - 24));
+            if (s.getWidth() > toolBar.getWidth() - 24) {
+                float ratio = (float) (s.getWidth() / (toolBar.getWidth() - 24));
                 newShape.setWidth(s.getWidth() / ratio);
                 newShape.setHeight(s.getHeight() / ratio);
             }
@@ -267,7 +276,7 @@ public final class FXImplementor implements Implementor, Serializable {
             newShape.setX(s.getPositionI().getX());
             newShape.setY(s.getPositionI().getY());
             Toolbar.getInstance().setNextPosition((int) newShape.getHeight());
-            leftBar.getChildren().add(newShape);
+            toolBar.getChildren().add(newShape);
 
         } else {
             Color c = Color.valueOf(s.getColor());
@@ -307,14 +316,14 @@ public final class FXImplementor implements Implementor, Serializable {
         newShape.setHeight(s.getHeight());
 
         newShape.setStrokeWidth(0);
-        if (s.getWidth() > leftBar.getWidth() - 24) {
-            float ratio = (float) (s.getWidth() / (leftBar.getWidth() - 24));
+        if (s.getWidth() > toolBar.getWidth() - 24) {
+            float ratio = (float) (s.getWidth() / (toolBar.getWidth() - 24));
             newShape.setWidth(s.getWidth() / ratio);
             newShape.setHeight(s.getHeight() / ratio);
         }
         newShape.setX(s.getPositionI().getX());
         newShape.setY(s.getPositionI().getY());
-        leftBar.getChildren().add(newShape);
+        toolBar.getChildren().add(newShape);
 
         return newShape;
     }
@@ -338,8 +347,8 @@ public final class FXImplementor implements Implementor, Serializable {
         if (s.getPositionI() instanceof ToolbarPosition) {
             s.setPosition(Toolbar.getInstance().getNextPosition());
             // Adjust the length of the shape in the toolbar
-            if (s.getWidth() > leftBar.getWidth() - 35) {
-                float ratio = (float) (s.getWidth() / (leftBar.getWidth() - 35));
+            if (s.getWidth() > toolBar.getWidth() - 35) {
+                float ratio = (float) (s.getWidth() / (toolBar.getWidth() - 35));
                 Polygon copy = s.clone();
                 copy.setLength(s.getLength() / ratio);
                 copy.computeVertices();
@@ -363,7 +372,7 @@ public final class FXImplementor implements Implementor, Serializable {
             newShape.setRotate(s.getRotation());
             newShape.setFill(Color.valueOf(s.getColor()));
 
-            leftBar.getChildren().add(newShape);
+            toolBar.getChildren().add(newShape);
         } else {
             newShape = new javafx.scene.shape.Polygon(vertices);
             Color c = Color.valueOf(s.getColor());
@@ -410,7 +419,7 @@ public final class FXImplementor implements Implementor, Serializable {
         newShape.setRotate(s.getRotation());
         newShape.setFill(Color.valueOf(s.getColor()));
 
-        leftBar.getChildren().add(newShape);
+        toolBar.getChildren().add(newShape);
         return newShape;
     }
 
@@ -423,15 +432,15 @@ public final class FXImplementor implements Implementor, Serializable {
         Map<Shape, javafx.scene.shape.Shape> compoundShapes = new HashMap<>();
         float width = s.getWidth();
         float ratio = 1;
-        if (width > leftBar.getWidth() - 35) {
-            ratio = (float) (width / (leftBar.getWidth() - 35));
+        if (width > toolBar.getWidth() - 35) {
+            ratio = (float) (width / (toolBar.getWidth() - 35));
         }
 
         for (Shape shape : s.getShapes()) {
             float posX = (float) (Toolbar.getInstance().getNextPosition().getX() +
-                    (shape.getPositionI().getX() - s.getPositionI().getX()) / ratio);
+                    (shape.getPositionI().getX() - s.getTopLeft().getX()) / ratio);
             float posY = (float) (Toolbar.getInstance().getNextPosition().getY() +
-                    (shape.getPositionI().getY() - s.getPositionI().getY()) / ratio);
+                    (shape.getPositionI().getY() - s.getTopLeft().getY()) / ratio);
 
 
             ToolbarPosition pos = new ToolbarPosition(posX, posY);
@@ -491,7 +500,11 @@ public final class FXImplementor implements Implementor, Serializable {
     @Override
     public void draw(Shape s) {
         if (s instanceof CompoundShape) {
-            createCompoundShape((CompoundShape) s);
+            if(s.getPositionI() instanceof ToolbarPosition) {
+                createToolbarCompoundShape(((CompoundShape) s));
+            }
+            else
+                createCompoundShape((CompoundShape) s);
         } else if (s instanceof Rectangle) {
             javafx.scene.shape.Shape newShape = createRectangle((Rectangle) s);
             commonHandlers(s, newShape);
@@ -512,13 +525,13 @@ public final class FXImplementor implements Implementor, Serializable {
     @Override
     public void remove() {
         List<Node> nodes = new ArrayList<>();
-        for (Node n : leftBar.getChildren()) {
+        for (Node n : toolBar.getChildren()) {
             if (n instanceof javafx.scene.shape.Rectangle || n instanceof javafx.scene.shape.Polygon) {
                 nodes.add(n);
             }
         }
         for (Node n : nodes) {
-            leftBar.getChildren().remove(n);
+            toolBar.getChildren().remove(n);
         }
         Toolbar.getInstance().resetPosition();
         for (Shape s : Toolbar.getInstance().getShapes()) {

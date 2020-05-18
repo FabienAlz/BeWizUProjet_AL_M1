@@ -25,7 +25,7 @@ public class FXMenuItemGroup extends FXMenuItem {
                 ShapeObserver obs = new ConcreteShapeObserver();
                 compoundShape.addObserver(obs);
                 Canvas.getInstance().addAndNotify(compoundShape);
-
+                Caretaker.getInstance().saveState();
             }
         });
     }

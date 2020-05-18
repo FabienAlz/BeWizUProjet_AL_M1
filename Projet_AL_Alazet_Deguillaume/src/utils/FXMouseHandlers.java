@@ -85,6 +85,10 @@ public class FXMouseHandlers {
                 Canvas.getInstance().setStartSelectPos(mouseEvent.getX(), mouseEvent.getY());
                 Canvas.getInstance().setSelection(true);
                 implementor.getCanvas().getChildren().add(FXShape);
+                FXShape.setVisible(true);
+                ((Rectangle) FXShape).setX(mouseEvent.getX());
+                ((Rectangle) FXShape).setY(mouseEvent.getY());
+
             }
         } else {
             throw new IllegalArgumentException();
@@ -96,6 +100,9 @@ public class FXMouseHandlers {
      */
     public void updateSelectionRectangle(MouseEvent mouseEvent) {
         if (Canvas.getInstance().getSelection()) {
+            if(FXShape.getStrokeWidth() == 0) {
+                FXShape.setStrokeWidth(2);
+            }
             double posX = mouseEvent.getX();
             double posY = mouseEvent.getY();
             if(posX < 0) {
@@ -200,6 +207,8 @@ public class FXMouseHandlers {
             }
             ((Rectangle) FXShape).setWidth(0);
             ((Rectangle) FXShape).setHeight(0);
+            FXShape.setStrokeWidth(0);
+            FXShape.setVisible(false);
         } else {
             throw new IllegalArgumentException();
         }
