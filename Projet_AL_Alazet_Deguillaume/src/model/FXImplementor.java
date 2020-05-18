@@ -116,6 +116,7 @@ public final class FXImplementor implements Implementor, Serializable {
         stage = primaryStage;
     }
 
+
     /**
      * Starts the javafx application
      *
@@ -126,15 +127,16 @@ public final class FXImplementor implements Implementor, Serializable {
     public void start(Stage primaryStage) throws Exception {
         View.getInstance().createGUI(primaryStage);
         initializeFXImplementor(primaryStage);
-
         File load = new File("C:/Users/Shadow/Desktop/GL/AL/projet/BeWizUProjet_AL_M1/Projet_AL_Alazet_Deguillaume/ressources/saves/autosave.ser");
         List<Shape> loadShapes = null;
         if (load != null) {
+            boolean scrollToDisable = true;
             try {
                 FileInputStream fileIn = new FileInputStream(load);
                 ObjectInputStream in = new ObjectInputStream(fileIn);
                 loadShapes = (List<Shape>) in.readObject();
                 ShapeObserver obs = new ConcreteShapeObserver();
+
                 for (Shape s : loadShapes) {
                     try {
                         s.setId();
@@ -152,13 +154,12 @@ public final class FXImplementor implements Implementor, Serializable {
                     s.addObserver(obs);
                     if (s.getPositionI() instanceof ToolbarPosition) {
                         Toolbar.getInstance().addAndNotify(s);
-                        float ratio = (float) (s.getWidth() / (View.getInstance().toolbar.getPrefWidth() - 24));
-                        if(View.getInstance().toolbar.getHeight() < Toolbar.getInstance().getNextPosition().getY() + s.getHeight() / ratio ) {
-                            View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight() + (s.getHeight() / ratio) +10 );
+                        if (View.getInstance().toolbar.getHeight() < Toolbar.getInstance().getNextPosition().getY()) {
+                            float ratio = (float) (s.getWidth() / (View.getInstance().toolbar.getPrefWidth() - 24));
+                            View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight() + (s.getHeight() / ratio) + 10);
+                            scrollToDisable = false;
                         }
                     }
-
-
                 }
                 in.close();
                 fileIn.close();
@@ -170,9 +171,9 @@ public final class FXImplementor implements Implementor, Serializable {
                 return;
             }
             Caretaker.getInstance().saveState();
-
+            if (scrollToDisable)
+                View.getInstance().toolbar.setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
         }
-
 
         primaryStage.setOnCloseRequest(event -> {
             File file = new File("C:/Users/Shadow/Desktop/GL/AL/projet/BeWizUProjet_AL_M1/Projet_AL_Alazet_Deguillaume/ressources/saves/autosave.ser");
@@ -337,6 +338,7 @@ public final class FXImplementor implements Implementor, Serializable {
         newShape.setFill(Color.valueOf(s.getColor()));
         newShape.setWidth(s.getWidth());
         newShape.setHeight(s.getHeight());
+
         if (s.getPositionI() instanceof ToolbarPosition) {
             newShape.setStrokeWidth(0);
             if (s.getWidth() > toolBar.getPrefWidth() - 24) {
@@ -348,6 +350,7 @@ public final class FXImplementor implements Implementor, Serializable {
             newShape.setX(s.getPositionI().getX());
             newShape.setY(s.getPositionI().getY());
             Toolbar.getInstance().setNextPosition((int) newShape.getHeight());
+
             toolBar.getChildren().add(newShape);
 
         } else {
@@ -387,8 +390,8 @@ public final class FXImplementor implements Implementor, Serializable {
         newShape.setFill(Color.valueOf(s.getColor()));
         newShape.setWidth(s.getWidth());
         newShape.setHeight(s.getHeight());
-
         newShape.setStrokeWidth(0);
+
         if (s.getWidth() > toolBar.getPrefWidth() - 24) {
             float ratio = (float) (s.getWidth() / (toolBar.getPrefWidth() - 24));
             newShape.setWidth(s.getWidth() / ratio);
@@ -397,7 +400,6 @@ public final class FXImplementor implements Implementor, Serializable {
         newShape.setX(s.getPositionI().getX());
         newShape.setY(s.getPositionI().getY());
         toolBar.getChildren().add(newShape);
-
         return newShape;
     }
 
@@ -486,9 +488,7 @@ public final class FXImplementor implements Implementor, Serializable {
         javafx.scene.shape.Polygon newShape;
         newShape = new javafx.scene.shape.Polygon(vertices);
 
-
         newShape.setStrokeWidth(0);
-        //newShape.setRotate(s.getRotation());
         newShape.setFill(Color.valueOf(s.getColor()));
 
         toolBar.getChildren().add(newShape);
@@ -618,5 +618,19 @@ public final class FXImplementor implements Implementor, Serializable {
     public void setLastSelected(Shape shape, javafx.scene.shape.Shape shapeFX) {
         lastSelected = shape;
         lastFXSelected = shapeFX;
+    }
+
+
+    public void refreshToolbarScroll() {
+        boolean scrollToDisable = true;
+        for (Shape s : Toolbar.getInstance().getShapes()) {
+            float ratio = (float) (s.getWidth() / (toolBar.getPrefWidth() - 24));
+            if (View.getInstance().toolbar.getHeight() < Toolbar.getInstance().getNextPosition().getY()) {
+                View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight() + (s.getHeight() / ratio) + 10);
+                scrollToDisable = false;
+            }
+            if (scrollToDisable)
+                View.getInstance().toolbar.setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
+        }
     }
 }

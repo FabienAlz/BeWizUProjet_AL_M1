@@ -30,7 +30,7 @@ public final class View implements Mediator {
     public ContextMenu contextMenu;
     public FXMenuItem menuItem;
     private double TOOLBAR_WIDTH = 128;
-    private double TOOLBAR_HEIGHT = 530;
+    public double TOOLBAR_HEIGHT = 530;
     private double MENU_HEIGHT = 51;
     private double SCENE_WIDTH = 1080;
     private double SCENE_HEIGHT = 650;
@@ -109,11 +109,11 @@ public final class View implements Mediator {
 
         toolbarWrapper = new ScrollPane(toolbar);
         toolbarWrapper.fitToWidthProperty().set(true);
-        toolbarWrapper.setPrefSize(TOOLBAR_WIDTH,TOOLBAR_HEIGHT);
+        toolbarWrapper.setPrefSize(TOOLBAR_WIDTH,TOOLBAR_HEIGHT+2);
         toolbarWrapper.setStyle("-fx-background-color: #ebeee6");
         toolbarWrapper.setLayoutY(concreteMenu.getPrefHeight());
 
-        bin.setPrefSize(TOOLBAR_WIDTH,SCENE_HEIGHT - (MENU_HEIGHT + TOOLBAR_HEIGHT));
+        bin.setPrefSize(TOOLBAR_WIDTH+1,SCENE_HEIGHT - (MENU_HEIGHT + TOOLBAR_HEIGHT));
         bin.setLayoutY(MENU_HEIGHT + TOOLBAR_HEIGHT);
         bin.setStyle("-fx-background-color: #ebeee6");
         bin.setAlignment(Pos.CENTER);
@@ -129,6 +129,7 @@ public final class View implements Mediator {
         canvas.setLayoutY(MENU_HEIGHT);
         root.getChildren().add(canvas);
 
+        concreteMenu.toFront();
         primaryStage.show();
     }
 

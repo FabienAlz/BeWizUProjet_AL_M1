@@ -308,7 +308,17 @@ public class FXDragAndDropHandlers {
             // Remove from Toolbar
             else {
                 Shape original = Toolbar.getInstance().getShape(id);
+
+                float ratio = (float) (original.getWidth() / (View.getInstance().toolbar.getPrefWidth() - 24));
+                if(View.getInstance().toolbar.getHeight() > View.getInstance().TOOLBAR_HEIGHT) {
+                    if((View.getInstance().toolbar.getPrefHeight() - (original.getHeight() / ratio)) < View.getInstance().TOOLBAR_HEIGHT)
+                           View.getInstance().toolbar.setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
+                    else
+                           View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight() - (original.getHeight() / ratio) - 10);
+                }
+
                 Toolbar.getInstance().remove(original);
+
                 implementor.getSHAPES().remove(original.getId());
                 implementor.remove();
             }
