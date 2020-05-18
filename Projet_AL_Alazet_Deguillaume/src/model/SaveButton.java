@@ -36,7 +36,7 @@ public class SaveButton extends FXButton {
     private void saveButtonHandler() {
         setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setInitialDirectory(new File("Projet_AL_Alazet_Deguillaume/ressources/saves"));
+            fileChooser.setInitialDirectory(new File("C:/Users/Shadow/Desktop/GL/AL/projet/BeWizUProjet_AL_M1/Projet_AL_Alazet_Deguillaume/ressources/saves"));
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("ser files (*.ser)", "*.ser");
             fileChooser.getExtensionFilters().add(extFilter);
             File file = fileChooser.showSaveDialog(primaryStage);
@@ -59,26 +59,6 @@ public class SaveButton extends FXButton {
                 } catch (NullPointerException np) {
                     np.printStackTrace();
                 }
-            }
-
-            /******
-             * LOAD
-             *********/
-
-            List<Shape> loadShapes = null;
-            try {
-                FileInputStream fileIn = new FileInputStream("data.ser");
-                ObjectInputStream in = new ObjectInputStream(fileIn);
-                loadShapes = (List<Shape>) in.readObject();
-                in.close();
-                fileIn.close();
-            } catch (IOException i) {
-                i.printStackTrace();
-                return;
-            } catch (ClassNotFoundException c) {
-                System.out.println("List<Shape> class not found");
-                c.printStackTrace();
-                return;
             }
         });
     }

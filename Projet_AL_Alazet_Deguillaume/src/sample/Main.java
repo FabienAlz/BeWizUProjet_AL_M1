@@ -1,16 +1,20 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.scene.Node;
 import javafx.stage.Stage;
 import model.*;
+import view.View;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main extends Application {
     Implementor implementor;
 
 
     public void initialize() {
-
-        Canvas canvas = Canvas.getInstance();
+               Canvas canvas = Canvas.getInstance();
         Toolbar toolbar = Toolbar.getInstance();
 
         Shape r = new Rectangle(new ToolbarPosition(), 0, new Position(0,0), new Position(0,0), "#4472c4", 30, 20, 0, implementor);
@@ -22,20 +26,21 @@ public class Main extends Application {
         ShapeObserver obs = new ConcreteShapeObserver();
 //        r.addObserver(obs);
 //        r2.addObserver(obs);
-//        r3.addObserver(obs);
-//        r4.addObserver(obs);
+        r3.addObserver(obs);
+        r4.addObserver(obs);
         p.addObserver(obs);
 
 //        toolbar.addAndNotify(r);
 //        toolbar.addAndNotify(r2);
-//        canvas.addAndNotify(r3);
+        canvas.addAndNotify(r3);
         canvas.addAndNotify(p);
-//        canvas.addAndNotify(r4);
+        canvas.addAndNotify(r4);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         implementor = FXImplementor.getInstance();
+        implementor.initialize();
         implementor.start(primaryStage);
         initialize();
         Caretaker.getInstance().saveState();

@@ -37,4 +37,13 @@ public class ToolbarPosition implements PositionI, Serializable {
     public void setY(double y) {
         this.y = y;
     }
+
+
+    @Override
+    public String toString() {
+        return "ToolbarPosition{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }

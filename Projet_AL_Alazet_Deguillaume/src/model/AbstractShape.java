@@ -1,6 +1,8 @@
 package model;
 
-public abstract class AbstractShape extends ObservableSuperClass implements Shape {
+import java.io.Serializable;
+
+public abstract class AbstractShape extends ObservableSuperClass implements Shape, Serializable {
     private static long generatedId = -1;
     private long id;
     private Implementor implementor;
