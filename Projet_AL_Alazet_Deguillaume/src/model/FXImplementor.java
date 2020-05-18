@@ -83,14 +83,13 @@ public final class FXImplementor implements Implementor, Serializable {
      *
      */
     @Override
-    public void initialize() {
+    public void initializeFX() {
         View mediator = View.getInstance();
-
-        mediator.registerComponent(new SaveButton("", "Projet_AL_Alazet_Deguillaume/ressources/ico/save.png"));
-        mediator.registerComponent(new LoadButton("", "Projet_AL_Alazet_Deguillaume/ressources/ico/load.png"));
-        mediator.registerComponent(new UndoButton("", "Projet_AL_Alazet_Deguillaume/ressources/ico/undo.png"));
-        mediator.registerComponent(new RedoButton("", "Projet_AL_Alazet_Deguillaume/ressources/ico/redo.png"));
-        mediator.registerComponent(new Bin("Projet_AL_Alazet_Deguillaume/ressources/ico/bin.png"));
+        mediator.registerComponent(new SaveButton("", "C:/Users/Shadow/Desktop/GL/AL/projet/BeWizUProjet_AL_M1/Projet_AL_Alazet_Deguillaume/ressources/ico/save.png"));
+        mediator.registerComponent(new LoadButton("", "C:/Users/Shadow/Desktop/GL/AL/projet/BeWizUProjet_AL_M1/Projet_AL_Alazet_Deguillaume/ressources/ico/load.png"));
+        mediator.registerComponent(new UndoButton("", "C:/Users/Shadow/Desktop/GL/AL/projet/BeWizUProjet_AL_M1/Projet_AL_Alazet_Deguillaume/ressources/ico/undo.png"));
+        mediator.registerComponent(new RedoButton("", "C:/Users/Shadow/Desktop/GL/AL/projet/BeWizUProjet_AL_M1/Projet_AL_Alazet_Deguillaume/ressources/ico/redo.png"));
+        mediator.registerComponent(new Bin("C:/Users/Shadow/Desktop/GL/AL/projet/BeWizUProjet_AL_M1/Projet_AL_Alazet_Deguillaume/ressources/ico/bin.png"));
         List<Node> toolbarComponent = new ArrayList<>();
         mediator.registerComponent(new FXToolbar(toolbarComponent));
         mediator.registerComponent(new FXCanvas(toolbarComponent));
@@ -103,6 +102,22 @@ public final class FXImplementor implements Implementor, Serializable {
     }
 
 
+
+    /**
+     * Initialize the FXImplementor
+     *
+     */
+    @Override
+    public void initializeFXImplementor(Stage primaryStage) {
+        SHAPES = new HashMap<>();
+        BORDER_COLOR = new Color(68.0 / 255, 114.0 / 255, 196.0 / 255, 1);
+        toolBar = View.getInstance().toolbar;
+        canvas = View.getInstance().canvas;
+        bin = View.getInstance().bin;
+        popup = View.getInstance().popup;
+        stage = primaryStage;
+    }
+
     /**
      * Starts the javafx application
      *
@@ -111,14 +126,7 @@ public final class FXImplementor implements Implementor, Serializable {
      */
 
     public void start(Stage primaryStage) throws Exception {
-
-        SHAPES = new HashMap<>();
-        BORDER_COLOR = new Color(68.0 / 255, 114.0 / 255, 196.0 / 255, 1);
-        toolBar = View.getInstance().toolbar;
-        canvas = View.getInstance().canvas;
-        bin = View.getInstance().bin;
-        popup = View.getInstance().popup;
-        stage = primaryStage;
+        initializeFXImplementor(primaryStage);
         View.getInstance().createGUI(primaryStage);
     }
 

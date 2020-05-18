@@ -105,11 +105,9 @@ public final class View implements Mediator {
         toolbar.setStyle("-fx-background-color: #ebeee6");
         toolbar.setLayoutY(concreteMenu.getPrefHeight());
 
-        /*StackPane binPane = new StackPane();
-        binPane.getChildren().add(bin);
-        */
         bin.setPrefSize(TOOLBAR_WIDTH,SCENE_HEIGHT - (MENU_HEIGHT + TOOLBAR_HEIGHT));
         bin.setLayoutY(MENU_HEIGHT + TOOLBAR_HEIGHT);
+        bin.setStyle("-fx-background-color: #ebeee6");
         bin.setAlignment(Pos.CENTER);
 
         concreteMenu.getItems().add(redo);

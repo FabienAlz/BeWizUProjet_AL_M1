@@ -51,12 +51,12 @@ public class LoadButton extends FXButton {
                         View.getInstance().canvas.getChildren().clear();
                         View.getInstance().toolbar.getChildren().clear();
                         ShapeObserver obs = new ConcreteShapeObserver();
-                        try {
-                            loadShapes.get(0).getImplementor().start(primaryStage);
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
                         for (Shape s : loadShapes) {
+                            try {
+                                s.getImplementor().initializeFXImplementor(primaryStage);
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
                             s.addObserver(obs);
                             if (s.getPositionI() instanceof ToolbarPosition)
                                 Toolbar.getInstance().addAndNotify(s);

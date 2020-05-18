@@ -2,7 +2,15 @@
 <module type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/Projet_AL_Alazet_Deguillaume/src/controller" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Projet_AL_Alazet_Deguillaume/src/model" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Projet_AL_Alazet_Deguillaume/src/sample" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Projet_AL_Alazet_Deguillaume/src/utils" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Projet_AL_Alazet_Deguillaume/src/view" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Projet_AL_Alazet_Deguillaume/src/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/Projet_AL_Alazet_Deguillaume/ressources" type="java-resource" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

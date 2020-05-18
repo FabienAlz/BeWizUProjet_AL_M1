@@ -6,5 +6,6 @@ public interface Implementor {
     public void start(Stage stage) throws Exception;
     public void draw(Shape s);
     public void remove();
-    public void initialize();
+    public void initializeFX();
+    public void initializeFXImplementor(Stage primaryStage);
 }

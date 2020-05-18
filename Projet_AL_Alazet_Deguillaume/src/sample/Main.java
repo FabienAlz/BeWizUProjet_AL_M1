@@ -41,7 +41,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         implementor = FXImplementor.getInstance();
-        implementor.initialize();
+        implementor.initializeFX();
         implementor.start(primaryStage);
         initialize();
         Caretaker.getInstance().saveState();
