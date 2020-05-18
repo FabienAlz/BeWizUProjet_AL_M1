@@ -24,6 +24,7 @@ public class Polygon extends SingleShape implements Serializable {
         this.edges = edges;
         this.length = length;
         this.vertices = new Vector<>();
+        computeVertices();
     }
 
     /******************************

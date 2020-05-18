@@ -26,8 +26,6 @@ public class Rectangle extends SingleShape implements Serializable {
         this.borderRadius = borderRadius;
     }
 
-    public Rectangle(){}
-
     /******************************
      *          GETTERS           *
      ******************************/

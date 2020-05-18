@@ -2,7 +2,7 @@ package model;
 
 
 public abstract class AbstractShape extends ObservableSuperClass implements Shape {
-    private static long generatedId = 0;
+    private static long generatedId = -1;
     private long id;
     private Implementor implementor;
     private PositionI position;
