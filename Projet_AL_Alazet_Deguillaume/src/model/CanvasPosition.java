@@ -3,6 +3,7 @@ package model;
 import java.io.Serializable;
 
 public class CanvasPosition implements PositionI, Serializable {
+    private static final long serialVersionUID = 7072556856740817626L;
 
     private double x, y;
 

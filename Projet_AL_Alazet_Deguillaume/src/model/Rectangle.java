@@ -3,6 +3,8 @@ package model;
 import java.io.Serializable;
 
 public class Rectangle extends SingleShape implements Serializable {
+    private static final long serialVersionUID = 2467016630396039571L;
+
     private float width;
     private float height;
     private float borderRadius;

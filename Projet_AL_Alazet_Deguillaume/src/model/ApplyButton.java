@@ -9,7 +9,7 @@ public class ApplyButton extends javafx.scene.control.Button implements Componen
 
     public ApplyButton(){
         super("Apply");
-        ApplyButtonHandler();
+        applyButtonHandler();
     }
 
     @Override
@@ -22,7 +22,7 @@ public class ApplyButton extends javafx.scene.control.Button implements Componen
         return "ApplyButton";
     }
 
-    private void ApplyButtonHandler() {
+    private void applyButtonHandler() {
         setOnAction(e -> {
             EditorView.getInstance().shapeSaves.clear();
             for (Shape s : Canvas.getInstance().getShapes()) {

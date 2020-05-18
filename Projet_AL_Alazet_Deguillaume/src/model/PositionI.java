@@ -1,6 +1,8 @@
 package model;
 
-public interface PositionI {
+import java.io.Serializable;
+
+public interface PositionI extends Serializable {
 
     double getX();
 

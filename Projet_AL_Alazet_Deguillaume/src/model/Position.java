@@ -1,15 +1,10 @@
 package model;
-
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-public class Position implements PositionI, Serializable {
+public class Position implements Serializable, PositionI  {
+    private static final long serialVersionUID = 7021457730345052437L;
 
     private double x;
-
-
     private double y;
 
     public Position(double x, double y) {

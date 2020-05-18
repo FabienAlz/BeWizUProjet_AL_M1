@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Vector;
 
 public class Polygon extends SingleShape implements Serializable {
+    private static final long serialVersionUID = -5784848863589796903L;
+
     private int edges;
     private float length;
     private Vector<Double> vertices;
