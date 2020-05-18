@@ -16,7 +16,7 @@ public abstract class SingleShape extends AbstractShape implements Serializable 
      * @param color
      * @param implementor
      */
-    public SingleShape(PositionI position, float rotation, PositionI rotationCenter, PositionI translation, String color, Implementor implementor) {
+    public SingleShape(PositionI position, float rotation, PositionI rotationCenter, Translation translation, String color, Implementor implementor) {
         super(position, translation, implementor);
         this.rotation = rotation;
         this.rotationCenter = rotationCenter;

@@ -142,7 +142,7 @@ public class FXDragAndDropHandlers {
             if(Canvas.getInstance().contains(id)) {
                 Shape original = Canvas.getInstance().getShape(id);
                 if(original instanceof CompoundShape) {
-                    ((CompoundShape)original).translate(new Position(dragEvent.getX()-((CompoundShape) original).getTopLeft().getX(),
+                    ((CompoundShape)original).translate(new Translation(dragEvent.getX()-((CompoundShape) original).getTopLeft().getX(),
                             dragEvent.getY()-((CompoundShape) original).getTopLeft().getY()));
                     implementor.getCanvas().getChildren().clear();
                     //Canvas.getInstance().add(original);
@@ -160,7 +160,7 @@ public class FXDragAndDropHandlers {
                 Shape copy = original.clone();
                 copy.setId();
                 if(original instanceof CompoundShape) {
-                    ((CompoundShape)copy).translate(new Position(dragEvent.getX()-((CompoundShape) original).getTopLeft().getX(),
+                    ((CompoundShape)copy).translate(new Translation(dragEvent.getX()-((CompoundShape) original).getTopLeft().getX(),
                             dragEvent.getY()-((CompoundShape) original).getTopLeft().getY()));
                 }
                 else {

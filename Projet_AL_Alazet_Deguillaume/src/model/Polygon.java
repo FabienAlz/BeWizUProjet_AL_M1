@@ -21,7 +21,7 @@ public class Polygon extends SingleShape implements Serializable {
      * @param length
      * @param implementor
      */
-    public Polygon(PositionI positionI, float rotation, PositionI rotationCenter, PositionI translation, String color, int edges, float length, Implementor implementor) {
+    public Polygon(PositionI positionI, float rotation, PositionI rotationCenter, Translation translation, String color, int edges, float length, Implementor implementor) {
         super(positionI, rotation, rotationCenter, translation, color, implementor);
         this.edges = edges;
         this.length = length;

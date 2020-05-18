@@ -96,36 +96,49 @@ public class FXMouseHandlers {
      */
     public void updateSelectionRectangle(MouseEvent mouseEvent) {
         if (Canvas.getInstance().getSelection()) {
+            double posX = mouseEvent.getX();
+            double posY = mouseEvent.getY();
+            if(posX < 0) {
+                posX = 0;
+            }
+            else if(posX > View.getInstance().canvas.getWidth()) {
+                posX = View.getInstance().canvas.getWidth();
+            }
+            if(posY < 0) {
+                posY = 0;
+            } else if(posY > View.getInstance().canvas.getHeight()) {
+                posY = View.getInstance().canvas.getHeight();
+            }
             if (FXShape instanceof Rectangle) {
                 Position firstPos = Canvas.getInstance().getStartSelectPos();
                 // top-left to bottom-right
-                if (mouseEvent.getX() > firstPos.getX() && mouseEvent.getY() > firstPos.getY()) {
+                if (posX > firstPos.getX() && posY > firstPos.getY()) {
                     ((Rectangle) FXShape).setX(firstPos.getX());
                     ((Rectangle) FXShape).setY(firstPos.getY());
-                    ((Rectangle) FXShape).setWidth(mouseEvent.getX() - firstPos.getX());
-                    ((Rectangle) FXShape).setHeight(mouseEvent.getY() - firstPos.getY());
+                    ((Rectangle) FXShape).setWidth(posX - firstPos.getX());
+                    ((Rectangle) FXShape).setHeight(posY - firstPos.getY());
 
                 }
                 // bottom-right to top-left
-                else if (mouseEvent.getX() < firstPos.getX() && mouseEvent.getY() < firstPos.getY()) {
-                    ((Rectangle) FXShape).setX(mouseEvent.getX());
-                    ((Rectangle) FXShape).setY(mouseEvent.getY());
-                    ((Rectangle) FXShape).setWidth(firstPos.getX() - mouseEvent.getX());
-                    ((Rectangle) FXShape).setHeight(firstPos.getY() - mouseEvent.getY());
+                else if (posX < firstPos.getX() && posY < firstPos.getY()) {
+                    ((Rectangle) FXShape).setX(posX);
+                    ((Rectangle) FXShape).setY(posY);
+                    ((Rectangle) FXShape).setWidth(firstPos.getX() - posX);
+                    ((Rectangle) FXShape).setHeight(firstPos.getY() - posY);
                 }
                 // bottom-left to top-right
-                else if (mouseEvent.getX() > firstPos.getX() && mouseEvent.getY() < firstPos.getY()) {
+                else if (posX > firstPos.getX() && posY < firstPos.getY()) {
                     ((Rectangle) FXShape).setX(firstPos.getX());
-                    ((Rectangle) FXShape).setY(mouseEvent.getY());
-                    ((Rectangle) FXShape).setWidth(mouseEvent.getX() - firstPos.getX());
-                    ((Rectangle) FXShape).setHeight(firstPos.getY() - mouseEvent.getY());
+                    ((Rectangle) FXShape).setY(posY);
+                    ((Rectangle) FXShape).setWidth(posX - firstPos.getX());
+                    ((Rectangle) FXShape).setHeight(firstPos.getY() - posY);
                 }
                 // top-right to bottom-left
-                else if (mouseEvent.getX() < firstPos.getX() && mouseEvent.getY() > firstPos.getY()) {
-                    ((Rectangle) FXShape).setX(mouseEvent.getX());
+                else if (posX < firstPos.getX() && posY > firstPos.getY()) {
+                    ((Rectangle) FXShape).setX(posX);
                     ((Rectangle) FXShape).setY(firstPos.getY());
-                    ((Rectangle) FXShape).setWidth(firstPos.getX() - mouseEvent.getX());
-                    ((Rectangle) FXShape).setHeight(mouseEvent.getY() - firstPos.getY());
+                    ((Rectangle) FXShape).setWidth(firstPos.getX() - posX);
+                    ((Rectangle) FXShape).setHeight(posY - firstPos.getY());
                 }
             } else {
                 throw new IllegalArgumentException();
@@ -141,7 +154,20 @@ public class FXMouseHandlers {
             if (Canvas.getInstance().getSelection()) {
                 Position firstPos = Canvas.getInstance().getStartSelectPos();
                 Canvas.getInstance().setSelection(false);
-                Position secondPos = new Position(mouseEvent.getX(), mouseEvent.getY());
+                double posX = mouseEvent.getX();
+                double posY = mouseEvent.getY();
+                if(posX < 0) {
+                    posX = 0;
+                }
+                else if(posX > View.getInstance().canvas.getWidth()) {
+                    posX = View.getInstance().canvas.getWidth();
+                }
+                if(posY < 0) {
+                    posY = 0;
+                } else if(posY > View.getInstance().canvas.getHeight()) {
+                    posY = View.getInstance().canvas.getHeight();
+                }
+                Position secondPos = new Position(posX, posY);
                 for (Shape s : Canvas.getInstance().getShapes()) {
                     // top-left to bottom-right
                     if (secondPos.getX() > firstPos.getX() && secondPos.getY() > firstPos.getY() && s.isInside(firstPos, secondPos)) {

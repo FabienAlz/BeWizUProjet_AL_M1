@@ -5,7 +5,7 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
     private long id;
     private Implementor implementor;
     private PositionI position;
-    private PositionI translation;
+    private Translation translation;
     private boolean isSelected;
 
     /**
@@ -14,7 +14,7 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
      * @param translation
      * @param implementor
      */
-    public AbstractShape(PositionI position, PositionI translation, Implementor implementor) {
+    public AbstractShape(PositionI position, Translation translation, Implementor implementor) {
         this.implementor = implementor;
         this.position = position;
         this.translation = translation;
@@ -36,7 +36,7 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
         return position;
     }
 
-    public PositionI getTranslation() {
+    public Translation getTranslation() {
         return translation;
     }
 
@@ -55,7 +55,7 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
      ******************************/
     public void setPosition(PositionI position) { this.position = position; }
 
-    public void setTranslation(PositionI translation) {
+    public void setTranslation(Translation translation) {
         this.translation = translation;
     }
 

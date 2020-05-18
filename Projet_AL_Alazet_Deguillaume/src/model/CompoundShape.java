@@ -15,7 +15,7 @@ public class CompoundShape extends AbstractShape implements Serializable {
      * @param position
      */
     public CompoundShape(Implementor implementor, PositionI position) {
-        super(position, new Position(0, 0), implementor);
+        super(position, new Translation(0, 0), implementor);
         this.shapes = new ArrayList<>();
     }
 
@@ -100,7 +100,7 @@ public class CompoundShape extends AbstractShape implements Serializable {
      * Translate all the shapes of the CompoundShape to their location + the translation
      * @param translation
      */
-    public void translate(Position translation) {
+    public void translate(Translation translation) {
         CanvasPosition compoundPos = new CanvasPosition(getTopLeft().getX() + translation.getX(),
                                                         getTopLeft().getY() + translation.getY());
         this.setTranslation(translation);

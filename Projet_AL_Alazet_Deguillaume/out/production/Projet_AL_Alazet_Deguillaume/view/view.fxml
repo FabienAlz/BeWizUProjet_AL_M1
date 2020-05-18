@@ -11,7 +11,7 @@
             <items>
             <ImageView id="save" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="file:/C:/Users/Shadow/Desktop/GL/AL/projet/BeWizUProjet_AL_M1/Projet_AL_Alazet_Deguillaume/ressources/save.png" />
+                  <Image url="@../../ressources/save.png" />
                </image>
             </ImageView>
             <Separator orientation="VERTICAL" prefHeight="32.0" prefWidth="20.0" />

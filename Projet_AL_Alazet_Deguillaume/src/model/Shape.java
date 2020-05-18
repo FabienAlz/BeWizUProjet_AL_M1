@@ -5,7 +5,7 @@ public interface Shape extends Cloneable {
 
     PositionI getPositionI();
 
-    void setPosition(PositionI positionI);
+    void setPosition(PositionI position);
 
     float getRotation();
 
@@ -15,7 +15,7 @@ public interface Shape extends Cloneable {
 
     PositionI getRotationCenter();
 
-    PositionI getTranslation();
+    Translation getTranslation();
 
     String getColor();
 

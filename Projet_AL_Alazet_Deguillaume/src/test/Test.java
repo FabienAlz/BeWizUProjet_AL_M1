@@ -46,8 +46,8 @@ public class Test extends TestCase {
     public void testComposite() {
         // Initialization
         ConcreteShapeObserver observer = new ConcreteShapeObserver();
-        Rectangle rectangle = new Rectangle(new CanvasPosition(50, 50), 0, new Position(0,0), new Position(0,0), "#4472c4", 30, 20, 0, implementor);
-        Polygon polygon = new Polygon(new CanvasPosition(100,100), 0, new Position(0,0), new Position(0,0), "#4472c4", 5, 100, implementor);
+        Rectangle rectangle = new Rectangle(new CanvasPosition(50, 50), 0, new Position(0,0), new Translation(0,0), "#4472c4", 30, 20, 0, implementor);
+        Polygon polygon = new Polygon(new CanvasPosition(100,100), 0, new Position(0,0), new Translation(0,0), "#4472c4", 5, 100, implementor);
         CompoundShape compoundShape = new CompoundShape(implementor, new CanvasPosition(0, 0));
         rectangle.addObserver(observer);
         polygon.addObserver(observer);
@@ -67,7 +67,7 @@ public class Test extends TestCase {
         assertEquals(true, compoundShape.getShapes().contains(polygon));
 
         // Checks CompoundShape's methods
-        compoundShape.translate(new Position(10, 10));
+        compoundShape.translate(new Translation(10, 10));
         assertEquals(60.0, rectangle.getPositionI().getX());
         assertEquals(60.0, rectangle.getPositionI().getY());
         assertEquals(110.0, polygon.getPositionI().getX());
@@ -92,8 +92,8 @@ public class Test extends TestCase {
         // Initialization
         Caretaker caretaker = Caretaker.getInstance();
         ConcreteShapeObserver observer = new ConcreteShapeObserver();
-        Rectangle rectangle = new Rectangle(new CanvasPosition(50, 50), 0, new Position(0,0), new Position(0,0), "#4472c4", 30, 20, 0, implementor);
-        Polygon polygon = new Polygon(new CanvasPosition(100,100), 0, new Position(0,0), new Position(0,0), "#4472c4", 5, 100, implementor);
+        Rectangle rectangle = new Rectangle(new CanvasPosition(50, 50), 0, new Position(0,0), new Translation(0,0), "#4472c4", 30, 20, 0, implementor);
+        Polygon polygon = new Polygon(new CanvasPosition(100,100), 0, new Position(0,0), new Translation(0,0), "#4472c4", 5, 100, implementor);
         rectangle.addObserver(observer);
         polygon.addObserver(observer);
         canvas.add(rectangle);
@@ -132,7 +132,7 @@ public class Test extends TestCase {
         }
         assertEquals(canvas.getShapes().size(), caretaker.get(0).getState().size());
 
-        Polygon polygon2 = new Polygon(new CanvasPosition(0,0), 0, new Position(0,0), new Position(0,0), "#4472c4", 5, 100, implementor);
+        Polygon polygon2 = new Polygon(new CanvasPosition(0,0), 0, new Position(0,0), new Translation(0,0), "#4472c4", 5, 100, implementor);
         canvas.add(polygon2);
         caretaker.saveState();
 
@@ -152,7 +152,7 @@ public class Test extends TestCase {
 
     public void testPrototype() {
         // Rectangle clone
-        Rectangle rectangle = new Rectangle(new CanvasPosition(50, 50), 0, new Position(0,0), new Position(0,0), "#4472c4", 30, 20, 0, implementor);
+        Rectangle rectangle = new Rectangle(new CanvasPosition(50, 50), 0, new Position(0,0), new Translation(0,0), "#4472c4", 30, 20, 0, implementor);
         Shape rectangle2 = rectangle.clone();
 
         assertEquals(rectangle.getClass(), rectangle2.getClass());
@@ -168,7 +168,7 @@ public class Test extends TestCase {
         assertEquals(rectangle.getTranslation(), rectangle2.getTranslation());
 
         // Polygon clone
-        Polygon polygon = new Polygon(new CanvasPosition(100,100), 0, new Position(0,0), new Position(0,0), "#4472c4", 5, 100, implementor);
+        Polygon polygon = new Polygon(new CanvasPosition(100,100), 0, new Position(0,0), new Translation(0,0), "#4472c4", 5, 100, implementor);
         Shape polygon2 = polygon.clone();
         assertEquals(polygon.getClass(), polygon2.getClass());
         assertEquals(polygon.getId(), polygon2.getId());
