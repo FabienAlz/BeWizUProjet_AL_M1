@@ -620,17 +620,4 @@ public final class FXImplementor implements Implementor, Serializable {
         lastFXSelected = shapeFX;
     }
 
-
-    public void refreshToolbarScroll() {
-        boolean scrollToDisable = true;
-        for (Shape s : Toolbar.getInstance().getShapes()) {
-            float ratio = (float) (s.getWidth() / (toolBar.getPrefWidth() - 24));
-            if (View.getInstance().toolbar.getHeight() < Toolbar.getInstance().getNextPosition().getY()) {
-                View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight() + (s.getHeight() / ratio) + 10);
-                scrollToDisable = false;
-            }
-            if (scrollToDisable)
-                View.getInstance().toolbar.setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
-        }
-    }
 }
