@@ -55,7 +55,6 @@ public class FXDragAndDropHandlers {
                         Toolbar.getInstance().addAndNotify(copy);
 
                     } else {
-
                         float ratio = (float) (copy.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
                         if (copy instanceof CompoundShape) {
                             implementor.createToolbarCompoundShape((CompoundShape) copy);
@@ -181,8 +180,8 @@ public class FXDragAndDropHandlers {
                 double posX = dragEvent.getX() - original.getWidth()/2;
                 double posY = dragEvent.getY() - original.getHeight()/2;
                 if (original instanceof CompoundShape) {
-                    posX -= original.getPositionI().getX();
-                    posY -= original.getPositionI().getY();
+                    posX -= original.getTopLeft().getX();
+                    posY -= original.getTopLeft().getY();
 
                     ((CompoundShape) original).translate(
                             new Translation(posX, posY));
@@ -217,7 +216,6 @@ public class FXDragAndDropHandlers {
 
             success = true;
             Caretaker.getInstance().saveState();
-
         }
         /* let the source know whether the string was successfully
          * transferred and used */
@@ -346,8 +344,8 @@ public class FXDragAndDropHandlers {
             }
 
             success = true;
-            Caretaker.getInstance().saveState();
 
+            Caretaker.getInstance().saveState();
         }
         /* let the source know whether the string was successfully
          * transferred and used */

@@ -410,10 +410,19 @@ public final class FXImplementor implements Implementor, Serializable {
         newShape.setHeight(s.getHeight());
         newShape.setRotate(s.getRotation());
         newShape.setStrokeWidth(0);
+        double radRotation = s.getRotation()%180 * Math.PI / 180;
+        Position rotationCenter = new Position(s.getPositionI().getX() + s.getWidth()/2,
+                s.getPositionI().getY() + s.getHeight()/2);
+        double posYtopLeft = (Math.sin(radRotation) * (s.getPositionI().getX()-rotationCenter.getX()) +
+                Math.cos(radRotation) * (s.getPositionI().getY()-rotationCenter.getY()) +
+                rotationCenter.getY());
 
-        newShape.setX(s.getPositionI().getX() + (s.getPositionI().getX() - s.getTopLeft().getX()));
+        double posXbottomLeft = (Math.cos(radRotation) * (s.getPositionI().getX()-rotationCenter.getX()) -
+                Math.sin(radRotation) * (s.getPositionI().getY()+s.getHeight()-rotationCenter.getY()) +
+                rotationCenter.getX());
 
-        newShape.setY(s.getPositionI().getY() + (s.getPositionI().getY() - s.getTopLeft().getY()));
+        newShape.setX(s.getPositionI().getX() + (s.getPositionI().getX() - posXbottomLeft));
+        newShape.setY(s.getPositionI().getY() + (s.getPositionI().getY() - posYtopLeft));
         toolBar.getChildren().add(newShape);
         return newShape;
     }
@@ -449,10 +458,10 @@ public final class FXImplementor implements Implementor, Serializable {
                 }
                 // Compute the position of the next shape to put in the toolbar
 
-                Toolbar.getInstance().setNextPosition((int) copy.computeRadius() * 2);
+                Toolbar.getInstance().setNextPosition((int) copy.getHeight());
 
             } else {
-                Toolbar.getInstance().setNextPosition((int) s.computeRadius() * 2);
+                Toolbar.getInstance().setNextPosition((int) s.getHeight());
             }
 
             newShape = new javafx.scene.shape.Polygon(vertices);
@@ -523,9 +532,7 @@ public final class FXImplementor implements Implementor, Serializable {
         float ratio = 1;
         if (width > toolBarWrapper.getWidth() - 35) {
             ratio = (float) (width / (toolBarWrapper.getWidth() - 35));
-
         }
-
         for (Shape shape : s.getShapes()) {
             float posX = (float) (Toolbar.getInstance().getNextPosition().getX() +
                     (shape.getTopLeft().getX() - s.getTopLeft().getX()) / ratio);

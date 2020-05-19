@@ -33,8 +33,8 @@ public class CompoundShape extends AbstractShape implements Serializable {
     }
 
     @Override
-    public PositionI getRotationCenter() {
-        return null;
+    public Position getRotationCenter() {
+          return new Position(getTopLeft().getX() + getWidth()/2, getTopLeft().getY() + getHeight()/2);
     }
 
     @Override
@@ -92,7 +92,8 @@ public class CompoundShape extends AbstractShape implements Serializable {
      *          SETTERS           *
      ******************************/
     @Override
-    public void setSelected(boolean b) {
+    public void setSelected(boolean
+                                        b) {
         super.setSelected(b);
         for(Shape s : shapes) {
             s.setSelected(b);
@@ -101,7 +102,12 @@ public class CompoundShape extends AbstractShape implements Serializable {
 
     @Override
     public void setRotation(float rotation) {
+        PositionI rotationCenter = getRotationCenter();
         for (Shape s : shapes) {
+            Position posCenter = rotate(s.getRotationCenter(), rotationCenter, rotation);
+            Translation translation = new Translation(posCenter.getX()-s.getRotationCenter().getX(), posCenter.getY()-s.getRotationCenter().getY()  );
+            Position newPos = new Position(s.getPositionI().getX()+translation.getX(), s.getPositionI().getY() + translation.getY());
+            s.setPosition(newPos);
             s.setRotation(rotation);
         }
     }
@@ -126,8 +132,6 @@ public class CompoundShape extends AbstractShape implements Serializable {
             double posX = shape.getPositionI().getX() + translation.getX();
             double posY = shape.getPositionI().getY() + translation.getY();
             shape.setPosition(new CanvasPosition(posX, posY));
-            ((SingleShape)shape).computeVertices();
-
         }
     }
 

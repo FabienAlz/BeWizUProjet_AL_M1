@@ -84,6 +84,21 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
      */
     public abstract boolean isInside(Position startingPoint, Position arrival);
 
+    /**
+     * Permits to do a rotation
+     * @return
+     */
+    public Position rotate(PositionI origin, PositionI pivot, double rotation) {
+        double radRotation = rotation%180 * Math.PI / 180;
+        double arrivalX = (Math.cos(radRotation) * (origin.getX() - pivot.getX()) -
+                Math.sin(radRotation) * (origin.getY() - pivot.getY()) +
+                pivot.getX());
+        double arrivalY = (Math.sin(radRotation) * (origin.getX() - pivot.getX()) +
+                Math.cos(radRotation) * (origin.getY() - pivot.getY()) +
+                pivot.getY());
+        return new Position(arrivalX, arrivalY);
+    }
+
     @Override
     public AbstractShape clone() {
         try {

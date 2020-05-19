@@ -15,6 +15,7 @@ public abstract class ValidateButton extends javafx.scene.control.Button impleme
      * @param s the Shape to edit
      */
     protected void editShape(Shape s) {
+
         s.setColor(String.valueOf(EditorView.getInstance().getColorPicker().getValue()));
         s.setRotation(Float.parseFloat(EditorView.getInstance().getTextFields().get("Rotation").getText()));
         if (s instanceof Rectangle) {

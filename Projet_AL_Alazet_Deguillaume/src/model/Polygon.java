@@ -90,6 +90,11 @@ public class Polygon extends SingleShape implements Serializable {
         this.length = length;
     }
 
+    @Override
+    public void setPosition(PositionI position) {
+        super.setPosition(position);
+        computeRotationCenter();
+    }
 
     /**
      * Computes the radius of the circle on witch all the vertices of the Polygon are
