@@ -3,6 +3,7 @@ package model;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import view.Mediator;
+import view.View;
 
 import java.sql.SQLOutput;
 import java.util.List;
@@ -50,6 +51,13 @@ public class RedoButton extends FXButton {
 
                         } else if (s.getPositionI() instanceof ToolbarPosition) {
                             Toolbar.getInstance().add(s);
+
+                            float ratio = (float) (s.getWidth() / (View.getInstance().toolbar.getPrefWidth() - 24));
+                            if (s.getPositionI().getY() + s.getHeight()/ratio < View.getInstance().TOOLBAR_HEIGHT)
+                                View.getInstance().toolbar.setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
+                            else {
+                                View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight() + (s.getHeight() / ratio) +10 );
+                            }
                         }
                     }
                     Canvas.getInstance().notifyAllShapes();
