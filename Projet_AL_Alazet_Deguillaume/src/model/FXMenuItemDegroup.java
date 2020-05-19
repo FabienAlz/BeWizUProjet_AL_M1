@@ -40,7 +40,7 @@ public class FXMenuItemDegroup extends FXMenuItem {
                 for (Shape s : shapesToAdd) {
                     Canvas.getInstance().add(s);
                 }
-                View.getInstance().canvas.getChildren().clear();
+                View.getInstance().getCanvas().getChildren().clear();
                 Canvas.getInstance().notifyAllShapes();
                 Caretaker.getInstance().saveState();
 

@@ -64,11 +64,6 @@ public final class EditorView implements Mediator {
     }
 
     @Override
-    public void hideElements(boolean flag) {
-
-    }
-
-    @Override
     public void createGUI(Stage primaryStage) {
     }
 
@@ -114,7 +109,7 @@ public final class EditorView implements Mediator {
         gridPane.add(hbValues,0,1);
         gridPane.add(hbButtons,0,2);
         gridPane.setStyle("-fx-background-color: #FFFFFF");
-        View.getInstance().canvas.getChildren().addAll(gridPane);
+        View.getInstance().getCanvas().getChildren().addAll(gridPane);
     }
 
 }

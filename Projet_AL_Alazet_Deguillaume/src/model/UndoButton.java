@@ -51,11 +51,11 @@ public class UndoButton extends FXButton {
                         } else if (s.getPositionI() instanceof ToolbarPosition) {
                             Toolbar.getInstance().add(s);
 
-                            float ratio = (float) (s.getWidth() / (View.getInstance().toolbar.getPrefWidth() - 24));
+                            float ratio = (float) (s.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
                             if (s.getPositionI().getY() + s.getHeight()/ratio < View.getInstance().TOOLBAR_HEIGHT)
-                                View.getInstance().toolbar.setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
+                                View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
                             else {
-                                View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight() + (s.getHeight() / ratio) +10 );
+                                View.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (s.getHeight() / ratio));
                             }
                         }
                     }

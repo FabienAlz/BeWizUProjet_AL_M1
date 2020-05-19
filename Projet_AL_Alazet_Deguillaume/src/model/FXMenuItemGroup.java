@@ -20,7 +20,7 @@ public class FXMenuItemGroup extends FXMenuItem {
                     compoundShape.add(s);
                 }
                 for (Shape s : compoundShape.getShapes()) {
-                    View.getInstance().canvas.getChildren().remove(FXImplementor.getInstance().getSHAPES().get(s.getId()));
+                    View.getInstance().getCanvas().getChildren().remove(FXImplementor.getInstance().getSHAPES().get(s.getId()));
                 }
                 ShapeObserver obs = new ConcreteShapeObserver();
                 compoundShape.addObserver(obs);

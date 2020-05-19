@@ -61,7 +61,7 @@ public class OkButton extends javafx.scene.control.Button implements Component {
                         }
                     }
                     Canvas.getInstance().resetSelection();
-                    View.getInstance().canvas.getChildren().clear();
+                    View.getInstance().getCanvas().getChildren().clear();
                     Canvas.getInstance().notifyAllShapes();
                 }
             }

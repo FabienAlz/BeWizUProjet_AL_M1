@@ -108,13 +108,13 @@ public class FXMouseHandlers {
             if(posX < 0) {
                 posX = 0;
             }
-            else if(posX > View.getInstance().canvas.getWidth()) {
-                posX = View.getInstance().canvas.getWidth();
+            else if(posX > View.getInstance().getCanvas().getWidth()) {
+                posX = View.getInstance().getCanvas().getWidth();
             }
             if(posY < 0) {
                 posY = 0;
-            } else if(posY > View.getInstance().canvas.getHeight()) {
-                posY = View.getInstance().canvas.getHeight();
+            } else if(posY > View.getInstance().getCanvas().getHeight()) {
+                posY = View.getInstance().getCanvas().getHeight();
             }
             if (FXShape instanceof Rectangle) {
                 Position firstPos = Canvas.getInstance().getStartSelectPos();
@@ -166,13 +166,13 @@ public class FXMouseHandlers {
                 if(posX < 0) {
                     posX = 0;
                 }
-                else if(posX > View.getInstance().canvas.getWidth()) {
-                    posX = View.getInstance().canvas.getWidth();
+                else if(posX > View.getInstance().getCanvas().getWidth()) {
+                    posX = View.getInstance().getCanvas().getWidth();
                 }
                 if(posY < 0) {
                     posY = 0;
-                } else if(posY > View.getInstance().canvas.getHeight()) {
-                    posY = View.getInstance().canvas.getHeight();
+                } else if(posY > View.getInstance().getCanvas().getHeight()) {
+                    posY = View.getInstance().getCanvas().getHeight();
                 }
                 Position secondPos = new Position(posX, posY);
                 for (Shape s : Canvas.getInstance().getShapes()) {

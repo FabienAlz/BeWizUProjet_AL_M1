@@ -17,25 +17,24 @@ import javax.naming.Context;
 public final class View implements Mediator {
 
     private static View instance;
-    public Popup popup;
+    private Popup popup;
     private SaveButton save;
     private LoadButton load;
     private UndoButton undo;
     private RedoButton redo;
-    public Bin bin;
+    private Bin bin;
     private FXMenu menu;
-    public ScrollPane toolbarWrapper;
-    public FXToolbar toolbar;
-    public FXCanvas canvas;
-    public ContextMenu contextMenu;
-    public FXMenuItem menuItem;
-    private double TOOLBAR_WIDTH = 128;
+    private ScrollPane toolbarWrapper;
+    private FXToolbar toolbar;
+    private FXCanvas canvas;
+    private ContextMenu contextMenu;
+    private FXMenuItem menuItem;
+    public double TOOLBAR_WIDTH = 128;
     public double TOOLBAR_HEIGHT = 530;
-    private double MENU_HEIGHT = 51;
-    private double SCENE_WIDTH = 1080;
-    private double SCENE_HEIGHT = 650;
-
-    public Group root;
+    public double MENU_HEIGHT = 51;
+    public double SCENE_WIDTH = 1080;
+    public double SCENE_HEIGHT = 650;
+    private Group root;
 
     @Override
     public void registerComponent(Component component) {
@@ -75,11 +74,6 @@ public final class View implements Mediator {
                 menuItem = (FXMenuItem) component;
                 break;
         }
-    }
-
-    @Override
-    public void hideElements(boolean flag) {
-
     }
 
     @Override
@@ -145,4 +139,75 @@ public final class View implements Mediator {
         return instance;
     }
 
+    public Popup getPopup() {
+        return popup;
+    }
+
+    public SaveButton getSave() {
+        return save;
+    }
+
+    public LoadButton getLoad() {
+        return load;
+    }
+
+    public UndoButton getUndo() {
+        return undo;
+    }
+
+    public RedoButton getRedo() {
+        return redo;
+    }
+
+    public Bin getBin() {
+        return bin;
+    }
+
+    public FXMenu getMenu() {
+        return menu;
+    }
+
+    public ScrollPane getToolbarWrapper() {
+        return toolbarWrapper;
+    }
+
+    public FXToolbar getToolbar() {
+        return toolbar;
+    }
+
+    public FXCanvas getCanvas() {
+        return canvas;
+    }
+
+    public ContextMenu getContextMenu() {
+        return contextMenu;
+    }
+
+    public FXMenuItem getMenuItem() {
+        return menuItem;
+    }
+
+    public double getTOOLBAR_WIDTH() {
+        return TOOLBAR_WIDTH;
+    }
+
+    public double getTOOLBAR_HEIGHT() {
+        return TOOLBAR_HEIGHT;
+    }
+
+    public double getMENU_HEIGHT() {
+        return MENU_HEIGHT;
+    }
+
+    public double getSCENE_WIDTH() {
+        return SCENE_WIDTH;
+    }
+
+    public double getSCENE_HEIGHT() {
+        return SCENE_HEIGHT;
+    }
+
+    public Group getRoot() {
+        return root;
+    }
 }

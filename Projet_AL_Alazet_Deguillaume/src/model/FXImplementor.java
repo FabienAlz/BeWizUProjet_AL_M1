@@ -23,20 +23,20 @@ import java.util.List;
 public final class FXImplementor implements Implementor, Serializable {
     private static final long serialVersionUID = 3734212650399506405L;
 
-    public transient Shape lastSelected;
-    public transient javafx.scene.shape.Shape lastFXSelected;
+    private transient Shape lastSelected;
+    private transient javafx.scene.shape.Shape lastFXSelected;
 
     private transient Pane canvas;
-    public transient Pane toolBar;
+    private transient Pane toolBar;
     private transient Pane bin;
 
-    public transient Color BORDER_COLOR;
+    private transient Color BORDER_COLOR;
 
     private transient static FXImplementor instance;
 
-    public transient static Stage stage;
+    private transient static Stage stage;
 
-    public transient Popup popup;
+    private transient Popup popup;
 
     private transient Map<Long, javafx.scene.shape.Shape> SHAPES;
 
@@ -76,9 +76,33 @@ public final class FXImplementor implements Implementor, Serializable {
     }
 
     public ContextMenu getContextMenu() {
-        return View.getInstance().contextMenu;
+        return View.getInstance().getContextMenu();
     }
 
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Shape getLastSelected() {
+        return lastSelected;
+    }
+
+    public javafx.scene.shape.Shape getLastFXSelected() {
+        return lastFXSelected;
+    }
+
+    public Color getBORDER_COLOR() {
+        return BORDER_COLOR;
+    }
+
+    public static Stage getStage() {
+        return stage;
+    }
+
+    public Popup getPopup() {
+        return popup;
+    }
 
     /**
      * Initialize the javafx application
@@ -109,10 +133,10 @@ public final class FXImplementor implements Implementor, Serializable {
     public void initializeFXImplementor(Stage primaryStage) {
         SHAPES = new HashMap<>();
         BORDER_COLOR = new Color(68.0 / 255, 114.0 / 255, 196.0 / 255, 1);
-        toolBar = View.getInstance().toolbar;
-        canvas = View.getInstance().canvas;
-        bin = View.getInstance().bin;
-        popup = View.getInstance().popup;
+        toolBar = View.getInstance().getToolbar();
+        canvas = View.getInstance().getCanvas();
+        bin = View.getInstance().getBin();
+        popup = View.getInstance().getPopup();
         stage = primaryStage;
     }
 
@@ -154,9 +178,9 @@ public final class FXImplementor implements Implementor, Serializable {
                     s.addObserver(obs);
                     if (s.getPositionI() instanceof ToolbarPosition) {
                         Toolbar.getInstance().addAndNotify(s);
-                        if (View.getInstance().toolbar.getHeight() < Toolbar.getInstance().getNextPosition().getY()) {
-                            float ratio = (float) (s.getWidth() / (View.getInstance().toolbar.getPrefWidth() - 24));
-                            View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight() + (s.getHeight() / ratio) + 10);
+                        float ratio = (float) (s.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
+                        if (View.getInstance().getToolbar().getHeight() < s.getPositionI().getY() + s.getHeight() / ratio) {
+                            View.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (s.getHeight()/ratio) + 10);
                             scrollToDisable = false;
                         }
                     }
@@ -172,7 +196,7 @@ public final class FXImplementor implements Implementor, Serializable {
             }
             Caretaker.getInstance().saveState();
             if (scrollToDisable)
-                View.getInstance().toolbar.setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
+                View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
         }
 
         primaryStage.setOnCloseRequest(event -> {

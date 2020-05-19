@@ -50,9 +50,9 @@ public class LoadButton extends FXButton {
                         Canvas.getInstance().getShapes().clear();
                         Toolbar.getInstance().getShapes().clear();
                         Toolbar.getInstance().resetPosition();
-                        View.getInstance().canvas.getChildren().clear();
-                        View.getInstance().toolbar.getChildren().clear();
-                        View.getInstance().toolbar.setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
+                        View.getInstance().getCanvas().getChildren().clear();
+                        View.getInstance().getToolbar().getChildren().clear();
+                        View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
 
                         ShapeObserver obs = new ConcreteShapeObserver();
                         for (Shape s : loadShapes) {
@@ -70,9 +70,9 @@ public class LoadButton extends FXButton {
 
                             if (s.getPositionI() instanceof ToolbarPosition) {
                                 Toolbar.getInstance().addAndNotify(s);
-                                float ratio = (float) (s.getWidth() / (View.getInstance().toolbar.getPrefWidth() - 24));
-                                if (View.getInstance().toolbar.getHeight() < Toolbar.getInstance().getNextPosition().getY()) {
-                                    View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight() + (s.getHeight() / ratio) + 10);
+                                float ratio = (float) (s.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
+                                if (View.getInstance().getToolbar().getHeight() < s.getPositionI().getY() + s.getHeight() / ratio) {
+                                    View.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (s.getHeight()/ratio) + 10);
                                     scrollToDisable = false;
                                 }
                             } else if (s.getPositionI() instanceof CanvasPosition)
@@ -90,7 +90,7 @@ public class LoadButton extends FXButton {
                     Caretaker.getInstance().saveState();
 
                     if (scrollToDisable)
-                        View.getInstance().toolbar.setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
+                        View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
 
                 }
             }
