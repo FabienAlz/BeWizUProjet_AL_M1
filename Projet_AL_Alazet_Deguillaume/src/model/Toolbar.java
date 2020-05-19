@@ -13,15 +13,16 @@ public final class Toolbar {
      */
     private Toolbar() {
         shapes = new ArrayList<>();
-        nextPosition = new ToolbarPosition(10,10);
+        nextPosition = new ToolbarPosition(10, 10);
     }
 
     /**
      * Singleton Pattern
+     *
      * @return a new toolbar if it's the first time called, the previously created instance otherwise
      */
     public static Toolbar getInstance() {
-        if(instance == null)
+        if (instance == null)
             instance = new Toolbar();
         return instance;
     }
@@ -35,7 +36,7 @@ public final class Toolbar {
 
     public Shape getShape(long id) {
         for (Shape s : shapes) {
-            if(s.getId() == id) return s;
+            if (s.getId() == id) return s;
         }
         return null;
     }
@@ -49,20 +50,21 @@ public final class Toolbar {
      *          SETTERS           *
      ******************************/
     public void setNextPosition(int height) {
-        this.nextPosition = new ToolbarPosition(nextPosition.getX(), nextPosition.getY()+10+height);
+        this.nextPosition = new ToolbarPosition(nextPosition.getX(), nextPosition.getY() + 10 + height);
     }
 
     /**
      * Notifies the observers of each Shape
      */
     public void notifyAllShapes() {
-        for(Shape s : shapes) {
+        for (Shape s : shapes) {
             s.notifyObserver();
         }
     }
 
     /**
      * Adds a Shape in the toolbar and notifies its observers
+     *
      * @param s the Shape to add and notify
      */
     public void addAndNotify(Shape s) {
@@ -72,6 +74,7 @@ public final class Toolbar {
 
     /**
      * Adds a Shape in the toolbar
+     *
      * @param s the Shape to add
      */
     public void add(Shape s) {
@@ -79,7 +82,8 @@ public final class Toolbar {
     }
 
     /**
-     * Remove a Shape from the toolbar
+     * Removes a Shape from the toolbar
+     *
      * @param s the Shape to remove
      */
     public void remove(Shape s) {
@@ -96,12 +100,13 @@ public final class Toolbar {
 
     /**
      * Checks if the Toolbar contains a Shape given its id
+     *
      * @param id the id of the Shape
      * @return true if the toolbar contains the Shape, false otherwise
      */
     public boolean contains(long id) {
         for (Shape s : shapes) {
-            if(s.getId() == id) return true;
+            if (s.getId() == id) return true;
         }
         return false;
     }

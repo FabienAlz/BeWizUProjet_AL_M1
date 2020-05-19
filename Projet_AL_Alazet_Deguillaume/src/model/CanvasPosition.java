@@ -13,6 +13,9 @@ public class CanvasPosition implements PositionI, Serializable {
         this.y = y;
     }
 
+    /******************************
+     *          GETTERS           *
+     ******************************/
     @Override
     public double getX() {
         return this.x;
@@ -23,6 +26,9 @@ public class CanvasPosition implements PositionI, Serializable {
         return this.y;
     }
 
+    /******************************
+     *          SETTERS           *
+     ******************************/
     @Override
     public void setX(double x) {
         this.x = x;

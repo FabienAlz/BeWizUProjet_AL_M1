@@ -16,7 +16,7 @@ public class MenuItemUngroup extends MenuItem {
     }
 
     /**
-     * On click, if the selected shapes are grouped, it ungroups them
+     * On click, if the selected Shapes are grouped, ungroups them
      */
     private void UngroupItemHandler() {
         setOnAction(new EventHandler<ActionEvent>() {

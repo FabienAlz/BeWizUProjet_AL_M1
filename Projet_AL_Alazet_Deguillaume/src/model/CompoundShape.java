@@ -97,7 +97,7 @@ public class CompoundShape extends AbstractShape implements Serializable {
     }
 
     /**
-     * Translate all the shapes of the CompoundShape to their location + the translation
+     * Translates all the shapes of the CompoundShape to their location + the translation
      * @param translation
      */
     public void translate(Translation translation) {
@@ -131,7 +131,7 @@ public class CompoundShape extends AbstractShape implements Serializable {
     }
 
     /**
-     * Add a Shape to the CompoundShape
+     * Adds a Shape to the CompoundShape
      * @param s
      */
     public void add(Shape s) {

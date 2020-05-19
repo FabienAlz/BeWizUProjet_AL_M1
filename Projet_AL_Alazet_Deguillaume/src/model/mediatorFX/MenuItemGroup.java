@@ -13,7 +13,7 @@ public class MenuItemGroup extends MenuItem {
     }
 
     /**
-     * On click, groups the selected shape(s)
+     * On click, groups the selected Shape(s)
      */
     private void groupItemHandler() {
         setOnAction(new EventHandler<ActionEvent>() {

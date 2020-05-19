@@ -57,7 +57,7 @@ public class LoadButton extends Button {
                         ShapeObserver obs = new ConcreteShapeObserver();
                         for (Shape s : loadShapes) {
                             try {
-                                s.getImplementor().initializeFXImplementor(primaryStage);
+                                ((FXImplementor)s.getImplementor()).initializeFXImplementor(primaryStage);
                             } catch (Exception ex) {
                                 ex.printStackTrace();
                             }

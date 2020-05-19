@@ -23,7 +23,7 @@ public class OkButton extends ValidateButton implements Component {
     }
 
     /**
-     * On click, updates the selected shape(s) according to the values extracted from the editor text fields and color picker, closes the editor and unselected all the selected shapes
+     * On click, updates the selected Shape(s) according to the values extracted from the editor text fields and color picker, closes the editor and unselected all the selected Shape(s)
      */
     private void okButtonHandler() {
         setOnAction(e -> {

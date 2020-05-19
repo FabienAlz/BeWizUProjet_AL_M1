@@ -16,7 +16,7 @@ public class MenuItemEdit extends MenuItem {
     }
 
     /**
-     * On click, opens the right editor depending of the selected shape(s)
+     * On click, opens the right editor depending of the selected Shape(s)
      */
     private void EditItemHandler() {
         setOnAction(new EventHandler<ActionEvent>() {

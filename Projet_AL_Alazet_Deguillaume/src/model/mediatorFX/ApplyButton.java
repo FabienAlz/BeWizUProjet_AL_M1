@@ -24,7 +24,7 @@ public class ApplyButton extends ValidateButton implements Component {
     }
 
     /**
-     * On click, updates the selected shape(s) according to the values extracted from the editor text fields and color picker
+     * On click, updates the selected Shape(s) according to the values extracted from the editor text fields and color picker
      */
     private void applyButtonHandler() {
         setOnAction(e -> {

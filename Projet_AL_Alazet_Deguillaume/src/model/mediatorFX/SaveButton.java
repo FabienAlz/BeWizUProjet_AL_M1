@@ -34,7 +34,7 @@ public class SaveButton extends Button {
     }
 
     /**
-     * On click, open a file chooser to name a file then saves the toolbar and canvas shapes inside
+     * On click, open a file chooser to name a file then saves the Toolbar and Canvas Shapes inside
      */
     private void saveButtonHandler() {
         setOnAction(e -> {

@@ -12,7 +12,7 @@ public abstract class ValidateButton extends javafx.scene.control.Button impleme
     /**
      * Edits s according to the values extracted from the editor text fields and color picker
      *
-     * @param s the shape to edit
+     * @param s the Shape to edit
      */
     protected void editShape(Shape s) {
         s.setColor(String.valueOf(EditorView.getInstance().getColorPicker().getValue()));
