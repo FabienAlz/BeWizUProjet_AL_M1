@@ -4,10 +4,7 @@ import javafx.scene.Cursor;
 import javafx.scene.input.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import model.Canvas;
-import model.FXImplementor;
-import model.Position;
-import model.Shape;
+import model.*;
 import view.View;
 
 /**

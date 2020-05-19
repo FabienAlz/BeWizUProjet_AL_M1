@@ -4,7 +4,6 @@ import javafx.scene.control.ToolBar;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import view.Mediator;
-import view.View;
 
 import java.io.*;
 import java.util.ArrayList;

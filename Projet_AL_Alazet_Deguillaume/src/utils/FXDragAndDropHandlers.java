@@ -6,9 +6,6 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import model.*;
 import view.View;
-
-import javax.tools.Tool;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,22 +43,34 @@ public class FXDragAndDropHandlers {
                 if (!original.isSelected()) {
                     Shape copy = original.clone();
                     copy.setId();
-
-                    float ratio = (float) (copy.getWidth() / (View.getInstance().toolbar.getPrefWidth() - 24));
-                    if (copy instanceof CompoundShape) {
-                        implementor.createToolbarCompoundShape((CompoundShape) copy);
-                        copy.setPosition(new ToolbarPosition());
-                        Toolbar.getInstance().add(copy);
-
-                        if(View.getInstance().toolbar.getHeight() < Toolbar.getInstance().getNextPosition().getY() + copy.getHeight() / ratio ) {
-                            View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight() + (copy.getHeight() / ratio) +10 );
-                        }
-                    } else {
-                        if(View.getInstance().toolbar.getHeight() < Toolbar.getInstance().getNextPosition().getY() + copy.getHeight() / ratio ) {
-                            View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight() + (copy.getHeight() / ratio) +10 );
+                    if(copy instanceof Rectangle) {
+                        float ratio = (float) (((Rectangle) copy).getAppearingWidth() / (View.getInstance().toolbar.getPrefWidth() - 24));
+                        if (View.getInstance().toolbar.getHeight() < Toolbar.getInstance().getNextPosition().getY()
+                                + ((Rectangle)copy).getAppearingHeight() / ratio) {
+                            View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight()
+                                    + (((Rectangle) copy).getAppearingHeight() / ratio) + 10);
                         }
                         copy.setPosition(new ToolbarPosition());
                         Toolbar.getInstance().addAndNotify(copy);
+
+                    } else {
+
+                        float ratio = (float) (copy.getWidth() / (View.getInstance().toolbar.getPrefWidth() - 24));
+                        if (copy instanceof CompoundShape) {
+                            implementor.createToolbarCompoundShape((CompoundShape) copy);
+                            copy.setPosition(new ToolbarPosition());
+                            Toolbar.getInstance().add(copy);
+
+                            if (View.getInstance().toolbar.getHeight() < Toolbar.getInstance().getNextPosition().getY() + copy.getHeight() / ratio) {
+                                View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight() + (copy.getHeight() / ratio) + 10);
+                            }
+                        } else {
+                            if (View.getInstance().toolbar.getHeight() < Toolbar.getInstance().getNextPosition().getY() + copy.getHeight() / ratio) {
+                                View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight() + (copy.getHeight() / ratio) + 10);
+                            }
+                            copy.setPosition(new ToolbarPosition());
+                            Toolbar.getInstance().addAndNotify(copy);
+                        }
                     }
                 }
                 // Add all the selected shapes in the toolbar
@@ -187,6 +196,8 @@ public class FXDragAndDropHandlers {
                             dragEvent.getY() - ((CompoundShape) original).getTopLeft().getY()));
                 } else {
                     copy.setPosition(new CanvasPosition(dragEvent.getX(), dragEvent.getY()));
+                    copy.setPosition(copy.getRotationCenter());
+//                    ((SingleShape)copy).computeVertices();
                 }
                 Canvas.getInstance().resetSelection();
                 Canvas.getInstance().add(copy);
@@ -354,10 +365,7 @@ public class FXDragAndDropHandlers {
             implementor.popup.getContent().clear();
             implementor.popup.getContent().add(label);
             implementor.getBin().setOpacity(1);
-//            long id = Long.parseLong(db.getString());
-//            if (Toolbar.getInstance().contains(id)) {
             implementor.popup.hide();
-//            }
         }
         dragEvent.consume();
     }

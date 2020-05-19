@@ -14,19 +14,19 @@ public class Polygon extends SingleShape implements Serializable {
      * Creates a new Polygon
      * @param positionI
      * @param rotation
-     * @param rotationCenter
      * @param translation
      * @param color
      * @param edges
      * @param length
      * @param implementor
      */
-    public Polygon(PositionI positionI, float rotation, PositionI rotationCenter, Translation translation, String color, int edges, float length, Implementor implementor) {
-        super(positionI, rotation, rotationCenter, translation, color, implementor);
+    public Polygon(PositionI positionI, float rotation, Translation translation, String color, int edges, float length, Implementor implementor) {
+        super(positionI, rotation, translation, color, implementor);
         this.edges = edges;
         this.length = length;
         this.vertices = new Vector<>();
         computeVertices();
+        computeRotationCenter();
     }
 
     /******************************
@@ -40,6 +40,17 @@ public class Polygon extends SingleShape implements Serializable {
         return length;
     }
 
+    public Position getTopLeft() {
+        double minX = vertices.get(0);
+        double minY = vertices.get(1);
+        for(int i = 0; i < vertices.size(); i += 2) {
+            if(minX > vertices.get(i)) minX = vertices.get(i);
+            if(minY > vertices.get(i+1)) minY = vertices.get(i+1);
+        }
+        return new Position(minX, minY);
+    }
+
+    @Override
     public Vector<Double> getVertices() {
         return vertices;
     }
@@ -93,6 +104,7 @@ public class Polygon extends SingleShape implements Serializable {
     /**
      * Computes the vertices of a Polygon with the number of its edges and their length
      */
+    @Override
     public void computeVertices() {
         double r = computeRadius();
         vertices.clear();
@@ -101,6 +113,24 @@ public class Polygon extends SingleShape implements Serializable {
             vertices.add(r * Math.cos(angle) + getPositionI().getX() + r);
             vertices.add(r * Math.sin(angle) + getPositionI().getY() + r);
         }
+    }
+
+    /**
+     * Computes the rotation center of a Polygon
+     */
+    @Override
+    public void computeRotationCenter() {
+        double posX = 0;
+        double posY = 0;
+        for(int i = 0; i < edges*2; i++) {
+            if(i%2 == 0) {
+                posX += vertices.get(i);
+            }
+            else {
+                posY += vertices.get(i);
+            }
+        }
+        setRotationCenter(new Position(posX/edges, posY/edges));
     }
 
     /**

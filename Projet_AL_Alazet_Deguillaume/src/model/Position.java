@@ -8,7 +8,6 @@ public class Position implements Serializable, PositionI  {
     private double y;
 
     public Position(double x, double y) {
-        if(x < 0 || y < 0) throw new IllegalArgumentException("Position out of bonds");
         this.x = x;
         this.y = y;
     }

@@ -39,20 +39,31 @@ public class CompoundShape extends AbstractShape implements Serializable {
 
     @Override
     public float getWidth() {
-        double minX = getTopLeft().getX();
-        double maxX = 0;
+        double minX = ((SingleShape)shapes.get(0)).getVertices().get(0);
+        double maxX = ((SingleShape)shapes.get(0)).getVertices().get(0);
         for(Shape s : shapes) {
-            if(maxX < s.getPositionI().getX() + s.getWidth()) maxX = s.getPositionI().getX() + s.getWidth();
+            if(s instanceof SingleShape) {
+                for(int i = 0; i < ((SingleShape) s).getVertices().size(); i+=2) {
+                    if(maxX < ((SingleShape) s).getVertices().get(i)) maxX = ((SingleShape) s).getVertices().get(i);
+                    if(minX > ((SingleShape) s).getVertices().get(i)) minX = ((SingleShape) s).getVertices().get(i);
+                }
+            }
         }
+
         return (float)(maxX-minX);
     }
 
     public float getHeight() {
-        double minY = shapes.get(0).getPositionI().getY();
-        double maxY = shapes.get(0).getPositionI().getY() + shapes.get(0).getHeight() ;
+        double minY = ((SingleShape)shapes.get(0)).getVertices().get(1);
+        double maxY = ((SingleShape)shapes.get(0)).getVertices().get(1);
+
         for(Shape s : shapes) {
-            if(minY > s.getPositionI().getY()) minY = s.getPositionI().getY();
-            if(maxY < s.getPositionI().getY() + s.getHeight()) maxY = s.getPositionI().getY() + s.getHeight();
+            if(s instanceof SingleShape) {
+                for(int i = 1; i < ((SingleShape) s).getVertices().size(); i+=2) {
+                    if (maxY < ((SingleShape) s).getVertices().get(i)) maxY = ((SingleShape) s).getVertices().get(i);
+                    if(minY > ((SingleShape) s).getVertices().get(i)) minY = ((SingleShape) s).getVertices().get(i);
+                }
+            }
         }
         return (float)(maxY-minY);
     }
@@ -61,9 +72,16 @@ public class CompoundShape extends AbstractShape implements Serializable {
         double minX = shapes.get(0).getPositionI().getX();
         double minY = shapes.get(0).getPositionI().getY();
         for(Shape s : shapes) {
-            if(minX > s.getPositionI().getX()) minX = s.getPositionI().getX();
-            if(minY > s.getPositionI().getY()) minY = s.getPositionI().getY();
+            if(s instanceof SingleShape) {
+                for(int i = 0; i < ((SingleShape) s).getVertices().size(); i++) {
+                    if (i%2 == 0 && minX > ((SingleShape) s).getVertices().get(i))
+                        minX = ((SingleShape) s).getVertices().get(i);
+                    else if(i%2 == 1 && minY > ((SingleShape) s).getVertices().get(i))
+                        minY = ((SingleShape) s).getVertices().get(i);
+                }
+            }
         }
+
         return new Position(minX, minY);
     }
 
@@ -109,6 +127,8 @@ public class CompoundShape extends AbstractShape implements Serializable {
             double posX = shape.getPositionI().getX() + translation.getX();
             double posY = shape.getPositionI().getY() + translation.getY();
             shape.setPosition(new CanvasPosition(posX, posY));
+//            ((SingleShape)shape).computeVertices();
+
         }
     }
 

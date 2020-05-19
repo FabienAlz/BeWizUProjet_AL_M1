@@ -28,7 +28,6 @@ public class OkButton extends javafx.scene.control.Button implements Component {
             for (Shape s : Canvas.getInstance().getShapes()) {
                 if (s.isSelected()) {
                     s.setColor(String.valueOf(EditorView.getInstance().colorPicker.getValue()));
-                    s.setRotation(Float.parseFloat(EditorView.getInstance().textFields.get("Rotation").getText()));
                     if (s instanceof Rectangle) {
                         ((Rectangle) s).setWidth(Float.parseFloat(EditorView.getInstance().textFields.get("Width").getText()));
                         ((Rectangle) s).setHeight(Float.parseFloat(EditorView.getInstance().textFields.get("Height").getText()));
@@ -60,6 +59,7 @@ public class OkButton extends javafx.scene.control.Button implements Component {
                             }
                         }
                     }
+                    s.setRotation(Float.parseFloat(EditorView.getInstance().textFields.get("Rotation").getText()));
                     Canvas.getInstance().resetSelection();
                     View.getInstance().canvas.getChildren().clear();
                     Canvas.getInstance().notifyAllShapes();

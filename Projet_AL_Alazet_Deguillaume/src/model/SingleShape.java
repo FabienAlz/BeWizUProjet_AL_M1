@@ -1,8 +1,10 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Vector;
 
 public abstract class SingleShape extends AbstractShape implements Serializable {
+
     private float rotation;
     private PositionI rotationCenter;
     private String color;
@@ -11,15 +13,13 @@ public abstract class SingleShape extends AbstractShape implements Serializable 
      * Initializes a SingleShape's fields
      * @param position
      * @param rotation
-     * @param rotationCenter
      * @param translation
      * @param color
      * @param implementor
      */
-    public SingleShape(PositionI position, float rotation, PositionI rotationCenter, Translation translation, String color, Implementor implementor) {
+    public SingleShape(PositionI position, float rotation, Translation translation, String color, Implementor implementor) {
         super(position, translation, implementor);
         this.rotation = rotation;
-        this.rotationCenter = rotationCenter;
         this.color = color;
     }
 
@@ -49,7 +49,18 @@ public abstract class SingleShape extends AbstractShape implements Serializable 
 
     public void setRotation(float rotation) {
         this.rotation = rotation;
+        computeVertices();
     }
+
+    public void setRotationCenter(PositionI rotationCenter) {
+        this.rotationCenter = rotationCenter;
+    }
+
+    public abstract void computeVertices();
+
+    public abstract void computeRotationCenter();
+
+    public abstract Vector<Double> getVertices();
 
     @Override
     public SingleShape clone() {
