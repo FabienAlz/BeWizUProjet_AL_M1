@@ -8,6 +8,7 @@ public final class Canvas {
     private List<Shape> shapes;
     private Position startSelectPos = new Position(0, 0);
     private boolean selection = false;
+
     /**
      * Singleton constructor
      */
@@ -17,15 +18,17 @@ public final class Canvas {
 
     /**
      * Singleton pattern
-     * @return a new Cnvas if it's the first time it's called, the previously created instance otherwise
+     *
+     * @return a new Canvas if it's the first time it's called, the previously created instance otherwise
      */
     public static Canvas getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new Canvas();
         }
 
         return instance;
     }
+
     /******************************
      *          GETTERS           *
      ******************************/
@@ -43,7 +46,7 @@ public final class Canvas {
 
     public Shape getShape(long id) {
         for (Shape s : shapes) {
-            if(s.getId() == id) return s;
+            if (s.getId() == id) return s;
         }
         return null;
     }
@@ -62,12 +65,13 @@ public final class Canvas {
 
     /**
      * Creates a list of Shapes to group together and removes them from the Canvas
+     *
      * @return a list of Shapes to group together
      */
     public List<Shape> createCompound() {
         List<Shape> compoundShape = new ArrayList<>();
         for (Shape s : shapes) {
-            if(s.isSelected()) {
+            if (s.isSelected()) {
                 s.setSelected(false);
                 compoundShape.add(s);
             }
@@ -82,30 +86,32 @@ public final class Canvas {
      * Resets the selection of all the Shapes
      */
     public void resetSelection() {
-        for(Shape s : shapes) {
+        for (Shape s : shapes) {
             s.setSelected(false);
         }
     }
 
     /**
      * Checks if the canvas contains a Shape given its id
+     *
      * @param id the id of the Shape
      * @return true if the Shape is in the canvas, false otherwise
      */
     public boolean contains(long id) {
         for (Shape s : shapes) {
-            if(s.getId() == id) return true;
+            if (s.getId() == id) return true;
         }
         return false;
     }
 
     /**
      * Remove a Shape from the canvas given its id
+     *
      * @param id the id of the Shape to remove
      */
     public void removeById(long id) {
-        for(Shape s : shapes) {
-            if(s.getId() == id) {
+        for (Shape s : shapes) {
+            if (s.getId() == id) {
                 shapes.remove(s);
                 break;
             }
@@ -116,13 +122,14 @@ public final class Canvas {
      * Notifies the observers of each Shape
      */
     public void notifyAllShapes() {
-        for(Shape s : shapes) {
+        for (Shape s : shapes) {
             s.notifyObserver();
         }
     }
 
     /**
      * Add a Shape in the canvas and notifies its observer
+     *
      * @param s the Shape to add and notify
      */
     public void addAndNotify(Shape s) {
@@ -132,6 +139,7 @@ public final class Canvas {
 
     /**
      * Adds a shape in the canvas
+     *
      * @param s the Shape to add
      */
     public void add(Shape s) {
@@ -140,6 +148,7 @@ public final class Canvas {
 
     /**
      * Remove a Shape from the canvas
+     *
      * @param s the Shape to remove
      */
     public void remove(Shape s) {

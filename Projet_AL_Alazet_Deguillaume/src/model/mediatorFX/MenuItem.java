@@ -1,11 +1,12 @@
-package model;
+package model.mediatorFX;
 
+import model.Component;
 import view.Mediator;
 
-public abstract class FXMenuItem extends javafx.scene.control.MenuItem implements Component {
+public abstract class MenuItem extends javafx.scene.control.MenuItem implements Component {
     private Mediator mediator;
 
-    public FXMenuItem(String text) {
+    public MenuItem(String text) {
         super(text);
         setId(text);
     }

@@ -1,19 +1,20 @@
-package model;
+package model.mediatorFX;
 
-import javafx.scene.control.ToolBar;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import model.Canvas;
+import model.Shape;
+import model.Toolbar;
 import view.Mediator;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SaveButton extends FXButton {
+public class SaveButton extends Button {
     private Mediator mediator;
     private Stage primaryStage;
 
-    public void setStage(Stage stage){
+    public void setStage(Stage stage) {
         primaryStage = stage;
     }
 
@@ -32,14 +33,17 @@ public class SaveButton extends FXButton {
         return "SaveButton";
     }
 
+    /**
+     * On click, open a file chooser to name a file then saves the Toolbar and Canvas Shapes inside
+     */
     private void saveButtonHandler() {
         setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setInitialDirectory(new File("C:/Users/Shadow/Desktop/GL/AL/projet/BeWizUProjet_AL_M1/Projet_AL_Alazet_Deguillaume/ressources/saves"));
+            fileChooser.setInitialDirectory(new File("ressources/saves"));
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("ser files (*.ser)", "*.ser");
             fileChooser.getExtensionFilters().add(extFilter);
             File file = fileChooser.showSaveDialog(primaryStage);
-            if(file!=null) {
+            if (file != null) {
                 try {
                     FileOutputStream fileOut =
                             new FileOutputStream(file);

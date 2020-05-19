@@ -1,16 +1,20 @@
-package model;
+package model.mediatorFX;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import model.*;
 import view.View;
 
-public class FXMenuItemGroup extends FXMenuItem {
+public class MenuItemGroup extends MenuItem {
 
-    public FXMenuItemGroup(String text) {
+    public MenuItemGroup(String text) {
         super(text);
         groupItemHandler();
     }
 
+    /**
+     * On click, groups the selected Shape(s)
+     */
     private void groupItemHandler() {
         setOnAction(new EventHandler<ActionEvent>() {
             @Override

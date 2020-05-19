@@ -1,13 +1,10 @@
-package model;
+package model.mediatorFX;
 
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.input.DragEvent;
+import model.Component;
 import utils.FXDragAndDropHandlers;
 import view.Mediator;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class FXToolbar extends javafx.scene.layout.Pane implements Component {
     private Mediator mediator;
@@ -28,7 +25,7 @@ public class FXToolbar extends javafx.scene.layout.Pane implements Component {
     }
 
     /**
-     * binds the handlers to the toolbar
+     * Binds the handlers to the toolbar
      */
     private void setToolbarHandlers() {
         FXDragAndDropHandlers myHandler = new FXDragAndDropHandlers();

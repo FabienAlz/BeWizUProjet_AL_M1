@@ -8,6 +8,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
+import model.mediatorFX.*;
+import model.mediatorFX.ContextMenu;
 import utils.FXContextMenuHandlers;
 import utils.FXMouseHandlers;
 import view.View;
@@ -21,20 +23,14 @@ public final class FXImplementor implements Implementor, Serializable {
 
     private transient Shape lastSelected;
     private transient javafx.scene.shape.Shape lastFXSelected;
-
     private transient Pane canvas;
     private transient Pane toolBar;
     private transient Pane bin;
     private transient  ScrollPane toolBarWrapper;
-
     private transient Color BORDER_COLOR;
-
     private transient static FXImplementor instance;
-
     private transient static Stage stage;
-
     private transient Popup popup;
-
     private transient Map<Long, javafx.scene.shape.Shape> SHAPES;
 
     /**
@@ -72,13 +68,8 @@ public final class FXImplementor implements Implementor, Serializable {
         return bin;
     }
 
-    public ContextMenu getContextMenu() {
+    public javafx.scene.control.ContextMenu getContextMenu() {
         return View.getInstance().getContextMenu();
-    }
-
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
     }
 
     public Shape getLastSelected() {
@@ -87,10 +78,6 @@ public final class FXImplementor implements Implementor, Serializable {
 
     public javafx.scene.shape.Shape getLastFXSelected() {
         return lastFXSelected;
-    }
-
-    public Color getBORDER_COLOR() {
-        return BORDER_COLOR;
     }
 
     public static Stage getStage() {
@@ -102,31 +89,30 @@ public final class FXImplementor implements Implementor, Serializable {
     }
 
     /**
-     * Initialize the javafx application
+     * Initializes the javafx application
      */
-    @Override
     public void initializeFX() {
         View mediator = View.getInstance();
-        mediator.registerComponent(new SaveButton("", "Projet_AL_Alazet_Deguillaume/ressources/ico/save.png"));
-        mediator.registerComponent(new LoadButton("", "Projet_AL_Alazet_Deguillaume/ressources/ico/load.png"));
-        mediator.registerComponent(new UndoButton("", "Projet_AL_Alazet_Deguillaume/ressources/ico/undo.png"));
-        mediator.registerComponent(new RedoButton("", "Projet_AL_Alazet_Deguillaume/ressources/ico/redo.png"));
-        mediator.registerComponent(new Bin("Projet_AL_Alazet_Deguillaume/ressources/ico/bin.png"));
+
+        mediator.registerComponent(new SaveButton("", "ressources/ico/save.png"));
+        mediator.registerComponent(new LoadButton("", "ressources/ico/load.png"));
+        mediator.registerComponent(new UndoButton("", "ressources/ico/undo.png"));
+        mediator.registerComponent(new RedoButton("", "ressources/ico/redo.png"));
+        mediator.registerComponent(new Bin("ressources/ico/bin.png"));
         mediator.registerComponent(new FXToolbar());
         mediator.registerComponent(new FXCanvas());
-        mediator.registerComponent(new model.Popup());
-        FXContextMenu menu = new FXContextMenu("contextMenu");
-        menu.addItem(new FXMenuItemGroup("Group"));
-        menu.addItem(new FXMenuItemDegroup("Degroup"));
-        menu.addItem(new FXMenuItemEdit("Edit"));
+        mediator.registerComponent(new model.mediatorFX.Popup());
+        ContextMenu menu = new ContextMenu("contextMenu");
+        menu.addItem(new MenuItemGroup("Group"));
+        menu.addItem(new MenuItemUngroup("Ungroup"));
+        menu.addItem(new MenuItemEdit("Edit"));
         mediator.registerComponent(menu);
     }
 
 
     /**
-     * Initialize the FXImplementor
+     * Initializes the FXImplementor
      */
-    @Override
     public void initializeFXImplementor(Stage primaryStage) {
         SHAPES = new HashMap<>();
         BORDER_COLOR = new Color(68.0 / 255, 114.0 / 255, 196.0 / 255, 1);
@@ -149,7 +135,8 @@ public final class FXImplementor implements Implementor, Serializable {
     public void start(Stage primaryStage) throws Exception {
         View.getInstance().createGUI(primaryStage);
         initializeFXImplementor(primaryStage);
-        /*File load = new File("Projet_AL_Alazet_Deguillaume/ressources/saves/autosave.ser");
+
+        File load = new File("ressources/saves/autosave.ser");
         List<Shape> loadShapes = null;
         if (load != null) {
             boolean scrollToDisable = true;
@@ -162,14 +149,14 @@ public final class FXImplementor implements Implementor, Serializable {
                 for (Shape s : loadShapes) {
                     try {
                         s.setId();
-                        s.getImplementor().initializeFXImplementor(primaryStage);
+                        ((FXImplementor)s.getImplementor()).initializeFXImplementor(primaryStage);
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
                     if (s instanceof CompoundShape) {
                         for (Shape subShape : ((CompoundShape) s).getShapes()) {
                             subShape.setId();
-                            subShape.getImplementor().initializeFXImplementor(primaryStage);
+                            ((FXImplementor)subShape.getImplementor()).initializeFXImplementor(primaryStage);
                             subShape.addObserver(obs);
                         }
                     }
@@ -178,7 +165,7 @@ public final class FXImplementor implements Implementor, Serializable {
                         Toolbar.getInstance().addAndNotify(s);
                         float ratio = (float) (s.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
                         if (View.getInstance().getToolbar().getHeight() < s.getPositionI().getY() + s.getHeight() / ratio) {
-                            View.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (s.getHeight()/ratio) + 10);
+                            View.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (s.getHeight() / ratio) + 10);
                             scrollToDisable = false;
                         }
                     }
@@ -195,7 +182,7 @@ public final class FXImplementor implements Implementor, Serializable {
             Caretaker.getInstance().saveState();
             if (scrollToDisable)
                 View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
-        }*/
+        }
 
         primaryStage.setOnCloseRequest(event -> {
             File file = new File("ressources/saves/autosave.ser");
@@ -219,7 +206,7 @@ public final class FXImplementor implements Implementor, Serializable {
     }
 
     /**
-     * binds the handlers to single shapes
+     * Binds the handlers to single shapes
      */
     private void commonHandlers(Shape s, javafx.scene.shape.Shape newShape) {
         FXMouseHandlers myHandler = new FXMouseHandlers(s, newShape);
@@ -260,7 +247,7 @@ public final class FXImplementor implements Implementor, Serializable {
     }
 
     /**
-     * binds the handlers to the compound shapes
+     * Binds the handlers to the compound shapes
      */
     private void compoundShapeHandlers(CompoundShape s, Map<Shape, javafx.scene.shape.Shape> compoundShapes) {
         EventHandler<MouseEvent> hoverColor = new EventHandler<MouseEvent>() {
@@ -312,7 +299,7 @@ public final class FXImplementor implements Implementor, Serializable {
     }
 
     /**
-     * binds the drop handlers to the single shapes
+     * Binds the drop handlers to the single shapes
      */
     private void dragHandlers(Shape shape, javafx.scene.shape.Shape newShape) {
         FXMouseHandlers myHandler = new FXMouseHandlers(shape, newShape);
@@ -327,7 +314,7 @@ public final class FXImplementor implements Implementor, Serializable {
     }
 
     /**
-     * binds the drop handlers to the compound shapes
+     * Binds the drop handlers to the compound shapes
      */
     private void dragHandlersCompound(CompoundShape s, Map<Shape, javafx.scene.shape.Shape> compoundShapes) {
         EventHandler setOnDragDetected = new EventHandler<MouseEvent>() {

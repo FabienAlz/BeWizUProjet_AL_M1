@@ -1,13 +1,14 @@
-package model;
+package model.mediatorFX;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import model.*;
 import view.Mediator;
 import view.View;
 
 import java.util.List;
 
-public class UndoButton extends FXButton {
+public class UndoButton extends Button {
     private Mediator mediator;
 
     public UndoButton(String s, String imageSrc) {
@@ -52,10 +53,10 @@ public class UndoButton extends FXButton {
                             Toolbar.getInstance().add(s);
 
                             float ratio = (float) (s.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
-                            if (s.getPositionI().getY() + s.getHeight()/ratio < View.getInstance().TOOLBAR_HEIGHT)
+                            if (s.getPositionI().getY() + s.getHeight() / ratio < View.getInstance().TOOLBAR_HEIGHT)
                                 View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
                             else {
-                                View.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (s.getHeight() / ratio));
+                                View.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (s.getHeight() / ratio) + 10);
                             }
                         }
                     }
@@ -64,6 +65,5 @@ public class UndoButton extends FXButton {
                 }
             }
         });
-
     }
 }

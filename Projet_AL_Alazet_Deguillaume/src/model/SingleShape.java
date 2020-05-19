@@ -12,6 +12,7 @@ public abstract class SingleShape extends AbstractShape implements Serializable 
 
     /**
      * Initializes a SingleShape's fields
+     *
      * @param position
      * @param rotation
      * @param translation
@@ -24,7 +25,8 @@ public abstract class SingleShape extends AbstractShape implements Serializable 
         this.color = color;
     }
 
-    public SingleShape(){}
+    public SingleShape() {
+    }
 
     /******************************
      *          GETTERS           *
@@ -65,7 +67,7 @@ public abstract class SingleShape extends AbstractShape implements Serializable 
 
     @Override
     public SingleShape clone() {
-            return (SingleShape) super.clone();
+        return (SingleShape) super.clone();
     }
 
 

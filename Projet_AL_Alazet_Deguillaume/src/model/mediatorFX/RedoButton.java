@@ -1,14 +1,14 @@
-package model;
+package model.mediatorFX;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import model.*;
 import view.Mediator;
 import view.View;
 
-import java.sql.SQLOutput;
 import java.util.List;
 
-public class RedoButton extends FXButton {
+public class RedoButton extends Button {
     private Mediator mediator;
 
     public RedoButton(String s, String imageSrc) {
@@ -53,10 +53,10 @@ public class RedoButton extends FXButton {
                             Toolbar.getInstance().add(s);
 
                             float ratio = (float) (s.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
-                            if (s.getPositionI().getY() + s.getHeight()/ratio < View.getInstance().TOOLBAR_HEIGHT)
+                            if (s.getPositionI().getY() + s.getHeight() / ratio < View.getInstance().TOOLBAR_HEIGHT)
                                 View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
                             else {
-                                View.getInstance().getToolbar().setPrefHeight(View.getInstance().getToolbar().getPrefHeight() + (s.getHeight() / ratio) +10 );
+                                View.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (s.getHeight() / ratio) + 10);
                             }
                         }
                     }

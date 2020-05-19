@@ -13,7 +13,8 @@ public class Rectangle extends SingleShape implements Serializable {
 
 
     /**
-     *  Creates a Rectangle
+     * Creates a Rectangle
+     *
      * @param position the position of the top-left corner of the rectangle
      * @param rotation
      * @param translation
@@ -176,12 +177,13 @@ public class Rectangle extends SingleShape implements Serializable {
 
     /**
      * Compares a given Shape with this Rectangle
+     *
      * @param s the Shape to compare to this Rectangle
      * @return true if the given Rectangle has the same id false otherwise
      */
     @Override
     public boolean equals(Shape s) {
-        if(s instanceof Rectangle && s.getId() == this.getId()) {
+        if (s instanceof Rectangle && s.getId() == this.getId()) {
             return true;
         }
         return false;
@@ -189,6 +191,7 @@ public class Rectangle extends SingleShape implements Serializable {
 
     /**
      * Clones the Rectangle
+     *
      * @return the copy of the Rectangle
      */
     @Override

@@ -1,17 +1,13 @@
-package model;
+package model.mediatorFX;
 
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import model.Component;
 import utils.FXDragAndDropHandlers;
 import utils.FXMouseHandlers;
 import view.Mediator;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class FXCanvas extends javafx.scene.layout.Pane implements Component {
     private Mediator mediator;
@@ -26,13 +22,13 @@ public class FXCanvas extends javafx.scene.layout.Pane implements Component {
     }
 
     @Override
-         public String getName() {
-             return "FXCanvas";
-         }
+    public String getName() {
+        return "FXCanvas";
+    }
 
     private void setCanvasHandlers() {
         javafx.scene.shape.Rectangle rectangleSelection = new javafx.scene.shape.Rectangle();
-        rectangleSelection.setFill(new Color(1,0,1,1));
+        rectangleSelection.setFill(new Color(1, 0, 1, 1));
         rectangleSelection.setStroke(new Color(0, 0, 1, 1));
         rectangleSelection.setOpacity(0.3);
         rectangleSelection.setVisible(false);

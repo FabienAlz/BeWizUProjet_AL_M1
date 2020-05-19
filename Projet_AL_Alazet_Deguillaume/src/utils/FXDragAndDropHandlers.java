@@ -5,6 +5,7 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import model.*;
+import model.Toolbar;
 import view.View;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +84,6 @@ public class FXDragAndDropHandlers {
                                 implementor.createToolbarCompoundShape((CompoundShape) copy);
                                 copy.setPosition(new ToolbarPosition());
                                 Toolbar.getInstance().add(copy);
-
                             }
                             else {
                                 copy.setPosition(new ToolbarPosition());

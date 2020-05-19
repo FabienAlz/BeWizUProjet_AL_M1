@@ -1,11 +1,8 @@
-package model;
+package model.mediatorFX;
 
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
+import model.Component;
 import view.Mediator;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 public class ColorPicker extends javafx.scene.control.ColorPicker implements Component {
     private Mediator mediator;
@@ -14,9 +11,6 @@ public class ColorPicker extends javafx.scene.control.ColorPicker implements Com
         super();
         setValue(color);
     }
-
-
-
 
     @Override
     public void setMediator(Mediator mediator) {

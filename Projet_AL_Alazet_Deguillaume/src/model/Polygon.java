@@ -12,6 +12,7 @@ public class Polygon extends SingleShape implements Serializable {
 
     /**
      * Creates a new Polygon
+     *
      * @param positionI
      * @param rotation
      * @param translation
@@ -60,22 +61,22 @@ public class Polygon extends SingleShape implements Serializable {
     public float getWidth() {
         double maxX = vertices.get(0);
         double minX = vertices.get(0);
-        for(int index = 0; index < edges*2; index += 2){
-            if(vertices.get(index) > maxX) maxX = vertices.get(index);
+        for (int index = 0; index < edges * 2; index += 2) {
+            if (vertices.get(index) > maxX) maxX = vertices.get(index);
             else if (vertices.get(index) < minX) minX = vertices.get(index);
         }
-        return (float)(maxX-minX);
+        return (float) (maxX - minX);
     }
 
     @Override
-    public float getHeight(){
+    public float getHeight() {
         double maxY = vertices.get(1);
         double minY = vertices.get(1);
-        for(int index = 1; index < edges*2; index += 2){
-            if(vertices.get(index) > maxY) maxY = vertices.get(index);
+        for (int index = 1; index < edges * 2; index += 2) {
+            if (vertices.get(index) > maxY) maxY = vertices.get(index);
             if (vertices.get(index) < minY) minY = vertices.get(index);
         }
-        return (float)(maxY-minY);
+        return (float) (maxY - minY);
     }
 
     /******************************
@@ -92,6 +93,7 @@ public class Polygon extends SingleShape implements Serializable {
 
     /**
      * Computes the radius of the circle on witch all the vertices of the Polygon are
+     *
      * @return the radius of this circle
      */
     public double computeRadius() {
@@ -109,8 +111,8 @@ public class Polygon extends SingleShape implements Serializable {
     public void computeVertices() {
         double r = computeRadius();
         vertices.clear();
-        for (int i = 0; i < edges*2; i+=2) {
-            double angle = i/2 * (2 * Math.PI / edges);
+        for (int i = 0; i < edges * 2; i += 2) {
+            double angle = i / 2 * (2 * Math.PI / edges);
             vertices.add(r * Math.cos(angle) + getPositionI().getX() + r);
             vertices.add(r * Math.sin(angle) + getPositionI().getY() + r);
         }
@@ -155,12 +157,13 @@ public class Polygon extends SingleShape implements Serializable {
 
     /**
      * Compares a given Shape with this Polygon
+     *
      * @param s the Shape to compare to this Polygon
      * @return true if they have the same id, false otherwise
      */
     @Override
     public boolean equals(Shape s) {
-        if(s instanceof Polygon && s.getId() == this.getId()) {
+        if (s instanceof Polygon && s.getId() == this.getId()) {
             return true;
         }
         return false;
@@ -168,13 +171,14 @@ public class Polygon extends SingleShape implements Serializable {
 
     /**
      * Clones a Polygon and deep copies its array of vertices
+     *
      * @return a copy of this Polygon
      */
     @Override
     public Polygon clone() {
         Polygon copy = (Polygon) super.clone();
         copy.vertices = new Vector<>();
-        Vector<Double> copyVector = (Vector<Double>)vertices.clone();
+        Vector<Double> copyVector = (Vector<Double>) vertices.clone();
         copy.vertices.addAll(copyVector);
         return copy;
     }

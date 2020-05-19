@@ -18,6 +18,9 @@ public class ToolbarPosition implements PositionI, Serializable {
         this.y = y;
     }
 
+    /******************************
+     *          GETTERS           *
+     ******************************/
     @Override
     public double getX() {
         return this.x;
@@ -28,6 +31,9 @@ public class ToolbarPosition implements PositionI, Serializable {
         return this.y;
     }
 
+    /******************************
+     *          SETTERS           *
+     ******************************/
     @Override
     public void setX(double x) {
         this.x = x;
@@ -36,14 +42,5 @@ public class ToolbarPosition implements PositionI, Serializable {
     @Override
     public void setY(double y) {
         this.y = y;
-    }
-
-
-    @Override
-    public String toString() {
-        return "ToolbarPosition{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
     }
 }

@@ -1,24 +1,29 @@
-package model;
+package model.mediatorFX;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.paint.Color;
+import model.*;
 import view.EditorView;
 import view.View;
 
-public class FXMenuItemEdit extends FXMenuItem {
-            EditorView mediator;
-    public FXMenuItemEdit(String text) {
+public class MenuItemEdit extends MenuItem {
+    EditorView mediator;
+
+    public MenuItemEdit(String text) {
         super(text);
         EditItemHandler();
     }
 
+    /**
+     * On click, opens the right editor depending of the selected Shape(s)
+     */
     private void EditItemHandler() {
-    setOnAction(new EventHandler<ActionEvent>() {
+        setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 mediator = EditorView.getInstance();
-                EditorView.getInstance().shapeSaves.clear();
+                EditorView.getInstance().getShapeSaves().clear();
 
                 for (Shape shape : Canvas.getInstance().getShapes()) {
                     if (!(shape instanceof CompoundShape) && shape.isSelected()) {
@@ -35,12 +40,12 @@ public class FXMenuItemEdit extends FXMenuItem {
                     if (shape.isSelected()) s = shape;
                 }
                 if (s.isSelected()) {
-                    EditorView.getInstance().shapeSaves.put(s.getId(), s.clone());
+                    EditorView.getInstance().getShapeSaves().put(s.getId(), s.clone());
                     if (s instanceof Rectangle) {
-                        createRectangleEditor((Rectangle)s);
+                        createRectangleEditor(s);
 
                     } else if (s instanceof Polygon) {
-                        createPolygonEditor((Polygon)s);
+                        createPolygonEditor(s);
                     } else if (s instanceof CompoundShape) {
                         boolean sameClass = true;
                         Shape firstShape = ((CompoundShape) s).getShapes().get(0);
@@ -63,9 +68,12 @@ public class FXMenuItemEdit extends FXMenuItem {
             }
 
 
-    });
+        });
     }
 
+    /**
+     * Creates all the FX components needed for the rectangle (or compound shape of rectangle) editor window
+     */
     private void createRectangleEditor(Shape s) {
         if (s instanceof CompoundShape) s = ((CompoundShape) s).getShapes().get(0);
         createSharedComponents(s);
@@ -74,25 +82,35 @@ public class FXMenuItemEdit extends FXMenuItem {
         mediator.registerComponent(new Label("Height"));
         mediator.registerComponent(new TextField("Height", String.valueOf(s.getHeight())));
         mediator.registerComponent(new Label("Border radius"));
-        mediator.registerComponent(new TextField("Border radius", String.valueOf(((Rectangle)s).getBorderRadius())));
+        mediator.registerComponent(new TextField("Border radius", String.valueOf(((Rectangle) s).getBorderRadius())));
         mediator.createRectangleEditor();
     }
 
+
+    /**
+     * Creates all the FX components needed for the rectangle (or compound shape of rectangle) editor window
+     */
     private void createPolygonEditor(Shape s) {
         if (s instanceof CompoundShape) s = ((CompoundShape) s).getShapes().get(0);
         createSharedComponents(s);
         mediator.registerComponent(new Label("Edges"));
-        mediator.registerComponent(new TextField("Edges",String.valueOf(((Polygon)s).getEdges())));
+        mediator.registerComponent(new TextField("Edges", String.valueOf(((Polygon) s).getEdges())));
         mediator.registerComponent(new Label("Length"));
-        mediator.registerComponent(new TextField("Length",String.valueOf(((Polygon)s).getLength())));
+        mediator.registerComponent(new TextField("Length", String.valueOf(((Polygon) s).getLength())));
         mediator.createPolygonEditor();
     }
 
+    /**
+     * Creates all the FX components needed for the compound shape of both polygons and rectangles editor window
+     */
     private void createMixedEditor(Shape s) {
         createSharedComponents(s);
         mediator.createMixedEditor();
     }
 
+    /**
+     * Creates all the FX components that are shared between all editors
+     */
     private void createSharedComponents(Shape s) {
         if (s instanceof CompoundShape) s = ((CompoundShape) s).getShapes().get(0);
 
