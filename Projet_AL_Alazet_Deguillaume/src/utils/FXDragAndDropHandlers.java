@@ -45,12 +45,6 @@ public class FXDragAndDropHandlers {
                     Shape copy = original.clone();
                     copy.setId();
                     if(copy instanceof Rectangle) {
-                        float ratio = (float) (((Rectangle) copy).getAppearingWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
-                        if (View.getInstance().getToolbar().getHeight() < Toolbar.getInstance().getNextPosition().getY()
-                                + ((Rectangle)copy).getAppearingHeight() / ratio) {
-                            View.getInstance().getToolbar().setPrefHeight(View.getInstance().getToolbar().getPrefHeight()
-                                    + (((Rectangle) copy).getAppearingHeight() / ratio) + 10);
-                        }
                         copy.setPosition(new ToolbarPosition());
                         Toolbar.getInstance().addAndNotify(copy);
 
@@ -65,9 +59,6 @@ public class FXDragAndDropHandlers {
                                 View.getInstance().getToolbar().setPrefHeight(View.getInstance().getToolbar().getPrefHeight() + (copy.getHeight() / ratio) + 10);
                             }
                         } else {
-                            if (View.getInstance().getToolbar().getHeight() < Toolbar.getInstance().getNextPosition().getY() + copy.getHeight() / ratio) {
-                                View.getInstance().getToolbar().setPrefHeight(View.getInstance().getToolbar().getPrefHeight() + (copy.getHeight() / ratio) + 10);
-                            }
                             copy.setPosition(new ToolbarPosition());
                             Toolbar.getInstance().addAndNotify(copy);
                         }
