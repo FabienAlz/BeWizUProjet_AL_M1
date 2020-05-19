@@ -1,13 +1,9 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.scene.Node;
 import javafx.stage.Stage;
 import model.*;
-import view.View;
-
-import java.util.ArrayList;
-import java.util.List;
+import model.Toolbar;
 
 public class Main extends Application {
     Implementor implementor;

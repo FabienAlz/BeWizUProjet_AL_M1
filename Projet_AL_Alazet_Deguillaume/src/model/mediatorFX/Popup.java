@@ -1,11 +1,12 @@
-package model;
+package model.mediatorFX;
 
+import model.Component;
 import view.Mediator;
 
-public class GridPane extends javafx.scene.layout.GridPane implements Component {
-    Mediator mediator;
+public class Popup extends javafx.stage.Popup implements Component {
+    private Mediator mediator;
 
-    public GridPane(){
+    public Popup() {
         super();
     }
 
@@ -16,6 +17,6 @@ public class GridPane extends javafx.scene.layout.GridPane implements Component 
 
     @Override
     public String getName() {
-        return "GridPane";
+        return "Popup";
     }
 }

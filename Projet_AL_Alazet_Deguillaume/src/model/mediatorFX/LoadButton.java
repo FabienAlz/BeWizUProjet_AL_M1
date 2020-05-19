@@ -1,17 +1,14 @@
-package model;
+package model.mediatorFX;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import model.*;
 import view.Mediator;
 import view.View;
-
-import javax.tools.Tool;
 import java.io.*;
-import java.sql.SQLOutput;
-import java.util.ArrayList;
 import java.util.List;
 
-public class LoadButton extends FXButton {
+public class LoadButton extends Button {
     private Mediator mediator;
     private Stage primaryStage;
 
@@ -34,10 +31,13 @@ public class LoadButton extends FXButton {
         return "LoadButton";
     }
 
+    /**
+     * On click, open a file chooser to pick a file. If the file is valid (not null and .ser extension) it will load its content
+     */
     private void loadButtonHandler() {
         setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setInitialDirectory(new File("C:/Users/Shadow/Desktop/GL/AL/projet/BeWizUProjet_AL_M1/Projet_AL_Alazet_Deguillaume/ressources/saves"));
+            fileChooser.setInitialDirectory(new File("ressources/saves"));
             File file = fileChooser.showOpenDialog(primaryStage);
             List<Shape> loadShapes = null;
             boolean scrollToDisable = true;
@@ -72,7 +72,7 @@ public class LoadButton extends FXButton {
                                 Toolbar.getInstance().addAndNotify(s);
                                 float ratio = (float) (s.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
                                 if (View.getInstance().getToolbar().getHeight() < s.getPositionI().getY() + s.getHeight() / ratio) {
-                                    View.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (s.getHeight()/ratio) + 10);
+                                    View.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (s.getHeight() / ratio) + 10);
                                     scrollToDisable = false;
                                 }
                             } else if (s.getPositionI() instanceof CanvasPosition)

@@ -5,10 +5,9 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import model.*;
+import model.Toolbar;
 import view.View;
 
-import javax.tools.Tool;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,12 +68,10 @@ public class FXDragAndDropHandlers {
                             copy.setId();
                             s.setSelected(false);
 
-                            float ratio = (float) (copy.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
                             if (copy instanceof CompoundShape) {
                                 implementor.createToolbarCompoundShape((CompoundShape) copy);
                                 copy.setPosition(new ToolbarPosition());
                                 Toolbar.getInstance().add(copy);
-
                             }
                             else {
                                 copy.setPosition(new ToolbarPosition());
@@ -94,7 +91,7 @@ public class FXDragAndDropHandlers {
         Canvas.getInstance().resetSelection();
         Canvas.getInstance().notifyAllShapes();
         for (Shape s : Toolbar.getInstance().getShapes()) {
-            float ratio = 1;
+            float ratio;
             if (s instanceof Polygon) {
                 ratio = (float) (s.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 35));
             } else ratio = (float) (s.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));

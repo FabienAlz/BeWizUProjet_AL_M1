@@ -1,20 +1,24 @@
-package model;
+package model.mediatorFX;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import model.*;
 import view.View;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FXMenuItemDegroup extends FXMenuItem {
+public class MenuItemUngroup extends MenuItem {
 
-    public FXMenuItemDegroup(String text) {
+    public MenuItemUngroup(String text) {
         super(text);
-        DegroupItemHandler();
+        UngroupItemHandler();
     }
 
-    private void DegroupItemHandler() {
+    /**
+     * On click, if the selected shapes are grouped, it ungroups them
+     */
+    private void UngroupItemHandler() {
         setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {

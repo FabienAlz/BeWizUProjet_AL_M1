@@ -7,12 +7,9 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.ToolBar;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import model.*;
-
-import javax.naming.Context;
+import model.mediatorFX.*;
 
 public final class View implements Mediator {
 
@@ -23,12 +20,12 @@ public final class View implements Mediator {
     private UndoButton undo;
     private RedoButton redo;
     private Bin bin;
-    private FXMenu menu;
+    private Menu menu;
     private ScrollPane toolbarWrapper;
     private FXToolbar toolbar;
     private FXCanvas canvas;
     private ContextMenu contextMenu;
-    private FXMenuItem menuItem;
+    private MenuItem menuItem;
     public double TOOLBAR_WIDTH = 128;
     public double TOOLBAR_HEIGHT = 530;
     public double MENU_HEIGHT = 51;
@@ -36,6 +33,11 @@ public final class View implements Mediator {
     public double SCENE_HEIGHT = 650;
     private Group root;
 
+
+    /**
+     * Assigns component to the correct matching field
+     * @param component
+     */
     @Override
     public void registerComponent(Component component) {
         component.setMediator(this);
@@ -59,7 +61,7 @@ public final class View implements Mediator {
                 bin = (Bin) component;
                 break;
             case "FXMenu":
-                menu = (FXMenu)component;
+                menu = (Menu)component;
                 break;
             case "FXToolbar":
                 toolbar = (FXToolbar) component;
@@ -71,11 +73,15 @@ public final class View implements Mediator {
                 contextMenu = (ContextMenu) component;
                 break;
             case "FXMenuItem":
-                menuItem = (FXMenuItem) component;
+                menuItem = (MenuItem) component;
                 break;
         }
     }
 
+    /**
+     * Creates all the FX components needed for the first screen of the application then displays them
+     * @param primaryStage
+     */
     @Override
     public void createGUI(Stage primaryStage) {
         root = new Group();
@@ -124,13 +130,14 @@ public final class View implements Mediator {
         root.getChildren().add(canvas);
 
         concreteMenu.toFront();
+        toolbarWrapper.toFront();
         primaryStage.show();
     }
 
 
     /**
      * Singleton pattern
-     * @return
+     * @returns a new View if it's the first time it's called, the previously created instance otherwise
      */
     public static View getInstance() {
         if (instance == null) {
@@ -139,36 +146,16 @@ public final class View implements Mediator {
         return instance;
     }
 
+    /*****************
+     *    GETTERS    *
+     *****************/
+
     public Popup getPopup() {
         return popup;
     }
 
-    public SaveButton getSave() {
-        return save;
-    }
-
-    public LoadButton getLoad() {
-        return load;
-    }
-
-    public UndoButton getUndo() {
-        return undo;
-    }
-
-    public RedoButton getRedo() {
-        return redo;
-    }
-
     public Bin getBin() {
         return bin;
-    }
-
-    public FXMenu getMenu() {
-        return menu;
-    }
-
-    public ScrollPane getToolbarWrapper() {
-        return toolbarWrapper;
     }
 
     public FXToolbar getToolbar() {
@@ -183,31 +170,4 @@ public final class View implements Mediator {
         return contextMenu;
     }
 
-    public FXMenuItem getMenuItem() {
-        return menuItem;
-    }
-
-    public double getTOOLBAR_WIDTH() {
-        return TOOLBAR_WIDTH;
-    }
-
-    public double getTOOLBAR_HEIGHT() {
-        return TOOLBAR_HEIGHT;
-    }
-
-    public double getMENU_HEIGHT() {
-        return MENU_HEIGHT;
-    }
-
-    public double getSCENE_WIDTH() {
-        return SCENE_WIDTH;
-    }
-
-    public double getSCENE_HEIGHT() {
-        return SCENE_HEIGHT;
-    }
-
-    public Group getRoot() {
-        return root;
-    }
 }

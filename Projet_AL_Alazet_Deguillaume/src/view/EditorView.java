@@ -3,43 +3,34 @@ package view;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import model.*;
+import model.mediatorFX.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public final class EditorView implements Mediator {
 
 
-    public Map<Long, Shape> shapeSaves = new HashMap<>();
+    private Map<Long, Shape> shapeSaves = new HashMap<>();
     private static EditorView instance;
-    public GridPane gridPane;
-    /**
-     * Singleton pattern
-     * @return
-     */
-    public static EditorView getInstance() {
-        if (instance == null) {
-            instance = new EditorView();
-        }
-        return instance;
-    }
-
-
-    public ColorPicker colorPicker;
+    private GridPane gridPane;
+    private ColorPicker colorPicker;
     private OkButton ok;
     private ApplyButton apply;
     private CancelButton cancel;
-    public Map<String, Label> labels = new HashMap<>();
-    public Map<String, TextField> textFields = new HashMap<>();
+    private Map<String, Label> labels = new HashMap<>();
+    private Map<String, TextField> textFields = new HashMap<>();
 
+    /**
+     * Assigns component to the correct matching field
+     * @param component
+     */
     @Override
     public void registerComponent(Component component) {
         component.setMediator(this);
         switch (component.getName()) {
             case "ColorPicker":
-                colorPicker = (model.ColorPicker) component;
+                colorPicker = (ColorPicker) component;
                 break;
             case "OkButton":
                 ok = (OkButton) component;
@@ -63,11 +54,16 @@ public final class EditorView implements Mediator {
         }
     }
 
+    /**
+     * Unused
+     */
     @Override
-    public void createGUI(Stage primaryStage) {
-    }
+    public void createGUI(Stage primaryStage) { }
 
 
+    /**
+     * Puts all the FX components needed for the rectangle (or compound shape of rectangles) editor window together
+     */
     public void createRectangleEditor() {
         HBox hbValues = new HBox();
         hbValues.getChildren().addAll(labels.get("Width"),textFields.get("Width"));
@@ -77,7 +73,9 @@ public final class EditorView implements Mediator {
 
     }
 
-
+    /**
+     * Puts all the FX components needed for the polygon (or compound shape of polygon) editor window together
+     */
     public void createPolygonEditor() {
         HBox hbValues = new HBox();
         hbValues.getChildren().addAll(labels.get("Edges"),textFields.get("Edges"));
@@ -85,17 +83,22 @@ public final class EditorView implements Mediator {
         createSharedComponents(hbValues);
     }
 
+    /**
+     * Puts all the FX components needed for the compound shape of both polygons and rectangles editor window together
+     */
     public void createMixedEditor() {
         createSharedComponents(new HBox());
     }
 
+    /**
+     * Puts all the FX components that are shared between all editors together
+     */
     public void createSharedComponents(HBox hbValues) {
         hbValues.setSpacing(10);
         hbValues.getChildren().addAll(labels.get("Rotation"),textFields.get("Rotation"));
 
         HBox hbColorPicker = new HBox();
         hbColorPicker.getChildren().add(colorPicker);
-
 
         HBox hbButtons = new HBox();
         hbButtons.getChildren().add(ok);
@@ -111,5 +114,41 @@ public final class EditorView implements Mediator {
         gridPane.setStyle("-fx-background-color: #FFFFFF");
         View.getInstance().getCanvas().getChildren().addAll(gridPane);
     }
+
+    /**
+     * Singleton pattern
+     * @return a new EditorView if it's the first time it's called, the previously created instance otherwise
+     */
+    public static EditorView getInstance() {
+        if (instance == null) {
+            instance = new EditorView();
+        }
+        return instance;
+    }
+
+    /*****************
+     *    GETTERS    *
+     *****************/
+
+    public Map<Long, Shape> getShapeSaves() {
+        return shapeSaves;
+    }
+
+    public GridPane getGridPane() {
+        return gridPane;
+    }
+
+    public ColorPicker getColorPicker() {
+        return colorPicker;
+    }
+
+    public Map<String, Label> getLabels() {
+        return labels;
+    }
+
+    public Map<String, TextField> getTextFields() {
+        return textFields;
+    }
+
 
 }

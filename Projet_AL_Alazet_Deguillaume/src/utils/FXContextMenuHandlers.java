@@ -2,7 +2,6 @@ package utils;
 
 import javafx.scene.Node;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import model.Canvas;

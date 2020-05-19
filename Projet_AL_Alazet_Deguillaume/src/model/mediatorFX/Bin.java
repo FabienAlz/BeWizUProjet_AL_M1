@@ -1,10 +1,11 @@
-package model;
+package model.mediatorFX;
 
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.layout.StackPane;
+import model.Component;
 import utils.FXDragAndDropHandlers;
 import view.Mediator;
 
@@ -40,7 +41,7 @@ public class Bin extends StackPane implements Component {
     }
 
     /**
-     * binds the handlers to the bin
+     * Binds the handlers to the bin
      */
     private void setBinHandlers() {
         FXDragAndDropHandlers myDragAndDropHandler = new FXDragAndDropHandlers();

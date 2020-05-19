@@ -2,20 +2,17 @@ package model;
 
 import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
-import javafx.fxml.FXML;
+import model.mediatorFX.*;
+import model.mediatorFX.ContextMenu;
 import utils.FXContextMenuHandlers;
 import utils.FXMouseHandlers;
 import view.View;
 
-import javax.tools.Tool;
 import java.io.*;
 import java.util.*;
 import java.util.List;
@@ -75,7 +72,7 @@ public final class FXImplementor implements Implementor, Serializable {
         return bin;
     }
 
-    public ContextMenu getContextMenu() {
+    public javafx.scene.control.ContextMenu getContextMenu() {
         return View.getInstance().getContextMenu();
     }
 
@@ -117,11 +114,11 @@ public final class FXImplementor implements Implementor, Serializable {
         mediator.registerComponent(new Bin("C:/Users/Shadow/Desktop/GL/AL/projet/BeWizUProjet_AL_M1/Projet_AL_Alazet_Deguillaume/ressources/ico/bin.png"));
         mediator.registerComponent(new FXToolbar());
         mediator.registerComponent(new FXCanvas());
-        mediator.registerComponent(new model.Popup());
-        FXContextMenu menu = new FXContextMenu("contextMenu");
-        menu.addItem(new FXMenuItemGroup("Group"));
-        menu.addItem(new FXMenuItemDegroup("Degroup"));
-        menu.addItem(new FXMenuItemEdit("Edit"));
+        mediator.registerComponent(new model.mediatorFX.Popup());
+        ContextMenu menu = new ContextMenu("contextMenu");
+        menu.addItem(new MenuItemGroup("Group"));
+        menu.addItem(new MenuItemUngroup("Ungroup"));
+        menu.addItem(new MenuItemEdit("Edit"));
         mediator.registerComponent(menu);
     }
 

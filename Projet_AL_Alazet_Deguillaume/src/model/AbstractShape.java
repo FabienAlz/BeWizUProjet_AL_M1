@@ -12,6 +12,7 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
 
     /**
      * Initializes the fields of an AbstractShape
+     *
      * @param position
      * @param translation
      * @param implementor
@@ -24,7 +25,8 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
         this.id = ++generatedId;
     }
 
-    public AbstractShape(){}
+    public AbstractShape() {
+    }
 
     /******************************
      *           GETTERS          *
@@ -32,7 +34,7 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
 
     abstract public float getWidth();
 
-    abstract  public float getHeight();
+    abstract public float getHeight();
 
     public PositionI getPositionI() {
         return position;
@@ -50,12 +52,16 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
         return isSelected;
     }
 
-    public long getId() { return this.id; }
+    public long getId() {
+        return this.id;
+    }
 
     /******************************
      *           SETTERS          *
      ******************************/
-    public void setPosition(PositionI position) { this.position = position; }
+    public void setPosition(PositionI position) {
+        this.position = position;
+    }
 
     public void setTranslation(Translation translation) {
         this.translation = translation;
@@ -66,10 +72,12 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
     }
 
     public void setId() {
-        this.id = ++generatedId; }
+        this.id = ++generatedId;
+    }
 
     /**
      * Checks if the Shape is inside a Rectangle
+     *
      * @param startingPoint
      * @param arrival
      * @return
@@ -77,10 +85,10 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
     public boolean isInside(Position startingPoint, Position arrival) {
         boolean res = false;
 
-        if(position.getX() > startingPoint.getX() &&
+        if (position.getX() > startingPoint.getX() &&
                 position.getX() + getWidth() < arrival.getX() &&
                 position.getY() > startingPoint.getY() &&
-                position.getY() + getHeight() < arrival.getY()){
+                position.getY() + getHeight() < arrival.getY()) {
             res = true;
         }
 

@@ -1,5 +1,6 @@
-package model;
+package model.mediatorFX;
 
+import model.Component;
 import view.Mediator;
 
 public class TextField extends javafx.scene.control.TextField implements Component {
@@ -15,12 +16,6 @@ public class TextField extends javafx.scene.control.TextField implements Compone
         super(text);
         this.id = id;
     }
-
-
-    public void addText(String text) {
-        setText(text);
-    }
-
 
     @Override
     public void setMediator(Mediator mediator) {

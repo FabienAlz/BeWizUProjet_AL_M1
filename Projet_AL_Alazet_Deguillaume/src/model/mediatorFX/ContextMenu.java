@@ -1,15 +1,13 @@
-package model;
+package model.mediatorFX;
 
 import javafx.scene.control.MenuItem;
+import model.Component;
 import view.Mediator;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class FXContextMenu extends javafx.scene.control.ContextMenu implements Component {
+public class ContextMenu extends javafx.scene.control.ContextMenu implements Component {
     private Mediator mediator;
 
-    public FXContextMenu(String id) {
+    public ContextMenu(String id) {
         super();
         setId(id);
     }

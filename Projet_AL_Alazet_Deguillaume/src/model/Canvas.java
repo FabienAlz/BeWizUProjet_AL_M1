@@ -17,7 +17,7 @@ public final class Canvas {
 
     /**
      * Singleton pattern
-     * @return a new Cnvas if it's the first time it's called, the previously created instance otherwise
+     * @return a new Canvas if it's the first time it's called, the previously created instance otherwise
      */
     public static Canvas getInstance() {
         if(instance == null) {

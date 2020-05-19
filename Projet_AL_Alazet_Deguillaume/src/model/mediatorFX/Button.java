@@ -1,15 +1,14 @@
-package model;
+package model.mediatorFX;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
-import java.io.File;
+import model.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-public abstract class FXButton extends javafx.scene.control.Button implements Component {
+public abstract class Button extends javafx.scene.control.Button implements Component {
 
-    public FXButton(String s, String imageSrc){
+    public Button(String s, String imageSrc) {
         super(s);
         FileInputStream fis = null;
         try {
