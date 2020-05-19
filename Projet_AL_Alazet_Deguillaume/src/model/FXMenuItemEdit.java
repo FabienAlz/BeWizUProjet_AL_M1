@@ -23,9 +23,9 @@ public class FXMenuItemEdit extends FXMenuItem {
                 for (Shape shape : Canvas.getInstance().getShapes()) {
                     if (!(shape instanceof CompoundShape) && shape.isSelected()) {
                         Canvas.getInstance().resetSelection();
-                        FXImplementor.getInstance().lastSelected.setSelected(true);
-                        View.getInstance().canvas.getChildren().clear();
-                        View.getInstance().canvas.getChildren().add(FXImplementor.getInstance().lastFXSelected);
+                        FXImplementor.getInstance().getLastSelected().setSelected(true);
+                        View.getInstance().getCanvas().getChildren().clear();
+                        View.getInstance().getCanvas().getChildren().add(FXImplementor.getInstance().getLastFXSelected());
                         Canvas.getInstance().notifyAllShapes();
                     }
                 }

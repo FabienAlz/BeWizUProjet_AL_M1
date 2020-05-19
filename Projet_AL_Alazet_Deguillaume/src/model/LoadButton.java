@@ -7,6 +7,7 @@ import view.View;
 
 import javax.tools.Tool;
 import java.io.*;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,8 @@ public class LoadButton extends FXButton {
             fileChooser.setInitialDirectory(new File("C:/Users/Shadow/Desktop/GL/AL/projet/BeWizUProjet_AL_M1/Projet_AL_Alazet_Deguillaume/ressources/saves"));
             File file = fileChooser.showOpenDialog(primaryStage);
             List<Shape> loadShapes = null;
-            if(file!=null) {
+            boolean scrollToDisable = true;
+            if (file != null) {
                 if (file.toString().substring(file.toString().length() - 3).compareTo("ser") == 0) {
                     try {
                         FileInputStream fileIn = new FileInputStream(file);
@@ -48,8 +50,10 @@ public class LoadButton extends FXButton {
                         Canvas.getInstance().getShapes().clear();
                         Toolbar.getInstance().getShapes().clear();
                         Toolbar.getInstance().resetPosition();
-                        View.getInstance().canvas.getChildren().clear();
-                        View.getInstance().toolbar.getChildren().clear();
+                        View.getInstance().getCanvas().getChildren().clear();
+                        View.getInstance().getToolbar().getChildren().clear();
+                        View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
+
                         ShapeObserver obs = new ConcreteShapeObserver();
                         for (Shape s : loadShapes) {
                             try {
@@ -66,12 +70,12 @@ public class LoadButton extends FXButton {
 
                             if (s.getPositionI() instanceof ToolbarPosition) {
                                 Toolbar.getInstance().addAndNotify(s);
-                                float ratio = (float) (s.getWidth() / (View.getInstance().toolbar.getPrefWidth() - 24));
-                                if(View.getInstance().toolbar.getHeight() < Toolbar.getInstance().getNextPosition().getY() + s.getHeight() / ratio ) {
-                                    View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight() + (s.getHeight() / ratio) +10 );
+                                float ratio = (float) (s.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
+                                if (View.getInstance().getToolbar().getHeight() < s.getPositionI().getY() + s.getHeight() / ratio) {
+                                    View.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (s.getHeight()/ratio) + 10);
+                                    scrollToDisable = false;
                                 }
-                            }
-                            else if (s.getPositionI() instanceof CanvasPosition)
+                            } else if (s.getPositionI() instanceof CanvasPosition)
                                 Canvas.getInstance().addAndNotify(s);
                         }
                         in.close();
@@ -84,6 +88,10 @@ public class LoadButton extends FXButton {
                         return;
                     }
                     Caretaker.getInstance().saveState();
+
+                    if (scrollToDisable)
+                        View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
+
                 }
             }
         });

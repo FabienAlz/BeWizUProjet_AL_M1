@@ -8,7 +8,6 @@ public class CanvasPosition implements PositionI, Serializable {
     private double x, y;
 
     public CanvasPosition(double x, double y) {
-        if(x < 0 || y < 0) throw new IllegalArgumentException("Position out of bonds");
         this.x = x;
         this.y = y;
     }

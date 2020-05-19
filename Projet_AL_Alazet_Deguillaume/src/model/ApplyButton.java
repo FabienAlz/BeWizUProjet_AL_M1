@@ -59,9 +59,9 @@ public class ApplyButton extends javafx.scene.control.Button implements Componen
                             }
                         }
                     }
-                    View.getInstance().canvas.getChildren().clear();
+                    View.getInstance().getCanvas().getChildren().clear();
                     Canvas.getInstance().notifyAllShapes();
-                    View.getInstance().canvas.getChildren().add(EditorView.getInstance().gridPane);
+                    View.getInstance().getCanvas().getChildren().add(EditorView.getInstance().gridPane);
                 }
             }
         });

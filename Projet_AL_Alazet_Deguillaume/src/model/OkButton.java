@@ -32,6 +32,7 @@ public class OkButton extends javafx.scene.control.Button implements Component {
                         ((Rectangle) s).setWidth(Float.parseFloat(EditorView.getInstance().textFields.get("Width").getText()));
                         ((Rectangle) s).setHeight(Float.parseFloat(EditorView.getInstance().textFields.get("Height").getText()));
                         ((Rectangle) s).setBorderRadius(Float.parseFloat(EditorView.getInstance().textFields.get("Border radius").getText()));
+
                     } else if (s instanceof Polygon) {
                         ((Polygon) s).setEdges(Integer.parseInt(EditorView.getInstance().textFields.get("Edges").getText()));
                         ((Polygon) s).setLength(Float.parseFloat(EditorView.getInstance().textFields.get("Length").getText()));
@@ -49,6 +50,8 @@ public class OkButton extends javafx.scene.control.Button implements Component {
                                     ((Rectangle) subShape).setWidth(Float.parseFloat(EditorView.getInstance().textFields.get("Width").getText()));
                                     ((Rectangle) subShape).setHeight(Float.parseFloat(EditorView.getInstance().textFields.get("Height").getText()));
                                     ((Rectangle) subShape).setBorderRadius(Float.parseFloat(EditorView.getInstance().textFields.get("Border radius").getText()));
+
+
                                 }
 
                             } else if (firstShape instanceof Polygon) {
@@ -61,7 +64,7 @@ public class OkButton extends javafx.scene.control.Button implements Component {
                     }
                     s.setRotation(Float.parseFloat(EditorView.getInstance().textFields.get("Rotation").getText()));
                     Canvas.getInstance().resetSelection();
-                    View.getInstance().canvas.getChildren().clear();
+                    View.getInstance().getCanvas().getChildren().clear();
                     Canvas.getInstance().notifyAllShapes();
                 }
             }

@@ -19,20 +19,21 @@ import java.util.List;
 public final class FXImplementor implements Implementor, Serializable {
     private static final long serialVersionUID = 3734212650399506405L;
 
-    public transient Shape lastSelected;
-    public transient javafx.scene.shape.Shape lastFXSelected;
+    private transient Shape lastSelected;
+    private transient javafx.scene.shape.Shape lastFXSelected;
 
     private transient Pane canvas;
-    public transient Pane toolBar;
+    private transient Pane toolBar;
     private transient Pane bin;
+    private transient  ScrollPane toolBarWrapper;
 
-    public transient Color BORDER_COLOR;
+    private transient Color BORDER_COLOR;
 
     private transient static FXImplementor instance;
 
-    public transient static Stage stage;
+    private transient static Stage stage;
 
-    public transient Popup popup;
+    private transient Popup popup;
 
     private transient Map<Long, javafx.scene.shape.Shape> SHAPES;
 
@@ -72,9 +73,33 @@ public final class FXImplementor implements Implementor, Serializable {
     }
 
     public ContextMenu getContextMenu() {
-        return View.getInstance().contextMenu;
+        return View.getInstance().getContextMenu();
     }
 
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Shape getLastSelected() {
+        return lastSelected;
+    }
+
+    public javafx.scene.shape.Shape getLastFXSelected() {
+        return lastFXSelected;
+    }
+
+    public Color getBORDER_COLOR() {
+        return BORDER_COLOR;
+    }
+
+    public static Stage getStage() {
+        return stage;
+    }
+
+    public Popup getPopup() {
+        return popup;
+    }
 
     /**
      * Initialize the javafx application
@@ -105,12 +130,14 @@ public final class FXImplementor implements Implementor, Serializable {
     public void initializeFXImplementor(Stage primaryStage) {
         SHAPES = new HashMap<>();
         BORDER_COLOR = new Color(68.0 / 255, 114.0 / 255, 196.0 / 255, 1);
-        toolBar = View.getInstance().toolbar;
-        canvas = View.getInstance().canvas;
-        bin = View.getInstance().bin;
-        popup = View.getInstance().popup;
+        toolBar = View.getInstance().getToolbar();
+        toolBarWrapper = View.getInstance().getToolbarWrapper();
+        canvas = View.getInstance().getCanvas();
+        bin = View.getInstance().getBin();
+        popup = View.getInstance().getPopup();
         stage = primaryStage;
     }
+
 
     /**
      * Starts the javafx application
@@ -122,15 +149,16 @@ public final class FXImplementor implements Implementor, Serializable {
     public void start(Stage primaryStage) throws Exception {
         View.getInstance().createGUI(primaryStage);
         initializeFXImplementor(primaryStage);
-
-       File load = new File("Projet_AL_Alazet_Deguillaume/ressources/saves/autosave.ser");
+        /*File load = new File("Projet_AL_Alazet_Deguillaume/ressources/saves/autosave.ser");
         List<Shape> loadShapes = null;
         if (load != null) {
+            boolean scrollToDisable = true;
             try {
                 FileInputStream fileIn = new FileInputStream(load);
                 ObjectInputStream in = new ObjectInputStream(fileIn);
                 loadShapes = (List<Shape>) in.readObject();
                 ShapeObserver obs = new ConcreteShapeObserver();
+
                 for (Shape s : loadShapes) {
                     try {
                         s.setId();
@@ -148,13 +176,12 @@ public final class FXImplementor implements Implementor, Serializable {
                     s.addObserver(obs);
                     if (s.getPositionI() instanceof ToolbarPosition) {
                         Toolbar.getInstance().addAndNotify(s);
-                        float ratio = (float) (s.getWidth() / (View.getInstance().toolbar.getPrefWidth() - 24));
-                        if(View.getInstance().toolbar.getHeight() < Toolbar.getInstance().getNextPosition().getY() + s.getHeight() / ratio ) {
-                            View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight() + (s.getHeight() / ratio) +10 );
+                        float ratio = (float) (s.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
+                        if (View.getInstance().getToolbar().getHeight() < s.getPositionI().getY() + s.getHeight() / ratio) {
+                            View.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (s.getHeight()/ratio) + 10);
+                            scrollToDisable = false;
                         }
                     }
-
-
                 }
                 in.close();
                 fileIn.close();
@@ -166,11 +193,12 @@ public final class FXImplementor implements Implementor, Serializable {
                 return;
             }
             Caretaker.getInstance().saveState();
-        }
-
+            if (scrollToDisable)
+                View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
+        }*/
 
         primaryStage.setOnCloseRequest(event -> {
-            File file = new File("Projet_AL_Alazet_Deguillaume/ressources/saves/autosave.ser");
+            File file = new File("ressources/saves/autosave.ser");
             if (file != null) {
                 try {
                     FileOutputStream fileOut =
@@ -337,8 +365,9 @@ public final class FXImplementor implements Implementor, Serializable {
         if (s.getPositionI() instanceof ToolbarPosition) {
             newShape.setStrokeWidth(0);
             float ratio = 1;
-            if (s.getAppearingWidth() > toolBar.getPrefWidth() -  - 24) {
-                ratio = (float) (s.getWidth() / (toolBar.getPrefWidth() - 24));
+            // Computes the Ratio and the size of the shape in the toolbar
+            if (s.getAppearingWidth() > toolBarWrapper.getPrefWidth() - 36) {
+                ratio = (float) (s.getAppearingWidth() / (toolBarWrapper.getPrefWidth() - 36));
                 newShape.setWidth(s.getWidth() / ratio);
                 newShape.setHeight(s.getHeight() / ratio);
             }
@@ -350,7 +379,7 @@ public final class FXImplementor implements Implementor, Serializable {
                     rotationCenter.getY());
 
             double posXbottomLeft = (Math.cos(radRotation) * (s.getPositionI().getX()-rotationCenter.getX()) -
-                    Math.sin(radRotation) * (s.getPositionI().getY()+s.getHeight()-rotationCenter.getY()) +
+                    Math.sin(radRotation) * (s.getPositionI().getY()+s.getHeight()/ratio-rotationCenter.getY()) +
                     rotationCenter.getX());
 
             newShape.setX(s.getPositionI().getX() + (s.getPositionI().getX() - posXbottomLeft));
@@ -395,23 +424,10 @@ public final class FXImplementor implements Implementor, Serializable {
         newShape.setRotate(s.getRotation());
         newShape.setStrokeWidth(0);
 
-        float ratio = 1;
-        double radRotation = s.getRotation()%180 * Math.PI / 180;
-        Position rotationCenter = new Position(s.getPositionI().getX() + s.getWidth()/(2 * ratio),
-                s.getPositionI().getY() + s.getHeight()/(2 * ratio));
-        double posYtopLeft = (Math.sin(radRotation) * (s.getPositionI().getX()-rotationCenter.getX()) +
-                Math.cos(radRotation) * (s.getPositionI().getY()-rotationCenter.getY()) +
-                rotationCenter.getY());
+        newShape.setX(s.getPositionI().getX() + (s.getPositionI().getX() - s.getTopLeft().getX()));
 
-        double posXbottomLeft = (Math.cos(radRotation) * (s.getPositionI().getX()-rotationCenter.getX()) -
-                Math.sin(radRotation) * (s.getPositionI().getY()+s.getHeight()-rotationCenter.getY()) +
-                rotationCenter.getX());
-
-        newShape.setX(s.getPositionI().getX() + (s.getPositionI().getX() - posXbottomLeft));
-
-        newShape.setY(s.getPositionI().getY() + (s.getPositionI().getY() - posYtopLeft));
+        newShape.setY(s.getPositionI().getY() + (s.getPositionI().getY() - s.getTopLeft().getY()));
         toolBar.getChildren().add(newShape);
-
         return newShape;
     }
 
@@ -454,7 +470,7 @@ public final class FXImplementor implements Implementor, Serializable {
 
             newShape = new javafx.scene.shape.Polygon(vertices);
 
-
+            newShape.setRotate(s.getRotation());
             newShape.setStrokeWidth(0);
             newShape.setFill(Color.valueOf(s.getColor()));
 
@@ -480,6 +496,7 @@ public final class FXImplementor implements Implementor, Serializable {
             newShape.setFill(Color.valueOf(s.getColor()));
             canvas.getChildren().add(newShape);
         }
+
         return newShape;
     }
 
@@ -500,7 +517,6 @@ public final class FXImplementor implements Implementor, Serializable {
         javafx.scene.shape.Polygon newShape;
         newShape = new javafx.scene.shape.Polygon(vertices);
 
-
         newShape.setStrokeWidth(0);
         newShape.setRotate(s.getRotation());
         newShape.setFill(Color.valueOf(s.getColor()));
@@ -518,17 +534,16 @@ public final class FXImplementor implements Implementor, Serializable {
         Map<Shape, javafx.scene.shape.Shape> compoundShapes = new HashMap<>();
         float width = s.getWidth();
         float ratio = 1;
-        if (width > toolBar.getWidth() - 35) {
-            ratio = (float) (width / (toolBar.getWidth() - 35));
+        if (width > toolBarWrapper.getWidth() - 35) {
+            ratio = (float) (width / (toolBarWrapper.getWidth() - 35));
+
         }
 
         for (Shape shape : s.getShapes()) {
             float posX = (float) (Toolbar.getInstance().getNextPosition().getX() +
-                    (shape.getPositionI().getX() - s.getTopLeft().getX()) / ratio);
+                    (shape.getTopLeft().getX() - s.getTopLeft().getX()) / ratio);
             float posY = (float) (Toolbar.getInstance().getNextPosition().getY() +
-                    (shape.getPositionI().getY() - s.getTopLeft().getY()) / ratio);
-
-
+                    (shape.getTopLeft().getY() - s.getTopLeft().getY()) / ratio);
             ToolbarPosition pos = new ToolbarPosition(posX, posY);
             if (shape instanceof Rectangle) {
                 Rectangle copy = (Rectangle) shape.clone();
@@ -536,7 +551,6 @@ public final class FXImplementor implements Implementor, Serializable {
                 copy.setWidth(shape.getWidth() / ratio);
                 copy.setHeight(shape.getHeight() / ratio);
                 copy.setPosition(pos);
-//                copy.computeVertices();
                 javafx.scene.shape.Rectangle rectangle = createToolbarCompoundRectangle(copy);
                 SHAPES.put(copy.getId(), rectangle);
                 compoundShapes.put(copy, rectangle);
@@ -545,7 +559,6 @@ public final class FXImplementor implements Implementor, Serializable {
                 copy.setId();
                 copy.setLength(copy.getLength() / ratio);
                 copy.setPosition(pos);
-//                copy.computeVertices();
                 javafx.scene.shape.Polygon polygon = createToolbarCompoundPolygon(copy);
                 SHAPES.put(copy.getId(), polygon);
                 compoundShapes.put(copy, polygon);
@@ -635,4 +648,5 @@ public final class FXImplementor implements Implementor, Serializable {
         lastSelected = shape;
         lastFXSelected = shapeFX;
     }
+
 }

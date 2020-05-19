@@ -34,7 +34,7 @@ public class CancelButton extends javafx.scene.control.Button implements Compone
                 Canvas.getInstance().getShapes().remove(Canvas.getInstance().getShape(key));
                 Canvas.getInstance().getShapes().add(shapeToRevert);
             }
-            View.getInstance().canvas.getChildren().clear();
+            View.getInstance().getCanvas().getChildren().clear();
             Canvas.getInstance().notifyAllShapes();
         });
     }

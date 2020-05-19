@@ -74,18 +74,7 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
      * @param arrival
      * @return
      */
-    public boolean isInside(Position startingPoint, Position arrival) {
-        boolean res = false;
-
-        if(position.getX() > startingPoint.getX() &&
-                position.getX() + getWidth() < arrival.getX() &&
-                position.getY() > startingPoint.getY() &&
-                position.getY() + getHeight() < arrival.getY()){
-            res = true;
-        }
-
-        return res;
-    }
+    public abstract boolean isInside(Position startingPoint, Position arrival);
 
     @Override
     public AbstractShape clone() {

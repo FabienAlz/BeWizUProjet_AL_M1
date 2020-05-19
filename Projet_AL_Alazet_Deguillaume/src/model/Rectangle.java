@@ -72,6 +72,7 @@ public class Rectangle extends SingleShape implements Serializable {
         return (float)(maxY-minY);
     }
 
+    @Override
     public Position getTopLeft() {
         double minX = vertices.get(0);
         double minY = vertices.get(1);
@@ -91,10 +92,14 @@ public class Rectangle extends SingleShape implements Serializable {
      ******************************/
     public void setWidth(float width) {
         this.width = width;
+        computeRotationCenter();
+        computeVertices();
     }
 
     public void setHeight(float height) {
         this.height = height;
+        computeRotationCenter();
+        computeVertices();
     }
 
     public void setBorderRadius(float borderRadius) {
@@ -148,6 +153,25 @@ public class Rectangle extends SingleShape implements Serializable {
         }
         vertices.clear();
         vertices.addAll(tmp);
+    }
+
+    /**
+     * Checks if the Shape is inside a Rectangle
+     * @param startingPoint
+     * @param arrival
+     * @return
+     */
+    @Override
+    public boolean isInside(Position startingPoint, Position arrival) {
+        for(int i = 0; i < 8; i+=2) {
+            if (!(vertices.get(i) > startingPoint.getX() &&
+                    vertices.get(i) < arrival.getX() &&
+                    vertices.get(i+1) > startingPoint.getY() &&
+                    vertices.get(i+1) < arrival.getY())) {
+                return true;
+            }
+        }
+        return true;
     }
 
     /**

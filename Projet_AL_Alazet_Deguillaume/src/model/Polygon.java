@@ -40,6 +40,7 @@ public class Polygon extends SingleShape implements Serializable {
         return length;
     }
 
+    @Override
     public Position getTopLeft() {
         double minX = vertices.get(0);
         double minY = vertices.get(1);
@@ -131,6 +132,25 @@ public class Polygon extends SingleShape implements Serializable {
             }
         }
         setRotationCenter(new Position(posX/edges, posY/edges));
+    }
+
+    /**
+     * Checks if the Shape is inside a Rectangle
+     * @param startingPoint
+     * @param arrival
+     * @return
+     */
+    @Override
+    public boolean isInside(Position startingPoint, Position arrival) {
+        for(int i = 0; i < vertices.size(); i+=2) {
+            if (!(vertices.get(i) > startingPoint.getX() &&
+                    vertices.get(i) < arrival.getX() &&
+                    vertices.get(i+1) > startingPoint.getY() &&
+                    vertices.get(i+1) < arrival.getY())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

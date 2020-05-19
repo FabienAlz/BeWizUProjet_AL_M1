@@ -44,10 +44,10 @@ public class FXDragAndDropHandlers {
                     Shape copy = original.clone();
                     copy.setId();
                     if(copy instanceof Rectangle) {
-                        float ratio = (float) (((Rectangle) copy).getAppearingWidth() / (View.getInstance().toolbar.getPrefWidth() - 24));
-                        if (View.getInstance().toolbar.getHeight() < Toolbar.getInstance().getNextPosition().getY()
+                        float ratio = (float) (((Rectangle) copy).getAppearingWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
+                        if (View.getInstance().getToolbar().getHeight() < Toolbar.getInstance().getNextPosition().getY()
                                 + ((Rectangle)copy).getAppearingHeight() / ratio) {
-                            View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight()
+                            View.getInstance().getToolbar().setPrefHeight(View.getInstance().getToolbar().getPrefHeight()
                                     + (((Rectangle) copy).getAppearingHeight() / ratio) + 10);
                         }
                         copy.setPosition(new ToolbarPosition());
@@ -55,47 +55,39 @@ public class FXDragAndDropHandlers {
 
                     } else {
 
-                        float ratio = (float) (copy.getWidth() / (View.getInstance().toolbar.getPrefWidth() - 24));
+                        float ratio = (float) (copy.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
                         if (copy instanceof CompoundShape) {
                             implementor.createToolbarCompoundShape((CompoundShape) copy);
                             copy.setPosition(new ToolbarPosition());
                             Toolbar.getInstance().add(copy);
-
-                            if (View.getInstance().toolbar.getHeight() < Toolbar.getInstance().getNextPosition().getY() + copy.getHeight() / ratio) {
-                                View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight() + (copy.getHeight() / ratio) + 10);
+                            if (View.getInstance().getToolbar().getHeight() < Toolbar.getInstance().getNextPosition().getY() + copy.getHeight() / ratio) {
+                                View.getInstance().getToolbar().setPrefHeight(View.getInstance().getToolbar().getPrefHeight() + (copy.getHeight() / ratio) + 10);
                             }
                         } else {
-                            if (View.getInstance().toolbar.getHeight() < Toolbar.getInstance().getNextPosition().getY() + copy.getHeight() / ratio) {
-                                View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight() + (copy.getHeight() / ratio) + 10);
+                            if (View.getInstance().getToolbar().getHeight() < Toolbar.getInstance().getNextPosition().getY() + copy.getHeight() / ratio) {
+                                View.getInstance().getToolbar().setPrefHeight(View.getInstance().getToolbar().getPrefHeight() + (copy.getHeight() / ratio) + 10);
                             }
                             copy.setPosition(new ToolbarPosition());
                             Toolbar.getInstance().addAndNotify(copy);
                         }
                     }
                 }
-                // Add all the selected shapes in the toolbar
+                // Adds all the selected shapes in the toolbar
                 else {
                     for (Shape s : Canvas.getInstance().getShapes()) {
                         if (s.isSelected()) {
                             Shape copy = s.clone();
                             copy.setId();
                             s.setSelected(false);
-
-                            float ratio = (float) (copy.getWidth() / (View.getInstance().toolbar.getPrefWidth() - 24));
                             if (copy instanceof CompoundShape) {
                                 implementor.createToolbarCompoundShape((CompoundShape) copy);
                                 copy.setPosition(new ToolbarPosition());
                                 Toolbar.getInstance().add(copy);
-                                if(View.getInstance().toolbar.getHeight() < Toolbar.getInstance().getNextPosition().getY() + copy.getHeight() / ratio ) {
-                                    View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight() + (copy.getHeight() / ratio) +10 );
-                                }
 
-                            } else {
+                            }
+                            else {
                                 copy.setPosition(new ToolbarPosition());
                                 Toolbar.getInstance().addAndNotify(copy);
-                                if(View.getInstance().toolbar.getHeight() < Toolbar.getInstance().getNextPosition().getY() + copy.getHeight() / ratio ) {
-                                    View.getInstance().toolbar.setPrefHeight(View.getInstance().toolbar.getPrefHeight() + (copy.getHeight() / ratio) +10 );
-                                }
                             }
                         }
                     }
@@ -110,6 +102,15 @@ public class FXDragAndDropHandlers {
         implementor.getCanvas().getChildren().clear();
         Canvas.getInstance().resetSelection();
         Canvas.getInstance().notifyAllShapes();
+        for (Shape s : Toolbar.getInstance().getShapes()) {
+            float ratio;
+            if (s instanceof Polygon) {
+                ratio = (float) (s.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 35));
+            } else ratio = (float) (s.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
+            if (View.getInstance().getToolbar().getHeight() < s.getPositionI().getY() + s.getHeight() / ratio) {
+                View.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (s.getHeight()/ratio) + 10);
+            }
+        }
         dragEvent.consume();
     }
 
@@ -123,9 +124,9 @@ public class FXDragAndDropHandlers {
         if (db.hasString()) {
             long id = Long.parseLong(db.getString());
             if (Canvas.getInstance().contains(id)) {
-                implementor.popup.setX((int) (dragEvent.getScreenX()) - implementor.popup.getWidth() / 2);
-                implementor.popup.setY((int) (dragEvent.getScreenY()) - implementor.popup.getHeight() * 2);
-                implementor.popup.show(implementor.stage);
+                implementor.getPopup().setX((int) (dragEvent.getScreenX()) - implementor.getPopup().getWidth() / 2);
+                implementor.getPopup().setY((int) (dragEvent.getScreenY()) - implementor.getPopup().getHeight() * 2);
+                implementor.getPopup().show(implementor.getStage());
             }
             dragEvent.acceptTransferModes(TransferMode.COPY_OR_MOVE);
 
@@ -141,8 +142,8 @@ public class FXDragAndDropHandlers {
     public void toolbarOnDragEntered(DragEvent dragEvent) {
         Label label = new Label("Add to Toolbar");
         label.setStyle("-fx-background-color: #8a7876;");
-        implementor.popup.getContent().clear();
-        implementor.popup.getContent().add(label);
+        implementor.getPopup().getContent().clear();
+        implementor.getPopup().getContent().add(label);
         dragEvent.consume();
     }
 
@@ -152,7 +153,7 @@ public class FXDragAndDropHandlers {
      * @param dragEvent
      */
     public void toolbarOnDragExited(DragEvent dragEvent) {
-        implementor.popup.hide();
+        implementor.getPopup().hide();
         dragEvent.consume();
     }
 
@@ -174,30 +175,40 @@ public class FXDragAndDropHandlers {
             long id = Long.parseLong(db.getString());
             // If the shape comes from the canvas, changes its position
             if (Canvas.getInstance().contains(id)) {
+
                 Shape original = Canvas.getInstance().getShape(id);
+
+                double posX = dragEvent.getX() - original.getWidth()/2;
+                double posY = dragEvent.getY() - original.getHeight()/2;
                 if (original instanceof CompoundShape) {
-                    ((CompoundShape) original).translate(new Translation(dragEvent.getX() - ((CompoundShape) original).getTopLeft().getX(),
-                            dragEvent.getY() - ((CompoundShape) original).getTopLeft().getY()));
+                    posX -= original.getPositionI().getX();
+                    posY -= original.getPositionI().getY();
+
+                    ((CompoundShape) original).translate(
+                            new Translation(posX, posY));
                     implementor.getCanvas().getChildren().clear();
                     Canvas.getInstance().notifyAllShapes();
                 } else {
                     implementor.getCanvas().getChildren().remove(implementor.getSHAPES().get(original.getId()));
-                    original.setPosition(new CanvasPosition(dragEvent.getX(), dragEvent.getY()));
+                    original.setPosition(new CanvasPosition(posX, posY));
+
                     original.notifyObserver();
                 }
+
             }
             // If the shape comes from the toolbar, adds it to the canvas
             else {
                 Shape original = Toolbar.getInstance().getShape(id);
                 Shape copy = original.clone();
                 copy.setId();
+                double posX = dragEvent.getX() - original.getWidth()/2;
+                double posY = dragEvent.getY() - original.getHeight()/2;
                 if (original instanceof CompoundShape) {
-                    ((CompoundShape) copy).translate(new Translation(dragEvent.getX() - ((CompoundShape) original).getTopLeft().getX(),
-                            dragEvent.getY() - ((CompoundShape) original).getTopLeft().getY()));
+                    posX -= original.getPositionI().getX();
+                    posY -= original.getPositionI().getY();
+                    ((CompoundShape) copy).translate(new Translation(posX, posY));
                 } else {
-                    copy.setPosition(new CanvasPosition(dragEvent.getX(), dragEvent.getY()));
-                    copy.setPosition(copy.getRotationCenter());
-//                    ((SingleShape)copy).computeVertices();
+                    copy.setPosition(new CanvasPosition(posX, posY));
                 }
                 Canvas.getInstance().resetSelection();
                 Canvas.getInstance().add(copy);
@@ -227,9 +238,9 @@ public class FXDragAndDropHandlers {
         if (db.hasString()) {
             long id = Long.parseLong(db.getString());
             if (Toolbar.getInstance().contains(id)) {
-                implementor.popup.setX((int) (dragEvent.getScreenX()) - implementor.popup.getWidth() / 2);
-                implementor.popup.setY((int) (dragEvent.getScreenY()) - implementor.popup.getHeight() * 2);
-                implementor.popup.show(implementor.stage);
+                implementor.getPopup().setX((int) (dragEvent.getScreenX()) - implementor.getPopup().getWidth() / 2);
+                implementor.getPopup().setY((int) (dragEvent.getScreenY()) - implementor.getPopup().getHeight() * 2);
+                implementor.getPopup().show(implementor.getStage());
             }
             dragEvent.acceptTransferModes(TransferMode.COPY_OR_MOVE);
 
@@ -245,8 +256,8 @@ public class FXDragAndDropHandlers {
     public void canvasOnDragEntered(DragEvent dragEvent) {
         Label label = new Label("Add to Canvas");
         label.setStyle("-fx-background-color: #8a7876;");
-        implementor.popup.getContent().clear();
-        implementor.popup.getContent().add(label);
+        implementor.getPopup().getContent().clear();
+        implementor.getPopup().getContent().add(label);
 
         dragEvent.consume();
     }
@@ -257,7 +268,7 @@ public class FXDragAndDropHandlers {
      * @param dragEvent
      */
     public void canvasOnDragExited(DragEvent dragEvent) {
-        implementor.popup.hide();
+        implementor.getPopup().hide();
         dragEvent.consume();
 
     }
@@ -319,7 +330,17 @@ public class FXDragAndDropHandlers {
             // Remove from Toolbar
             else {
                 Shape original = Toolbar.getInstance().getShape(id);
+
+                float ratio = (float) (original.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
+                if(View.getInstance().getToolbar().getHeight() > View.getInstance().TOOLBAR_HEIGHT) {
+                    if((View.getInstance().getToolbar().getPrefHeight() - (original.getHeight() / ratio)) < View.getInstance().TOOLBAR_HEIGHT)
+                           View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
+                    else
+                           View.getInstance().getToolbar().setPrefHeight(View.getInstance().getToolbar().getPrefHeight() - (original.getHeight() / ratio) - 10);
+                }
+
                 Toolbar.getInstance().remove(original);
+
                 implementor.getSHAPES().remove(original.getId());
                 implementor.remove();
             }
@@ -346,8 +367,8 @@ public class FXDragAndDropHandlers {
     public void binOnDragEntered(DragEvent dragEvent) {
         Label label = new Label("Delete");
         label.setStyle("-fx-background-color: #8a7876;");
-        implementor.popup.getContent().clear();
-        implementor.popup.getContent().add(label);
+        implementor.getPopup().getContent().clear();
+        implementor.getPopup().getContent().add(label);
         implementor.getBin().setOpacity(0.5);
         dragEvent.consume();
     }
@@ -362,10 +383,10 @@ public class FXDragAndDropHandlers {
         label.setStyle("-fx-background-color: #8a7876;");
         Dragboard db = dragEvent.getDragboard();
         if (db.hasString()) {
-            implementor.popup.getContent().clear();
-            implementor.popup.getContent().add(label);
+            implementor.getPopup().getContent().clear();
+            implementor.getPopup().getContent().add(label);
             implementor.getBin().setOpacity(1);
-            implementor.popup.hide();
+            implementor.getPopup().hide();
         }
         dragEvent.consume();
     }
@@ -378,10 +399,10 @@ public class FXDragAndDropHandlers {
     public void binOnDragOver(DragEvent dragEvent) {
         Dragboard db = dragEvent.getDragboard();
         if (db.hasString()) {
-            implementor.popup.setX((int) (dragEvent.getScreenX()) - implementor.popup.getWidth() / 2);
-            implementor.popup.setY((int) (dragEvent.getScreenY()) - implementor.popup.getHeight() * 2);
+            implementor.getPopup().setX((int) (dragEvent.getScreenX()) - implementor.getPopup().getWidth() / 2);
+            implementor.getPopup().setY((int) (dragEvent.getScreenY()) - implementor.getPopup().getHeight() * 2);
             dragEvent.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-            implementor.popup.show(implementor.stage);
+            implementor.getPopup().show(implementor.getStage());
         }
         dragEvent.consume();
     }

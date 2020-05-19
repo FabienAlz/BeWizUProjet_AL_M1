@@ -81,7 +81,6 @@ public class CompoundShape extends AbstractShape implements Serializable {
                 }
             }
         }
-
         return new Position(minX, minY);
     }
 
@@ -127,9 +126,23 @@ public class CompoundShape extends AbstractShape implements Serializable {
             double posX = shape.getPositionI().getX() + translation.getX();
             double posY = shape.getPositionI().getY() + translation.getY();
             shape.setPosition(new CanvasPosition(posX, posY));
-//            ((SingleShape)shape).computeVertices();
+            ((SingleShape)shape).computeVertices();
 
         }
+    }
+
+    /**
+     * Checks if the Shape is inside a Rectangle
+     * @param startingPoint
+     * @param arrival
+     * @return
+     */
+    public boolean isInside(Position startingPoint, Position arrival) {
+        for(Shape s : shapes) {
+            if(!s.isInside(startingPoint, arrival))
+                return false;
+        }
+        return true;
     }
 
     /**

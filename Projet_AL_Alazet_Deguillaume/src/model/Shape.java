@@ -9,6 +9,8 @@ public interface Shape extends Cloneable {
 
     float getRotation();
 
+    PositionI getTopLeft();
+
     void setRotation(float rotation);
 
     void setColor(String color);

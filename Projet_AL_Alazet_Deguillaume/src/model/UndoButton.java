@@ -3,6 +3,8 @@ package model;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import view.Mediator;
+import view.View;
+
 import java.util.List;
 
 public class UndoButton extends FXButton {
@@ -48,6 +50,13 @@ public class UndoButton extends FXButton {
 
                         } else if (s.getPositionI() instanceof ToolbarPosition) {
                             Toolbar.getInstance().add(s);
+
+                            float ratio = (float) (s.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
+                            if (s.getPositionI().getY() + s.getHeight()/ratio < View.getInstance().TOOLBAR_HEIGHT)
+                                View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
+                            else {
+                                View.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (s.getHeight() / ratio));
+                            }
                         }
                     }
                     Canvas.getInstance().notifyAllShapes();
