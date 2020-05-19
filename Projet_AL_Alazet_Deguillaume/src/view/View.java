@@ -129,8 +129,8 @@ public final class View implements Mediator {
         canvas.setLayoutY(MENU_HEIGHT);
         root.getChildren().add(canvas);
 
-        concreteMenu.toFront();
         toolbarWrapper.toFront();
+        concreteMenu.toFront();
         primaryStage.show();
     }
 

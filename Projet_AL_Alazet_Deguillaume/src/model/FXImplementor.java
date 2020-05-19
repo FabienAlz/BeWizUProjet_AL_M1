@@ -202,6 +202,7 @@ public final class FXImplementor implements Implementor, Serializable {
                     np.printStackTrace();
                 }
             }
+            else throw new IllegalArgumentException();
         });
     }
 
