@@ -23,6 +23,7 @@ public final class EditorView implements Mediator {
 
     /**
      * Assigns component to the correct matching field
+     *
      * @param component
      */
     @Override
@@ -49,7 +50,7 @@ public final class EditorView implements Mediator {
                 break;
 
             case "GridPane":
-                gridPane = (GridPane)component;
+                gridPane = (GridPane) component;
                 break;
         }
     }
@@ -58,33 +59,34 @@ public final class EditorView implements Mediator {
      * Unused
      */
     @Override
-    public void createGUI(Stage primaryStage) { }
+    public void createGUI(Stage primaryStage) {
+    }
 
 
     /**
-     * Puts all the FX components needed for the rectangle (or compound shape of rectangles) editor window together
+     * Puts all the FX components needed for the Rectangle (or Compound Shape of Rectangles) editor window together
      */
     public void createRectangleEditor() {
         HBox hbValues = new HBox();
-        hbValues.getChildren().addAll(labels.get("Width"),textFields.get("Width"));
-        hbValues.getChildren().addAll(labels.get("Height"),textFields.get("Height"));
-        hbValues.getChildren().addAll(labels.get("Border radius"),textFields.get("Border radius"));
+        hbValues.getChildren().addAll(labels.get("Width"), textFields.get("Width"));
+        hbValues.getChildren().addAll(labels.get("Height"), textFields.get("Height"));
+        hbValues.getChildren().addAll(labels.get("Border radius"), textFields.get("Border radius"));
         createSharedComponents(hbValues);
 
     }
 
     /**
-     * Puts all the FX components needed for the polygon (or compound shape of polygon) editor window together
+     * Puts all the FX components needed for the Polygon (or Compound Shape of Polygon) editor window together
      */
     public void createPolygonEditor() {
         HBox hbValues = new HBox();
-        hbValues.getChildren().addAll(labels.get("Edges"),textFields.get("Edges"));
-        hbValues.getChildren().addAll(labels.get("Length"),textFields.get("Length"));
+        hbValues.getChildren().addAll(labels.get("Edges"), textFields.get("Edges"));
+        hbValues.getChildren().addAll(labels.get("Length"), textFields.get("Length"));
         createSharedComponents(hbValues);
     }
 
     /**
-     * Puts all the FX components needed for the compound shape of both polygons and rectangles editor window together
+     * Puts all the FX components needed for the Compound Shape of both Polygons and Rectangles editor window together
      */
     public void createMixedEditor() {
         createSharedComponents(new HBox());
@@ -95,7 +97,7 @@ public final class EditorView implements Mediator {
      */
     public void createSharedComponents(HBox hbValues) {
         hbValues.setSpacing(10);
-        hbValues.getChildren().addAll(labels.get("Rotation"),textFields.get("Rotation"));
+        hbValues.getChildren().addAll(labels.get("Rotation"), textFields.get("Rotation"));
 
         HBox hbColorPicker = new HBox();
         hbColorPicker.getChildren().add(colorPicker);
@@ -108,15 +110,16 @@ public final class EditorView implements Mediator {
 
         gridPane.setHgap(10);
         gridPane.setVgap(10);
-        gridPane.add(hbColorPicker,0,0);
-        gridPane.add(hbValues,0,1);
-        gridPane.add(hbButtons,0,2);
+        gridPane.add(hbColorPicker, 0, 0);
+        gridPane.add(hbValues, 0, 1);
+        gridPane.add(hbButtons, 0, 2);
         gridPane.setStyle("-fx-background-color: #FFFFFF");
         View.getInstance().getCanvas().getChildren().addAll(gridPane);
     }
 
     /**
      * Singleton pattern
+     *
      * @return a new EditorView if it's the first time it's called, the previously created instance otherwise
      */
     public static EditorView getInstance() {
@@ -140,10 +143,6 @@ public final class EditorView implements Mediator {
 
     public ColorPicker getColorPicker() {
         return colorPicker;
-    }
-
-    public Map<String, Label> getLabels() {
-        return labels;
     }
 
     public Map<String, TextField> getTextFields() {
