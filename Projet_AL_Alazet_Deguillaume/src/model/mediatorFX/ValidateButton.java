@@ -23,17 +23,19 @@ public abstract class ValidateButton extends javafx.scene.control.Button impleme
         if (s instanceof Rectangle) {
             if (!EditorView.getInstance().getTextFields().get("Width").getText().trim().isEmpty())
                 if (Float.parseFloat(EditorView.getInstance().getTextFields().get("Width").getText()) >= 2)
-                ((Rectangle) s).setWidth(Float.parseFloat(EditorView.getInstance().getTextFields().get("Width").getText()));
+                    ((Rectangle) s).setWidth(Float.parseFloat(EditorView.getInstance().getTextFields().get("Width").getText()));
             if (!EditorView.getInstance().getTextFields().get("Height").getText().trim().isEmpty())
                 if (Float.parseFloat(EditorView.getInstance().getTextFields().get("Height").getText()) >= 2)
-                ((Rectangle) s).setHeight(Float.parseFloat(EditorView.getInstance().getTextFields().get("Height").getText()));
+                    ((Rectangle) s).setHeight(Float.parseFloat(EditorView.getInstance().getTextFields().get("Height").getText()));
             if (!EditorView.getInstance().getTextFields().get("Border radius").getText().trim().isEmpty())
                 ((Rectangle) s).setBorderRadius(Float.parseFloat(EditorView.getInstance().getTextFields().get("Border radius").getText()));
         } else if (s instanceof Polygon) {
             if (!EditorView.getInstance().getTextFields().get("Edges").getText().trim().isEmpty())
-                ((Polygon) s).setEdges(Integer.parseInt(EditorView.getInstance().getTextFields().get("Edges").getText()));
+                if (Integer.parseInt(EditorView.getInstance().getTextFields().get("Edges").getText()) > 2)
+                    ((Polygon) s).setEdges(Integer.parseInt(EditorView.getInstance().getTextFields().get("Edges").getText()));
             if (!EditorView.getInstance().getTextFields().get("Length").getText().trim().isEmpty())
-                ((Polygon) s).setLength(Float.parseFloat(EditorView.getInstance().getTextFields().get("Length").getText()));
+                if (Float.parseFloat(EditorView.getInstance().getTextFields().get("Length").getText()) > 0)
+                    ((Polygon) s).setLength(Float.parseFloat(EditorView.getInstance().getTextFields().get("Length").getText()));
         } else if (s instanceof CompoundShape) {
             boolean sameClass = true;
             Shape firstShape = ((CompoundShape) s).getShapes().get(0);
@@ -46,9 +48,11 @@ public abstract class ValidateButton extends javafx.scene.control.Button impleme
                 if (firstShape instanceof Rectangle) {
                     for (Shape subShape : ((CompoundShape) s).getShapes()) {
                         if (!EditorView.getInstance().getTextFields().get("Width").getText().trim().isEmpty())
-                            ((Rectangle) subShape).setWidth(Float.parseFloat(EditorView.getInstance().getTextFields().get("Width").getText()));
+                            if (Float.parseFloat(EditorView.getInstance().getTextFields().get("Width").getText()) >= 2)
+                                ((Rectangle) subShape).setWidth(Float.parseFloat(EditorView.getInstance().getTextFields().get("Width").getText()));
                         if (!EditorView.getInstance().getTextFields().get("Height").getText().trim().isEmpty())
-                            ((Rectangle) subShape).setHeight(Float.parseFloat(EditorView.getInstance().getTextFields().get("Height").getText()));
+                            if (Float.parseFloat(EditorView.getInstance().getTextFields().get("Height").getText()) >= 2)
+                                ((Rectangle) subShape).setHeight(Float.parseFloat(EditorView.getInstance().getTextFields().get("Height").getText()));
                         if (!EditorView.getInstance().getTextFields().get("Border radius").getText().trim().isEmpty())
                             ((Rectangle) subShape).setBorderRadius(Float.parseFloat(EditorView.getInstance().getTextFields().get("Border radius").getText()));
                     }
@@ -56,9 +60,11 @@ public abstract class ValidateButton extends javafx.scene.control.Button impleme
                 } else if (firstShape instanceof Polygon) {
                     for (Shape subShape : ((CompoundShape) s).getShapes()) {
                         if (!EditorView.getInstance().getTextFields().get("Edges").getText().trim().isEmpty())
-                            ((Polygon) subShape).setEdges(Integer.parseInt(EditorView.getInstance().getTextFields().get("Edges").getText()));
+                            if (Integer.parseInt(EditorView.getInstance().getTextFields().get("Edges").getText()) > 2)
+                                ((Polygon) subShape).setEdges(Integer.parseInt(EditorView.getInstance().getTextFields().get("Edges").getText()));
                         if (!EditorView.getInstance().getTextFields().get("Length").getText().trim().isEmpty())
-                            ((Polygon) subShape).setLength(Float.parseFloat(EditorView.getInstance().getTextFields().get("Length").getText()));
+                            if (Float.parseFloat(EditorView.getInstance().getTextFields().get("Length").getText()) > 0)
+                                ((Polygon) subShape).setLength(Float.parseFloat(EditorView.getInstance().getTextFields().get("Length").getText()));
                     }
                 }
             }
