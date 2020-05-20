@@ -92,10 +92,14 @@ public class Rectangle extends SingleShape implements Serializable {
      ******************************/
     public void setWidth(float width) {
         this.width = width;
+        computeRotationCenter();
+        computeVertices();
     }
 
     public void setHeight(float height) {
         this.height = height;
+        computeRotationCenter();
+        computeVertices();
     }
 
     public void setBorderRadius(float borderRadius) {

@@ -97,6 +97,7 @@ public class FXMouseHandlers {
      */
     public void updateSelectionRectangle(MouseEvent mouseEvent) {
         if (Canvas.getInstance().getSelection()) {
+            Canvas.getInstance().setDragged(true);
             if(FXShape.getStrokeWidth() == 0) {
                 FXShape.setStrokeWidth(2);
             }
@@ -154,60 +155,63 @@ public class FXMouseHandlers {
      * Selects the shapes inside the rectangle selection
      */
     public void endSelection(MouseEvent mouseEvent) {
-        if (FXShape instanceof Rectangle) {
-            if (Canvas.getInstance().getSelection()) {
-                Position firstPos = Canvas.getInstance().getStartSelectPos();
-                Canvas.getInstance().setSelection(false);
-                double posX = mouseEvent.getX();
-                double posY = mouseEvent.getY();
-                if(posX < 0) {
-                    posX = 0;
-                }
-                else if(posX > View.getInstance().getCanvas().getWidth()) {
-                    posX = View.getInstance().getCanvas().getWidth();
-                }
-                if(posY < 0) {
-                    posY = 0;
-                } else if(posY > View.getInstance().getCanvas().getHeight()) {
-                    posY = View.getInstance().getCanvas().getHeight();
-                }
-                Position secondPos = new Position(posX, posY);
-                for (Shape s : Canvas.getInstance().getShapes()) {
-                    // top-left to bottom-right
-                    if (secondPos.getX() > firstPos.getX() && secondPos.getY() > firstPos.getY() && s.isInside(firstPos, secondPos)) {
-                        s.setSelected(true);
+        if(Canvas.getInstance().getDragged()) {
+            if (FXShape instanceof Rectangle) {
+                if (Canvas.getInstance().getSelection()) {
+                    Position firstPos = Canvas.getInstance().getStartSelectPos();
+                    Canvas.getInstance().setSelection(false);
+                    double posX = mouseEvent.getX();
+                    double posY = mouseEvent.getY();
+                    if (posX < 0) {
+                        posX = 0;
+                    } else if (posX > View.getInstance().getCanvas().getWidth()) {
+                        posX = View.getInstance().getCanvas().getWidth();
                     }
-                    // bottom-right to top-left
-                    else if (secondPos.getX() < firstPos.getX() && secondPos.getY() < firstPos.getY() && s.isInside(secondPos, firstPos)) {
-                        s.setSelected(true);
+                    if (posY < 0) {
+                        posY = 0;
+                    } else if (posY > View.getInstance().getCanvas().getHeight()) {
+                        posY = View.getInstance().getCanvas().getHeight();
                     }
-                    // bottom-left to top-right
-                    else if (secondPos.getX() > firstPos.getX() && secondPos.getY() < firstPos.getY()) {
-                        Position firstIntermediatePos = new Position(secondPos.getX(), firstPos.getY());
-                        Position secondIntermediatePos = new Position(firstPos.getX(), secondPos.getY());
-                        if (s.isInside(secondIntermediatePos, firstIntermediatePos)) {
+                    Position secondPos = new Position(posX, posY);
+                    for (Shape s : Canvas.getInstance().getShapes()) {
+                        // top-left to bottom-right
+                        if (secondPos.getX() > firstPos.getX() && secondPos.getY() > firstPos.getY() && s.isInside(firstPos, secondPos)) {
                             s.setSelected(true);
                         }
-                    }
-                    // top-right to bottom-left
-                    else if (secondPos.getX() < firstPos.getX() && secondPos.getY() > firstPos.getY()) {
-                        Position firstIntermediatePos = new Position(secondPos.getX(), firstPos.getY());
-                        Position secondIntermediatePos = new Position(firstPos.getX(), secondPos.getY());
-                        if (s.isInside(firstIntermediatePos, secondIntermediatePos)) {
+                        // bottom-right to top-left
+                        else if (secondPos.getX() < firstPos.getX() && secondPos.getY() < firstPos.getY() && s.isInside(secondPos, firstPos)) {
                             s.setSelected(true);
                         }
-                    }
+                        // bottom-left to top-right
+                        else if (secondPos.getX() > firstPos.getX() && secondPos.getY() < firstPos.getY()) {
+                            Position firstIntermediatePos = new Position(secondPos.getX(), firstPos.getY());
+                            Position secondIntermediatePos = new Position(firstPos.getX(), secondPos.getY());
+                            if (s.isInside(secondIntermediatePos, firstIntermediatePos)) {
+                                s.setSelected(true);
+                            }
+                        }
+                        // top-right to bottom-left
+                        else if (secondPos.getX() < firstPos.getX() && secondPos.getY() > firstPos.getY()) {
+                            Position firstIntermediatePos = new Position(secondPos.getX(), firstPos.getY());
+                            Position secondIntermediatePos = new Position(firstPos.getX(), secondPos.getY());
+                            if (s.isInside(firstIntermediatePos, secondIntermediatePos)) {
+                                s.setSelected(true);
+                            }
+                        }
 
+                    }
+                    implementor.getCanvas().getChildren().clear();
+                    Canvas.getInstance().setSelection(false);
+                    Canvas.getInstance().setDragged(false);
+                    Canvas.getInstance().notifyAllShapes();
                 }
-                implementor.getCanvas().getChildren().clear();
-                Canvas.getInstance().notifyAllShapes();
+                ((Rectangle) FXShape).setWidth(0);
+                ((Rectangle) FXShape).setHeight(0);
+                FXShape.setStrokeWidth(0);
+                FXShape.setVisible(false);
+            } else {
+                throw new IllegalArgumentException();
             }
-            ((Rectangle) FXShape).setWidth(0);
-            ((Rectangle) FXShape).setHeight(0);
-            FXShape.setStrokeWidth(0);
-            FXShape.setVisible(false);
-        } else {
-            throw new IllegalArgumentException();
         }
     }
 

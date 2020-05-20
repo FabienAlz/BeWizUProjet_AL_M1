@@ -71,6 +71,10 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
         isSelected = selected;
     }
 
+    public void setImplementor(Implementor implementor) {
+        this.implementor = implementor;
+    }
+
     public void setId() {
         this.id = ++generatedId;
     }

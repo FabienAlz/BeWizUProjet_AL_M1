@@ -10,6 +10,7 @@ import javafx.stage.Popup;
 import javafx.stage.Stage;
 import model.mediatorFX.*;
 import model.mediatorFX.ContextMenu;
+import org.w3c.dom.ls.LSOutput;
 import utils.FXContextMenuHandlers;
 import utils.FXMouseHandlers;
 import view.View;
@@ -149,14 +150,16 @@ public final class FXImplementor implements Implementor, Serializable {
                 for (Shape s : loadShapes) {
                     try {
                         s.setId();
-                        ((FXImplementor)s.getImplementor()).initializeFXImplementor(primaryStage);
+                        s.setImplementor(this);
+                        //((FXImplementor)s.getImplementor()).initializeFXImplementor(primaryStage);
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
                     if (s instanceof CompoundShape) {
                         for (Shape subShape : ((CompoundShape) s).getShapes()) {
                             subShape.setId();
-                            ((FXImplementor)subShape.getImplementor()).initializeFXImplementor(primaryStage);
+                            //((FXImplementor)subShape.getImplementor()).initializeFXImplementor(primaryStage);
+                            subShape.setImplementor(this);
                             subShape.addObserver(obs);
                         }
                     }
@@ -180,8 +183,9 @@ public final class FXImplementor implements Implementor, Serializable {
                 return;
             }
             Caretaker.getInstance().saveState();
-            if (scrollToDisable)
+            if (scrollToDisable) {
                 View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
+            }
         }
 
         primaryStage.setOnCloseRequest(event -> {
@@ -238,7 +242,6 @@ public final class FXImplementor implements Implementor, Serializable {
             newShape.addEventFilter(MouseEvent.MOUSE_CLICKED, selection);
 
             newShape.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
-
                 @Override
                 public void handle(ContextMenuEvent e) {
                     myContextMenuHandler.manageContextMenu(e);

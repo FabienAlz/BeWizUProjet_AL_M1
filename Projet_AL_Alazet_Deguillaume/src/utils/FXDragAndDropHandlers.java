@@ -179,7 +179,6 @@ public class FXDragAndDropHandlers {
                     implementor.getCanvas().getChildren().clear();
                     Canvas.getInstance().notifyAllShapes();
                 } else {
-                    implementor.getCanvas().getChildren().remove(implementor.getSHAPES().get(original.getId()));
                     original.setPosition(new CanvasPosition(posX, posY));
 
                     original.notifyObserver();

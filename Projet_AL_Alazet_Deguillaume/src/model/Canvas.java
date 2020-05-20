@@ -8,6 +8,7 @@ public final class Canvas {
     private List<Shape> shapes;
     private Position startSelectPos = new Position(0, 0);
     private boolean selection = false;
+    private boolean dragged = false;
 
     /**
      * Singleton constructor
@@ -44,6 +45,8 @@ public final class Canvas {
         return selection;
     }
 
+    public boolean getDragged() {return  dragged; }
+
     public Shape getShape(long id) {
         for (Shape s : shapes) {
             if (s.getId() == id) return s;
@@ -62,6 +65,11 @@ public final class Canvas {
     public void setSelection(boolean selection) {
         this.selection = selection;
     }
+
+    public void setDragged(boolean dragged) {
+        this.dragged = dragged;
+    }
+
 
     /**
      * Creates a list of Shapes to group together and removes them from the Canvas

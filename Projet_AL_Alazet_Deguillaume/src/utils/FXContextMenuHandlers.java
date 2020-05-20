@@ -8,6 +8,8 @@ import model.Canvas;
 import model.FXImplementor;
 import model.Shape;
 
+import java.sql.SQLOutput;
+
 /*
  * This class contains all the context menu handlers
  */
@@ -20,6 +22,7 @@ public class FXContextMenuHandlers {
         this.shape = s;
         this.FXShape = FXShape;
         this.implementor = FXImplementor.getInstance();
+
     }
 
     /**

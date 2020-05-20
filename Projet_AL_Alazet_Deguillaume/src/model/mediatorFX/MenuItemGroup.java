@@ -26,6 +26,7 @@ public class MenuItemGroup extends MenuItem {
                 for (Shape s : compoundShape.getShapes()) {
                     View.getInstance().getCanvas().getChildren().remove(FXImplementor.getInstance().getSHAPES().get(s.getId()));
                 }
+
                 ShapeObserver obs = new ConcreteShapeObserver();
                 compoundShape.addObserver(obs);
                 Canvas.getInstance().addAndNotify(compoundShape);
