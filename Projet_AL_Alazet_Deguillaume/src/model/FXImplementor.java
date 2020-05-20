@@ -148,14 +148,14 @@ public final class FXImplementor implements Implementor, Serializable {
                 for (Shape s : loadShapes) {
                     try {
                         s.setId();
-                        ((FXImplementor)s.getImplementor()).initializeFXImplementor(primaryStage);
+                        s.setImplementor(FXImplementor.getInstance());
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
                     if (s instanceof CompoundShape) {
                         for (Shape subShape : ((CompoundShape) s).getShapes()) {
                             subShape.setId();
-                            ((FXImplementor)subShape.getImplementor()).initializeFXImplementor(primaryStage);
+                            subShape.setImplementor(FXImplementor.getInstance());
                             subShape.addObserver(obs);
                         }
                     }

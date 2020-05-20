@@ -40,6 +40,8 @@ public interface Shape extends Cloneable {
 
     void setSelected(boolean b);
 
+    void setImplementor(Implementor implementor);
+
     void setId();
     
 

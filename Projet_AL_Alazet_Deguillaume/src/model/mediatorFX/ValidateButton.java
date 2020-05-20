@@ -22,8 +22,10 @@ public abstract class ValidateButton extends javafx.scene.control.Button impleme
             s.setRotation(Float.parseFloat(EditorView.getInstance().getTextFields().get("Rotation").getText()));
         if (s instanceof Rectangle) {
             if (!EditorView.getInstance().getTextFields().get("Width").getText().trim().isEmpty())
+                if (Float.parseFloat(EditorView.getInstance().getTextFields().get("Width").getText()) >= 2)
                 ((Rectangle) s).setWidth(Float.parseFloat(EditorView.getInstance().getTextFields().get("Width").getText()));
             if (!EditorView.getInstance().getTextFields().get("Height").getText().trim().isEmpty())
+                if (Float.parseFloat(EditorView.getInstance().getTextFields().get("Height").getText()) >= 2)
                 ((Rectangle) s).setHeight(Float.parseFloat(EditorView.getInstance().getTextFields().get("Height").getText()));
             if (!EditorView.getInstance().getTextFields().get("Border radius").getText().trim().isEmpty())
                 ((Rectangle) s).setBorderRadius(Float.parseFloat(EditorView.getInstance().getTextFields().get("Border radius").getText()));

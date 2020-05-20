@@ -39,7 +39,7 @@ public class Main extends Application {
         implementor = FXImplementor.getInstance();
         ((FXImplementor)implementor).initializeFX();
         ((FXImplementor)implementor).start(primaryStage);
-       //initialize();
+       initialize();
         Caretaker.getInstance().saveState();
     }
 
