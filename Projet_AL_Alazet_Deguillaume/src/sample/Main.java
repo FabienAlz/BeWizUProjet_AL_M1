@@ -26,7 +26,7 @@ public class Main extends Application {
 
         toolbar.addAndNotify(r2);
 
-        Shape p = new Polygon(new ToolbarPosition(), 0, new Translation(0,0), "#4472c4", 5, 100, implementor);
+        Shape p = new Polygon(new ToolbarPosition(), -18, new Translation(0,0), "#4472c4", 5, 100, implementor);
         p.addObserver(obs);
 
 //        canvas.addAndNotify(r3);
@@ -39,7 +39,7 @@ public class Main extends Application {
         implementor = FXImplementor.getInstance();
         ((FXImplementor)implementor).initializeFX();
         ((FXImplementor)implementor).start(primaryStage);
-        //initialize();
+       initialize();
         Caretaker.getInstance().saveState();
     }
 

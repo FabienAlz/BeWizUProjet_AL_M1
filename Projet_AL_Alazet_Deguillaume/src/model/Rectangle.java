@@ -52,6 +52,7 @@ public class Rectangle extends SingleShape implements Serializable {
         return vertices;
     }
 
+
     public float getAppearingWidth() {
         double maxX = vertices.get(0);
         double minX = vertices.get(0);
@@ -132,17 +133,27 @@ public class Rectangle extends SingleShape implements Serializable {
         Position secondVertex = new Position(getPositionI().getX() + width, getPositionI().getY());
         Position thirdVertex = new Position(getPositionI().getX(), getPositionI().getY() + height);
         Position fourthVertex = new Position(getPositionI().getX() + width, getPositionI().getY() + height);
-        vertices.add(rotate(firstVertex, getRotationCenter(), getRotation()).getX());
-        vertices.add(rotate(firstVertex, getRotationCenter(), getRotation()).getY());
-
-        vertices.add(rotate(secondVertex, getRotationCenter(), getRotation()).getX());
-        vertices.add(rotate(secondVertex, getRotationCenter(), getRotation()).getY());
-
-        vertices.add(rotate(thirdVertex, getRotationCenter(), getRotation()).getX());
-        vertices.add(rotate(thirdVertex, getRotationCenter(), getRotation()).getY());
-
-        vertices.add(rotate(fourthVertex, getRotationCenter(), getRotation()).getX());
-        vertices.add(rotate(fourthVertex, getRotationCenter(), getRotation()).getY());
+        double radRotation = getRotation()%180 * Math.PI / 180;
+        vertices.add(firstVertex.getX());
+        vertices.add(firstVertex.getY());
+        vertices.add(secondVertex.getX());
+        vertices.add(secondVertex.getY());
+        vertices.add(thirdVertex.getX());
+        vertices.add(thirdVertex.getY());
+        vertices.add(fourthVertex.getX());
+        vertices.add(fourthVertex.getY());
+        // Computes the rotation
+        Vector<Double> tmp = new Vector<>();
+        for(int i = 0; i < 8; i+=2) {
+            tmp.add((Math.cos(radRotation) * (vertices.get(i) - getRotationCenter().getX()) -
+                    Math.sin(radRotation) * (vertices.get(i + 1) - getRotationCenter().getY()) +
+                    getRotationCenter().getX()));
+            tmp.add((Math.sin(radRotation) * (vertices.get(i) - getRotationCenter().getX()) +
+                    Math.cos(radRotation) * (vertices.get(i + 1) - getRotationCenter().getY()) +
+                    getRotationCenter().getY()));
+        }
+        vertices.clear();
+        vertices.addAll(tmp);
     }
 
     /**

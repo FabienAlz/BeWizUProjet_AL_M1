@@ -48,20 +48,14 @@ public class UndoButton extends Button {
                     for (Shape s : state) {
                         if (s.getPositionI() instanceof CanvasPosition) {
                             Canvas.getInstance().add(s);
-
                         } else if (s.getPositionI() instanceof ToolbarPosition) {
                             Toolbar.getInstance().add(s);
-
-                            float ratio = (float) (s.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
-                            if (s.getPositionI().getY() + s.getHeight() / ratio < View.getInstance().TOOLBAR_HEIGHT)
-                                View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
-                            else {
-                                View.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (s.getHeight() / ratio) + 10);
-                            }
                         }
                     }
                     Canvas.getInstance().notifyAllShapes();
                     Toolbar.getInstance().notifyAllShapes();
+                    View.getInstance().getToolbar().updateDisplay();
+
                 }
             }
         });

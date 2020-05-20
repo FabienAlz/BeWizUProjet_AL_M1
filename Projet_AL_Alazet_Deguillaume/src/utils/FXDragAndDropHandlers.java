@@ -49,13 +49,14 @@ public class FXDragAndDropHandlers {
                         Toolbar.getInstance().addAndNotify(copy);
 
                     } else {
-                        float ratio = (float) (copy.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
+
                         if (copy instanceof CompoundShape) {
                             implementor.createToolbarCompoundShape((CompoundShape) copy);
                             copy.setPosition(new ToolbarPosition());
                             Toolbar.getInstance().add(copy);
-                            if (View.getInstance().getToolbar().getHeight() < Toolbar.getInstance().getNextPosition().getY() + copy.getHeight() / ratio) {
-                                View.getInstance().getToolbar().setPrefHeight(View.getInstance().getToolbar().getPrefHeight() + (copy.getHeight() / ratio) + 10);
+                            float ratio = (float) (copy.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
+                            if (View.getInstance().getToolbar().getHeight() < copy.getPositionI().getY() + copy.getHeight() / ratio) {
+                                View.getInstance().getToolbar().setPrefHeight(copy.getPositionI().getY() + (copy.getHeight() / ratio) + 10);
                             }
                         } else {
                             copy.setPosition(new ToolbarPosition());
@@ -92,15 +93,7 @@ public class FXDragAndDropHandlers {
         implementor.getCanvas().getChildren().clear();
         Canvas.getInstance().resetSelection();
         Canvas.getInstance().notifyAllShapes();
-        for (Shape s : Toolbar.getInstance().getShapes()) {
-            float ratio;
-            if (s instanceof Polygon) {
-                ratio = (float) (s.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 35));
-            } else ratio = (float) (s.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
-            if (View.getInstance().getToolbar().getHeight() < s.getPositionI().getY() + s.getHeight() / ratio) {
-                View.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (s.getHeight()/ratio) + 10);
-            }
-        }
+        View.getInstance().getToolbar().updateDisplay();
         dragEvent.consume();
     }
 
@@ -171,8 +164,8 @@ public class FXDragAndDropHandlers {
                 double posX = dragEvent.getX() - original.getWidth()/2;
                 double posY = dragEvent.getY() - original.getHeight()/2;
                 if (original instanceof CompoundShape) {
-                    posX -= original.getTopLeft().getX();
-                    posY -= original.getTopLeft().getY();
+                    posX -= original.getPositionI().getX();
+                    posY -= original.getPositionI().getY();
 
                     ((CompoundShape) original).translate(
                             new Translation(posX, posY));
@@ -206,6 +199,7 @@ public class FXDragAndDropHandlers {
 
             success = true;
             Caretaker.getInstance().saveState();
+
         }
         /* let the source know whether the string was successfully
          * transferred and used */
@@ -320,7 +314,18 @@ public class FXDragAndDropHandlers {
                 Shape original = Toolbar.getInstance().getShape(id);
 
                 float ratio = (float) (original.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
-                if(View.getInstance().getToolbar().getHeight() > View.getInstance().TOOLBAR_HEIGHT) {
+                if (original instanceof Rectangle) {
+                    if (original.getRotation() == 90 && (View.getInstance().getToolbar().getPrefHeight() - (((Rectangle) original).getAppearingHeight())) < View.getInstance().TOOLBAR_HEIGHT)
+                        View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
+                    else if (original.getRotation() == 90)
+                        View.getInstance().getToolbar().setPrefHeight(View.getInstance().getToolbar().getPrefHeight() - (((Rectangle) original).getAppearingHeight()) +10 );
+                    else {
+                        if ((View.getInstance().getToolbar().getPrefHeight() - (((Rectangle) original).getAppearingHeight() / ratio)) < View.getInstance().TOOLBAR_HEIGHT)
+                            View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
+                            else  View.getInstance().getToolbar().setPrefHeight(View.getInstance().getToolbar().getPrefHeight() - (((Rectangle) original).getAppearingHeight() / ratio) +10 );
+                    }
+                }
+                else if(View.getInstance().getToolbar().getHeight() > View.getInstance().TOOLBAR_HEIGHT) {
                     if((View.getInstance().getToolbar().getPrefHeight() - (original.getHeight() / ratio)) < View.getInstance().TOOLBAR_HEIGHT)
                            View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
                     else
@@ -334,8 +339,8 @@ public class FXDragAndDropHandlers {
             }
 
             success = true;
-
             Caretaker.getInstance().saveState();
+
         }
         /* let the source know whether the string was successfully
          * transferred and used */

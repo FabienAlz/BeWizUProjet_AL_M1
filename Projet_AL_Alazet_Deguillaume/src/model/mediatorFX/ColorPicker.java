@@ -12,6 +12,10 @@ public class ColorPicker extends javafx.scene.control.ColorPicker implements Com
         setValue(color);
     }
 
+    public ColorPicker() {
+        super();
+    }
+
     @Override
     public void setMediator(Mediator mediator) {
         this.mediator = mediator;
