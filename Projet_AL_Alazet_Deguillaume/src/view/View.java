@@ -130,6 +130,7 @@ public final class View implements Mediator {
         root.getChildren().add(canvas);
 
         toolbarWrapper.toFront();
+        bin.toFront();
         concreteMenu.toFront();
         primaryStage.show();
     }

@@ -40,7 +40,6 @@ public class LoadButton extends Button {
             fileChooser.setInitialDirectory(new File("ressources/saves"));
             File file = fileChooser.showOpenDialog(primaryStage);
             List<Shape> loadShapes = null;
-            boolean scrollToDisable = true;
             if (file != null) {
                 if (file.toString().substring(file.toString().length() - 3).compareTo("ser") == 0) {
                     try {
@@ -70,11 +69,6 @@ public class LoadButton extends Button {
 
                             if (s.getPositionI() instanceof ToolbarPosition) {
                                 Toolbar.getInstance().addAndNotify(s);
-                                float ratio = (float) (s.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
-                                if (View.getInstance().getToolbar().getHeight() < s.getPositionI().getY() + s.getHeight() / ratio) {
-                                    View.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (s.getHeight() / ratio) + 10);
-                                    scrollToDisable = false;
-                                }
                             } else if (s.getPositionI() instanceof CanvasPosition)
                                 Canvas.getInstance().addAndNotify(s);
                         }
@@ -88,10 +82,6 @@ public class LoadButton extends Button {
                         return;
                     }
                     Caretaker.getInstance().saveState();
-
-                    if (scrollToDisable)
-                        View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
-
                 }
             }
         });

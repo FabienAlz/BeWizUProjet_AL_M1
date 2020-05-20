@@ -61,7 +61,7 @@ public class MenuItemEdit extends MenuItem {
                                 createPolygonEditor(s);
                             }
                         } else {
-                            createMixedEditor(firstShape);
+                            createMixedEditor(s);
                         }
                     }
                 }
@@ -75,14 +75,36 @@ public class MenuItemEdit extends MenuItem {
      * Creates all the FX components needed for the rectangle (or compound shape of rectangle) editor window
      */
     private void createRectangleEditor(Shape s) {
-        if (s instanceof CompoundShape) s = ((CompoundShape) s).getShapes().get(0);
-        createSharedComponents(s);
         mediator.registerComponent(new Label("Width"));
-        mediator.registerComponent(new TextField("Width", String.valueOf(s.getWidth())));
         mediator.registerComponent(new Label("Height"));
-        mediator.registerComponent(new TextField("Height", String.valueOf(s.getHeight())));
         mediator.registerComponent(new Label("Border radius"));
-        mediator.registerComponent(new TextField("Border radius", String.valueOf(((Rectangle) s).getBorderRadius())));
+        createSharedComponents(s);
+
+
+//        mediator.registerComponent(new TextField("Width"));
+//        mediator.registerComponent(new TextField("Height"));
+//        mediator.registerComponent(new TextField("Border radius"));
+        if (s instanceof CompoundShape) {
+            if (((CompoundShape) s).sameWidth())
+                mediator.registerComponent(new TextField("Width", String.valueOf(((CompoundShape) s).getShapes().get(0).getWidth())));
+            else
+                mediator.registerComponent(new TextField("Width"));
+            if (((CompoundShape) s).sameHeight())
+                mediator.registerComponent(new TextField("Height", String.valueOf(((CompoundShape) s).getShapes().get(0).getHeight())));
+            else
+                mediator.registerComponent(new TextField("Height"));
+            if (((CompoundShape) s).sameBorderRadius()) {
+                Rectangle rect = (Rectangle) ((CompoundShape) s).getShapes().get(0);
+                mediator.registerComponent(new TextField("Border radius", String.valueOf(rect.getBorderRadius())));
+            } else
+                mediator.registerComponent(new TextField("Border radius"));
+
+        } else {
+            mediator.registerComponent(new TextField("Width", String.valueOf(s.getWidth())));
+            mediator.registerComponent(new TextField("Height", String.valueOf(s.getHeight())));
+            mediator.registerComponent(new TextField("Border radius", String.valueOf(((Rectangle) s).getBorderRadius())));
+        }
+
         mediator.createRectangleEditor();
     }
 
@@ -91,12 +113,23 @@ public class MenuItemEdit extends MenuItem {
      * Creates all the FX components needed for the rectangle (or compound shape of rectangle) editor window
      */
     private void createPolygonEditor(Shape s) {
-        if (s instanceof CompoundShape) s = ((CompoundShape) s).getShapes().get(0);
-        createSharedComponents(s);
         mediator.registerComponent(new Label("Edges"));
-        mediator.registerComponent(new TextField("Edges", String.valueOf(((Polygon) s).getEdges())));
         mediator.registerComponent(new Label("Length"));
-        mediator.registerComponent(new TextField("Length", String.valueOf(((Polygon) s).getLength())));
+
+        if (s instanceof CompoundShape) {
+            if (((CompoundShape) s).sameEdges())
+                mediator.registerComponent(new TextField("Edges", String.valueOf((((Polygon) ((CompoundShape) s).getShapes().get(0)).getEdges()))));
+            else
+                mediator.registerComponent(new TextField("Edges"));
+            if (((CompoundShape) s).sameLength())
+                mediator.registerComponent(new TextField("Length", String.valueOf((((Polygon) ((CompoundShape) s).getShapes().get(0)).getLength()))));
+            else
+                mediator.registerComponent(new TextField("Length"));
+        } else {
+            mediator.registerComponent(new TextField("Edges", String.valueOf(((Polygon) s).getEdges())));
+            mediator.registerComponent(new TextField("Length", String.valueOf(((Polygon) s).getLength())));
+        }
+        createSharedComponents(s);
         mediator.createPolygonEditor();
     }
 
@@ -112,14 +145,28 @@ public class MenuItemEdit extends MenuItem {
      * Creates all the FX components that are shared between all editors
      */
     private void createSharedComponents(Shape s) {
-        if (s instanceof CompoundShape) s = ((CompoundShape) s).getShapes().get(0);
-
         mediator.registerComponent(new GridPane());
-        mediator.registerComponent(new ColorPicker(Color.valueOf(s.getColor())));
         mediator.registerComponent(new Label("Rotation"));
-        mediator.registerComponent(new TextField("Rotation", String.valueOf(s.getRotation())));
+        mediator.registerComponent(new GridPane());
+        mediator.registerComponent(new Label("Rotation"));
         mediator.registerComponent(new OkButton());
         mediator.registerComponent(new ApplyButton());
         mediator.registerComponent(new CancelButton());
+
+        if (s instanceof CompoundShape && ((CompoundShape) s).getShapes().size() == 1) {
+            mediator.registerComponent(new ColorPicker(Color.valueOf(((CompoundShape) s).getShapes().get(0).getColor())));
+            mediator.registerComponent(new TextField("Rotation", String.valueOf(((CompoundShape) s).getShapes().get(0).getRotation())));
+        } else if (s instanceof CompoundShape) {
+            if (((CompoundShape) s).sameColor())
+                mediator.registerComponent(new ColorPicker((Color.valueOf(((CompoundShape) s).getShapes().get(0).getColor()))));
+            else mediator.registerComponent(new ColorPicker());
+            if (((CompoundShape) s).sameRotation())
+                mediator.registerComponent(new TextField("Rotation", String.valueOf(((CompoundShape) s).getShapes().get(0).getRotation())));
+            else
+                mediator.registerComponent(new TextField("Rotation"));
+        } else {
+            mediator.registerComponent(new ColorPicker(Color.valueOf(s.getColor())));
+            mediator.registerComponent(new TextField("Rotation", String.valueOf(s.getRotation())));
+        }
     }
 }
