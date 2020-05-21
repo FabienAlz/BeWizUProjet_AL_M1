@@ -173,7 +173,6 @@ public class FXDragAndDropHandlers {
                     Canvas.getInstance().notifyAllShapes();
                 } else {
                     original.setPosition(new CanvasPosition(posX, posY));
-
                     original.notifyObserver();
                 }
 
