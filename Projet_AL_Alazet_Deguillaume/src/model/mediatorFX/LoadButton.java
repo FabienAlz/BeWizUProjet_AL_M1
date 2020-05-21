@@ -81,7 +81,7 @@ public class LoadButton extends Button {
                         c.printStackTrace();
                         return;
                     }
-                    Caretaker.getInstance().saveState();
+                    View.getInstance().saveState();
                 }
             }
         });

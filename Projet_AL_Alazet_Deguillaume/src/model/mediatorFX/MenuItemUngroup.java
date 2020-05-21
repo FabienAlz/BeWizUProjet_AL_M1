@@ -46,7 +46,7 @@ public class MenuItemUngroup extends MenuItem {
                 }
                 View.getInstance().getCanvas().getChildren().clear();
                 Canvas.getInstance().notifyAllShapes();
-                Caretaker.getInstance().saveState();
+                View.getInstance().saveState();
 
             }
         });

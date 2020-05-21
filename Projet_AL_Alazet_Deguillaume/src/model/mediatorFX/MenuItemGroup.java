@@ -30,7 +30,7 @@ public class MenuItemGroup extends MenuItem {
                 ShapeObserver obs = new ConcreteShapeObserver();
                 compoundShape.addObserver(obs);
                 Canvas.getInstance().addAndNotify(compoundShape);
-                Caretaker.getInstance().saveState();
+                View.getInstance().saveState();
             }
         });
     }

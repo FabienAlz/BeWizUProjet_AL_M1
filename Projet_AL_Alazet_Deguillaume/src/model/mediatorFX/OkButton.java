@@ -35,7 +35,7 @@ public class OkButton extends ValidateButton implements Component {
                     Canvas.getInstance().notifyAllShapes();
                 }
             }
-            Caretaker.getInstance().saveState();
+            View.getInstance().saveState();
         });
     }
 }

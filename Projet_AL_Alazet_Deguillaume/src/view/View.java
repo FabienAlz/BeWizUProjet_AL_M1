@@ -11,6 +11,9 @@ import javafx.stage.Stage;
 import model.*;
 import model.mediatorFX.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class View implements Mediator {
 
     private static View instance;
@@ -135,6 +138,17 @@ public final class View implements Mediator {
         primaryStage.show();
     }
 
+    /**
+     * Saves the state of the application
+     */
+    public void saveState() {
+        Caretaker.getInstance().remove();
+        List<Shape> savedShapes = new ArrayList<>();
+        savedShapes.addAll(Canvas.getInstance().getShapes());
+        savedShapes.addAll(Toolbar.getInstance().getShapes());
+        Memento m = new Memento(savedShapes);
+        Caretaker.getInstance().add(m);
+    }
 
     /**
      * Singleton pattern

@@ -87,16 +87,4 @@ public final class Caretaker {
 
     }
 
-    /**
-     * Saves the state of the application
-     */
-    public void saveState() {
-        remove();
-        List<Shape> savedShapes = new ArrayList<>();
-        savedShapes.addAll(Canvas.getInstance().getShapes());
-        savedShapes.addAll(Toolbar.getInstance().getShapes());
-        Memento m = new Memento(savedShapes);
-        Caretaker.getInstance().add(m);
-    }
-
 }

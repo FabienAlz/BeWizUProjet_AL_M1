@@ -85,7 +85,7 @@ public class FXDragAndDropHandlers {
                 }
             }
             success = true;
-            Caretaker.getInstance().saveState();
+            View.getInstance().saveState();
         }
         /* let the source know whether the string was successfully
          * transferred and used */
@@ -198,7 +198,7 @@ public class FXDragAndDropHandlers {
             }
 
             success = true;
-            Caretaker.getInstance().saveState();
+            View.getInstance().saveState();
 
         }
         /* let the source know whether the string was successfully
@@ -339,7 +339,7 @@ public class FXDragAndDropHandlers {
             }
 
             success = true;
-            Caretaker.getInstance().saveState();
+            View.getInstance().saveState();
 
         }
         /* let the source know whether the string was successfully

@@ -174,7 +174,7 @@ public final class FXImplementor implements Implementor, Serializable {
                 c.printStackTrace();
                 return;
             }
-            Caretaker.getInstance().saveState();
+            View.getInstance().saveState();
             View.getInstance().getToolbar().updateDisplay();
         }
 

@@ -80,10 +80,6 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
         this.id = ++generatedId;
     }
 
-    public void setImplementor(Implementor implementor) {
-        this.implementor = implementor;
-    }
-
     /**
      * Checks if the Shape is inside a Rectangle
      *
