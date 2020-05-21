@@ -3,6 +3,7 @@ package model;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -197,6 +198,7 @@ public final class FXImplementor implements Implementor, Serializable {
                 }
             }
         });
+
     }
 
     /**

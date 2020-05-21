@@ -7,9 +7,13 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.ToolBar;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import model.*;
 import model.mediatorFX.*;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public final class View implements Mediator {
 
@@ -132,6 +136,11 @@ public final class View implements Mediator {
         toolbarWrapper.toFront();
         bin.toFront();
         concreteMenu.toFront();
+        try {
+            primaryStage.getIcons().add(new Image(new FileInputStream("C:/Users/Shadow/Desktop/GL/AL/projet/BeWizUProjet_AL_M1/Projet_AL_Alazet_Deguillaume/ressources/ico/ico.png")));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         primaryStage.show();
     }
 
