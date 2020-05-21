@@ -8,17 +8,12 @@ import view.View;
 
 import java.util.List;
 
-public class UndoButton extends Button {
+public class RedoButtonWithImage extends ButtonWithImage {
     private Mediator mediator;
 
-    public UndoButton(String s, String imageSrc) {
+    public RedoButtonWithImage(String s, String imageSrc) {
         super(s, imageSrc);
-        setUndoButtonHandlers();
-    }
-
-    @Override
-    public String getName() {
-        return "UndoButton";
+        setRedoButtonHandler();
     }
 
     @Override
@@ -26,17 +21,22 @@ public class UndoButton extends Button {
         this.mediator = mediator;
     }
 
-    private void setUndoButtonHandlers() {
+    @Override
+    public String getName() {
+        return "RedoButton";
+    }
+
+    private void setRedoButtonHandler() {
         /**
-         * Undo the last performed action
+         * Redo the last undone action
          */
         setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent mouseEvent) {
+            public void handle(ActionEvent actionEvent) {
                 FXImplementor implementor = FXImplementor.getInstance();
-                if (Caretaker.getInstance().getCurrent() != 0) {
-                    Caretaker.getInstance().decrement();
-
+                int oldState = Caretaker.getInstance().getCurrent();
+                Caretaker.getInstance().increment();
+                if (oldState != Caretaker.getInstance().getCurrent()) {
                     Memento memento = Caretaker.getInstance().get(Caretaker.getInstance().getCurrent());
                     List<Shape> state = memento.getState();
                     // Deletes all the Shapes

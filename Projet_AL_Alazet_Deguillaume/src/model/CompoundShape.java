@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompoundShape extends AbstractShape implements Serializable {
-    private static final long serialVersionUID = 7L;
-
     private List<Shape> shapes;
 
     /**
@@ -18,9 +16,6 @@ public class CompoundShape extends AbstractShape implements Serializable {
     public CompoundShape(Implementor implementor, PositionI position) {
         super(position, new Translation(0, 0), implementor);
         this.shapes = new ArrayList<>();
-    }
-
-    public CompoundShape() {
     }
 
     /******************************
