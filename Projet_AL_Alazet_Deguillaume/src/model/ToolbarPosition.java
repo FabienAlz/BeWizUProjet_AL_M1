@@ -3,8 +3,6 @@ package model;
 import java.io.Serializable;
 
 public class ToolbarPosition implements PositionI, Serializable {
-    private static final long serialVersionUID = 599980917088810958L;
-
     private double x, y;
 
     public ToolbarPosition() {

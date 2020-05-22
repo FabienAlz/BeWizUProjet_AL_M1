@@ -20,10 +20,10 @@ public final class ViewFX implements Mediator {
 
     private static ViewFX instance;
     private Popup popup;
-    private SaveButton save;
-    private LoadButton load;
-    private UndoButton undo;
-    private RedoButton redo;
+    private SaveButtonWithImage save;
+    private LoadButtonWithImage load;
+    private UndoButtonWithImage undo;
+    private RedoButtonWithImage redo;
     private Bin bin;
     private Menu menu;
     private ScrollPane toolbarWrapper;
@@ -48,19 +48,19 @@ public final class ViewFX implements Mediator {
         component.setMediator(this);
         switch (component.getName()) {
             case "SaveButton":
-                save = (SaveButton) component;
+                save = (SaveButtonWithImage) component;
                 break;
             case "Popup":
                 popup = (Popup) component;
                 break;
             case "LoadButton":
-                load = (LoadButton) component;
+                load = (LoadButtonWithImage) component;
                 break;
             case "UndoButton":
-                undo = (UndoButton) component;
+                undo = (UndoButtonWithImage) component;
                 break;
             case "RedoButton":
-                redo = (RedoButton) component;
+                redo = (RedoButtonWithImage) component;
                 break;
             case "BinButton":
                 bin = (Bin) component;
@@ -85,11 +85,11 @@ public final class ViewFX implements Mediator {
 
     /**
      * Creates all the FX components needed for the first screen of the application then displays them
-     * @param primaryStage
      */
     @Override
-    public void createGUI(Stage primaryStage) {
+    public void createGUI() {
         root = new Group();
+        Stage primaryStage = FXImplementor.getStage();
         primaryStage.setResizable(false);
         primaryStage.setTitle("BeWizU");
         primaryStage.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT));

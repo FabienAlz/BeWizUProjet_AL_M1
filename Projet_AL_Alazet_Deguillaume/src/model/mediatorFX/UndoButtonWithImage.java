@@ -9,10 +9,10 @@ import view.ViewFX;
 
 import java.util.List;
 
-public class UndoButton extends Button {
+public class UndoButtonWithImage extends ButtonWithImage {
     private Mediator mediator;
 
-    public UndoButton(String s, String imageSrc) {
+    public UndoButtonWithImage(String s, String imageSrc) {
         super(s, imageSrc);
         setUndoButtonHandlers();
     }

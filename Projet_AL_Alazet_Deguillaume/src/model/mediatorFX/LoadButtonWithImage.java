@@ -9,7 +9,7 @@ import view.ViewFX;
 import java.io.*;
 import java.util.List;
 
-public class LoadButton extends Button {
+public class LoadButtonWithImage extends ButtonWithImage {
     private Mediator mediator;
     private Stage primaryStage;
 
@@ -17,7 +17,7 @@ public class LoadButton extends Button {
         primaryStage = stage;
     }
 
-    public LoadButton(String s, String imageSrc) {
+    public LoadButtonWithImage(String s, String imageSrc) {
         super(s, imageSrc);
         loadButtonHandler();
     }

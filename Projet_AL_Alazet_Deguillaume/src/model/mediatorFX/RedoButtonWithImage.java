@@ -9,10 +9,10 @@ import view.ViewFX;
 
 import java.util.List;
 
-public class RedoButton extends Button {
+public class RedoButtonWithImage extends ButtonWithImage {
     private Mediator mediator;
 
-    public RedoButton(String s, String imageSrc) {
+    public RedoButtonWithImage(String s, String imageSrc) {
         super(s, imageSrc);
         setRedoButtonHandler();
     }

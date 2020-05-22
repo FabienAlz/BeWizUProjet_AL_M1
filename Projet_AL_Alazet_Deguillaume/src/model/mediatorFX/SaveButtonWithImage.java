@@ -10,7 +10,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SaveButton extends Button {
+public class SaveButtonWithImage extends ButtonWithImage {
     private Mediator mediator;
     private Stage primaryStage;
 
@@ -18,7 +18,7 @@ public class SaveButton extends Button {
         primaryStage = stage;
     }
 
-    public SaveButton(String s, String imageSrc) {
+    public SaveButtonWithImage(String s, String imageSrc) {
         super(s, imageSrc);
         saveButtonHandler();
     }

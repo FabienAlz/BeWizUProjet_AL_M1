@@ -20,8 +20,6 @@ import java.util.*;
 import java.util.List;
 
 public final class FXImplementor implements Implementor, Serializable {
-    private static final long serialVersionUID = 3734212650399506405L;
-
     private transient Shape lastSelected;
     private transient javafx.scene.shape.Shape lastFXSelected;
     private transient Pane canvas;
@@ -95,10 +93,10 @@ public final class FXImplementor implements Implementor, Serializable {
     public void initializeFX() {
         ViewFX mediator = ViewFX.getInstance();
 
-        mediator.registerComponent(new SaveButton("", "ressources/ico/save.png"));
-        mediator.registerComponent(new LoadButton("", "ressources/ico/load.png"));
-        mediator.registerComponent(new UndoButton("", "ressources/ico/undo.png"));
-        mediator.registerComponent(new RedoButton("", "ressources/ico/redo.png"));
+        mediator.registerComponent(new SaveButtonWithImage("", "ressources/ico/save.png"));
+        mediator.registerComponent(new LoadButtonWithImage("", "ressources/ico/load.png"));
+        mediator.registerComponent(new UndoButtonWithImage("", "ressources/ico/undo.png"));
+        mediator.registerComponent(new RedoButtonWithImage("", "ressources/ico/redo.png"));
         mediator.registerComponent(new Bin("ressources/ico/bin.png"));
         mediator.registerComponent(new FXToolbar());
         mediator.registerComponent(new FXCanvas());
@@ -134,7 +132,8 @@ public final class FXImplementor implements Implementor, Serializable {
      */
 
     public void start(Stage primaryStage) throws Exception {
-        ViewFX.getInstance().createGUI(primaryStage);
+        stage = primaryStage;
+        ViewFX.getInstance().createGUI();
         initializeFXImplementor(primaryStage);
 
         File load = new File("ressources/saves/autosave.ser");

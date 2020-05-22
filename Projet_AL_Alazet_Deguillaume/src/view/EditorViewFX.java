@@ -58,8 +58,7 @@ public final class EditorViewFX implements Mediator {
      * Unused
      */
     @Override
-    public void createGUI(Stage primaryStage) {
-    }
+    public void createGUI() { }
 
 
     /**

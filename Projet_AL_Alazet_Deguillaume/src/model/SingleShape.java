@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Vector;
 
 public abstract class SingleShape extends AbstractShape implements Serializable {
-    private static final long serialVersionUID = -6514750722141852843L;
-
     private float rotation;
     private PositionI rotationCenter;
     private String color;

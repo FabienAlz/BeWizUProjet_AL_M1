@@ -3,8 +3,6 @@ package model;
 import java.io.Serializable;
 
 public class Position implements Serializable, PositionI {
-    private static final long serialVersionUID = 7021457730345052437L;
-
     private double x;
     private double y;
 
