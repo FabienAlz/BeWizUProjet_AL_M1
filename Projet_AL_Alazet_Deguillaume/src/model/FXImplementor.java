@@ -131,7 +131,8 @@ public final class FXImplementor implements Implementor, Serializable {
      */
 
     public void start(Stage primaryStage) throws Exception {
-        View.getInstance().createGUI(primaryStage);
+        stage = primaryStage;
+        View.getInstance().createGUI();
         initializeFXImplementor(primaryStage);
 
         File load = new File("ressources/saves/autosave.ser");

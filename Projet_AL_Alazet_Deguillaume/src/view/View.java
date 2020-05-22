@@ -85,11 +85,11 @@ public final class View implements Mediator {
 
     /**
      * Creates all the FX components needed for the first screen of the application then displays them
-     * @param primaryStage
      */
     @Override
-    public void createGUI(Stage primaryStage) {
+    public void createGUI() {
         root = new Group();
+        Stage primaryStage = FXImplementor.getStage();
         primaryStage.setResizable(false);
         primaryStage.setTitle("BeWizU");
         primaryStage.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT));

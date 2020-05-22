@@ -59,8 +59,7 @@ public final class EditorView implements Mediator {
      * Unused
      */
     @Override
-    public void createGUI(Stage primaryStage) {
-    }
+    public void createGUI() { }
 
 
     /**
