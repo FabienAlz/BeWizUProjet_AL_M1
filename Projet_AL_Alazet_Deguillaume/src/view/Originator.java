@@ -5,7 +5,7 @@ import model.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Originator {
+public final class Originator {
     private static List<Shape> state;
     private static Originator instance;
 
