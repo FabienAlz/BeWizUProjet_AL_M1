@@ -5,7 +5,7 @@ import model.*;
 import view.Originator;
 import view.ViewFX;
 
-public class Test extends TestCase {
+public class UnitTest extends TestCase {
     Canvas canvas = Canvas.getInstance();
     FXImplementor implementor = FXImplementor.getInstance();
 
@@ -115,6 +115,9 @@ public class Test extends TestCase {
         // Checks if the old state is different than the current canvas
         assertFalse(canvas.getShapes().equals(caretaker.get(0).getState().size()));
 
+        canvas.clear();
+        Originator.getInstance().saveState();
+        assertEquals(2, Caretaker.getInstance().getCurrent());
     }
 
     public void testPrototype() {
@@ -153,8 +156,6 @@ public class Test extends TestCase {
         rectangle.setRotation((float)-10);
         assertEquals((float)-10, compoundShape.getShapes().get(0).getRotation());
         assertNotSame((float)-10, compoundShape2.getShapes().get(0).getRotation());
-
-
     }
 
 }
