@@ -25,6 +25,9 @@ public class FXToolbar extends javafx.scene.layout.Pane implements Component {
         return "FXToolbar";
     }
 
+    /**
+     * Update the dislay of the toolbar's scrollbar
+     */
     public void updateDisplay() {
         boolean scrollToDisable = true;
         for (Shape s : Toolbar.getInstance().getShapes()) {
