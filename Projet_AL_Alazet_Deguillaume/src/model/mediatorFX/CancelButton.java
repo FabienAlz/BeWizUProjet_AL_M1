@@ -3,9 +3,9 @@ package model.mediatorFX;
 import model.Canvas;
 import model.Component;
 import model.Shape;
-import view.EditorView;
+import view.EditorViewFX;
 import view.Mediator;
-import view.View;
+import view.ViewFX;
 import java.util.Map;
 
 public class CancelButton extends javafx.scene.control.Button implements Component {
@@ -31,15 +31,15 @@ public class CancelButton extends javafx.scene.control.Button implements Compone
      */
     private void cancelButtonHandler() {
         setOnAction(e -> {
-            if (EditorView.getInstance().getShapeSaves().size() != 0) {
-                Map.Entry<Long, Shape> entry = EditorView.getInstance().getShapeSaves().entrySet().iterator().next();
+            if (EditorViewFX.getInstance().getShapeSaves().size() != 0) {
+                Map.Entry<Long, Shape> entry = EditorViewFX.getInstance().getShapeSaves().entrySet().iterator().next();
                 Long key = entry.getKey();
-                Shape shapeToRevert = EditorView.getInstance().getShapeSaves().get(key);
+                Shape shapeToRevert = EditorViewFX.getInstance().getShapeSaves().get(key);
                 Canvas.getInstance().getShapes().remove(Canvas.getInstance().getShape(key));
                 Canvas.getInstance().getShapes().add(shapeToRevert);
             }
             Canvas.getInstance().resetSelection();
-            View.getInstance().getCanvas().getChildren().clear();
+            ViewFX.getInstance().getCanvas().getChildren().clear();
             Canvas.getInstance().notifyAllShapes();
         });
     }

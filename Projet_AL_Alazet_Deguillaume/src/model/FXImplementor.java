@@ -3,7 +3,6 @@ package model;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -11,10 +10,10 @@ import javafx.stage.Popup;
 import javafx.stage.Stage;
 import model.mediatorFX.*;
 import model.mediatorFX.ContextMenu;
-import org.w3c.dom.ls.LSOutput;
 import utils.FXContextMenuHandlers;
 import utils.FXMouseHandlers;
-import view.View;
+import view.Originator;
+import view.ViewFX;
 
 import java.io.*;
 import java.util.*;
@@ -71,7 +70,7 @@ public final class FXImplementor implements Implementor, Serializable {
     }
 
     public javafx.scene.control.ContextMenu getContextMenu() {
-        return View.getInstance().getContextMenu();
+        return ViewFX.getInstance().getContextMenu();
     }
 
     public Shape getLastSelected() {
@@ -94,7 +93,7 @@ public final class FXImplementor implements Implementor, Serializable {
      * Initializes the javafx application
      */
     public void initializeFX() {
-        View mediator = View.getInstance();
+        ViewFX mediator = ViewFX.getInstance();
 
         mediator.registerComponent(new SaveButton("", "ressources/ico/save.png"));
         mediator.registerComponent(new LoadButton("", "ressources/ico/load.png"));
@@ -118,11 +117,11 @@ public final class FXImplementor implements Implementor, Serializable {
     public void initializeFXImplementor(Stage primaryStage) {
         SHAPES = new HashMap<>();
         BORDER_COLOR = new Color(68.0 / 255, 114.0 / 255, 196.0 / 255, 1);
-        toolBar = View.getInstance().getToolbar();
-        toolBarWrapper = View.getInstance().getToolbarWrapper();
-        canvas = View.getInstance().getCanvas();
-        bin = View.getInstance().getBin();
-        popup = View.getInstance().getPopup();
+        toolBar = ViewFX.getInstance().getToolbar();
+        toolBarWrapper = ViewFX.getInstance().getToolbarWrapper();
+        canvas = ViewFX.getInstance().getCanvas();
+        bin = ViewFX.getInstance().getBin();
+        popup = ViewFX.getInstance().getPopup();
         stage = primaryStage;
     }
 
@@ -135,7 +134,7 @@ public final class FXImplementor implements Implementor, Serializable {
      */
 
     public void start(Stage primaryStage) throws Exception {
-        View.getInstance().createGUI(primaryStage);
+        ViewFX.getInstance().createGUI(primaryStage);
         initializeFXImplementor(primaryStage);
 
         File load = new File("ressources/saves/autosave.ser");
@@ -175,8 +174,8 @@ public final class FXImplementor implements Implementor, Serializable {
                 c.printStackTrace();
                 return;
             }
-            View.getInstance().saveState();
-            View.getInstance().getToolbar().updateDisplay();
+            Originator.getInstance().saveState();
+            ViewFX.getInstance().getToolbar().updateDisplay();
         }
 
         primaryStage.setOnCloseRequest(event -> {

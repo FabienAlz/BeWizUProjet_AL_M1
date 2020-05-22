@@ -1,9 +1,9 @@
 package model.mediatorFX;
 
 import model.*;
-import view.EditorView;
+import view.EditorViewFX;
 import view.Mediator;
-import view.View;
+import view.ViewFX;
 
 public class ApplyButton extends ValidateButton implements Component {
     private Mediator mediator;
@@ -31,9 +31,9 @@ public class ApplyButton extends ValidateButton implements Component {
             for (Shape s : Canvas.getInstance().getShapes()) {
                 if (s.isSelected()) {
                     editShape(s);
-                    View.getInstance().getCanvas().getChildren().clear();
+                    ViewFX.getInstance().getCanvas().getChildren().clear();
                     Canvas.getInstance().notifyAllShapes();
-                    View.getInstance().getCanvas().getChildren().add(EditorView.getInstance().getGridPane());
+                    ViewFX.getInstance().getCanvas().getChildren().add(EditorViewFX.getInstance().getGridPane());
                 }
             }
         });

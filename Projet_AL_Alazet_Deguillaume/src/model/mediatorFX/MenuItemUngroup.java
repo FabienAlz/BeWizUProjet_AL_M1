@@ -3,7 +3,8 @@ package model.mediatorFX;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import model.*;
-import view.View;
+import view.Originator;
+import view.ViewFX;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +45,9 @@ public class MenuItemUngroup extends MenuItem {
                 for (Shape s : shapesToAdd) {
                     Canvas.getInstance().add(s);
                 }
-                View.getInstance().getCanvas().getChildren().clear();
+                ViewFX.getInstance().getCanvas().getChildren().clear();
                 Canvas.getInstance().notifyAllShapes();
-                View.getInstance().saveState();
+                Originator.getInstance().saveState();
 
             }
         });

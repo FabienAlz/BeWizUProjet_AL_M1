@@ -4,7 +4,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.*;
 import view.Mediator;
-import view.View;
+import view.Originator;
+import view.ViewFX;
 import java.io.*;
 import java.util.List;
 
@@ -49,9 +50,9 @@ public class LoadButton extends Button {
                         Canvas.getInstance().getShapes().clear();
                         Toolbar.getInstance().getShapes().clear();
                         Toolbar.getInstance().resetPosition();
-                        View.getInstance().getCanvas().getChildren().clear();
-                        View.getInstance().getToolbar().getChildren().clear();
-                        View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
+                        ViewFX.getInstance().getCanvas().getChildren().clear();
+                        ViewFX.getInstance().getToolbar().getChildren().clear();
+                        ViewFX.getInstance().getToolbar().setPrefHeight(ViewFX.getInstance().TOOLBAR_HEIGHT);
 
                         ShapeObserver obs = new ConcreteShapeObserver();
                         for (Shape s : loadShapes) {
@@ -81,7 +82,7 @@ public class LoadButton extends Button {
                         c.printStackTrace();
                         return;
                     }
-                    View.getInstance().saveState();
+                    Originator.getInstance().saveState();
                 }
             }
         });

@@ -3,7 +3,8 @@ package model.mediatorFX;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import model.*;
-import view.View;
+import view.Originator;
+import view.ViewFX;
 
 public class MenuItemGroup extends MenuItem {
 
@@ -24,13 +25,13 @@ public class MenuItemGroup extends MenuItem {
                     compoundShape.add(s);
                 }
                 for (Shape s : compoundShape.getShapes()) {
-                    View.getInstance().getCanvas().getChildren().remove(FXImplementor.getInstance().getSHAPES().get(s.getId()));
+                    ViewFX.getInstance().getCanvas().getChildren().remove(FXImplementor.getInstance().getSHAPES().get(s.getId()));
                 }
 
                 ShapeObserver obs = new ConcreteShapeObserver();
                 compoundShape.addObserver(obs);
                 Canvas.getInstance().addAndNotify(compoundShape);
-                View.getInstance().saveState();
+                Originator.getInstance().saveState();
             }
         });
     }

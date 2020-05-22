@@ -4,11 +4,11 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.paint.Color;
 import model.*;
-import view.EditorView;
-import view.View;
+import view.EditorViewFX;
+import view.ViewFX;
 
 public class MenuItemEdit extends MenuItem {
-    EditorView mediator;
+    EditorViewFX mediator;
 
     public MenuItemEdit(String text) {
         super(text);
@@ -22,15 +22,15 @@ public class MenuItemEdit extends MenuItem {
         setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                mediator = EditorView.getInstance();
-                EditorView.getInstance().getShapeSaves().clear();
+                mediator = EditorViewFX.getInstance();
+                EditorViewFX.getInstance().getShapeSaves().clear();
 
                 for (Shape shape : Canvas.getInstance().getShapes()) {
                     if (!(shape instanceof CompoundShape) && shape.isSelected()) {
                         Canvas.getInstance().resetSelection();
                         FXImplementor.getInstance().getLastSelected().setSelected(true);
-                        View.getInstance().getCanvas().getChildren().clear();
-                        View.getInstance().getCanvas().getChildren().add(FXImplementor.getInstance().getLastFXSelected());
+                        ViewFX.getInstance().getCanvas().getChildren().clear();
+                        ViewFX.getInstance().getCanvas().getChildren().add(FXImplementor.getInstance().getLastFXSelected());
                         Canvas.getInstance().notifyAllShapes();
                     }
                 }
@@ -40,7 +40,7 @@ public class MenuItemEdit extends MenuItem {
                     if (shape.isSelected()) s = shape;
                 }
                 if (s.isSelected()) {
-                    EditorView.getInstance().getShapeSaves().put(s.getId(), s.clone());
+                    EditorViewFX.getInstance().getShapeSaves().put(s.getId(), s.clone());
                     if (s instanceof Rectangle) {
                         createRectangleEditor(s);
 

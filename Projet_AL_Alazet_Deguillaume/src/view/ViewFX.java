@@ -16,9 +16,9 @@ import java.util.List;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-public final class View implements Mediator {
+public final class ViewFX implements Mediator {
 
-    private static View instance;
+    private static ViewFX instance;
     private Popup popup;
     private SaveButton save;
     private LoadButton load;
@@ -146,24 +146,12 @@ public final class View implements Mediator {
     }
 
     /**
-     * Saves the state of the application
-     */
-    public void saveState() {
-        Caretaker.getInstance().remove();
-        List<Shape> savedShapes = new ArrayList<>();
-        savedShapes.addAll(Canvas.getInstance().getShapes());
-        savedShapes.addAll(Toolbar.getInstance().getShapes());
-        Memento m = new Memento(savedShapes);
-        Caretaker.getInstance().add(m);
-    }
-
-    /**
      * Singleton pattern
      * @returns a new View if it's the first time it's called, the previously created instance otherwise
      */
-    public static View getInstance() {
+    public static ViewFX getInstance() {
         if (instance == null) {
-            instance = new View();
+            instance = new ViewFX();
         }
         return instance;
     }

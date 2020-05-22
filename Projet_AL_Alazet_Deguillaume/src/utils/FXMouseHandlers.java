@@ -5,7 +5,7 @@ import javafx.scene.input.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import model.*;
-import view.View;
+import view.ViewFX;
 
 /**
  * This class contains all the mouse handlers used by the implementor
@@ -106,13 +106,13 @@ public class FXMouseHandlers {
             if(posX < 0) {
                 posX = 0;
             }
-            else if(posX > View.getInstance().getCanvas().getWidth()) {
-                posX = View.getInstance().getCanvas().getWidth();
+            else if(posX > ViewFX.getInstance().getCanvas().getWidth()) {
+                posX = ViewFX.getInstance().getCanvas().getWidth();
             }
             if(posY < 0) {
                 posY = 0;
-            } else if(posY > View.getInstance().getCanvas().getHeight()) {
-                posY = View.getInstance().getCanvas().getHeight();
+            } else if(posY > ViewFX.getInstance().getCanvas().getHeight()) {
+                posY = ViewFX.getInstance().getCanvas().getHeight();
             }
             if (FXShape instanceof Rectangle) {
                 Position firstPos = Canvas.getInstance().getStartSelectPos();
@@ -164,13 +164,13 @@ public class FXMouseHandlers {
                     double posY = mouseEvent.getY();
                     if (posX < 0) {
                         posX = 0;
-                    } else if (posX > View.getInstance().getCanvas().getWidth()) {
-                        posX = View.getInstance().getCanvas().getWidth();
+                    } else if (posX > ViewFX.getInstance().getCanvas().getWidth()) {
+                        posX = ViewFX.getInstance().getCanvas().getWidth();
                     }
                     if (posY < 0) {
                         posY = 0;
-                    } else if (posY > View.getInstance().getCanvas().getHeight()) {
-                        posY = View.getInstance().getCanvas().getHeight();
+                    } else if (posY > ViewFX.getInstance().getCanvas().getHeight()) {
+                        posY = ViewFX.getInstance().getCanvas().getHeight();
                     }
                     Position secondPos = new Position(posX, posY);
                     for (Shape s : Canvas.getInstance().getShapes()) {

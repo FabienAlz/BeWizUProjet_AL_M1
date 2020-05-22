@@ -2,7 +2,8 @@ package test;
 
 import junit.framework.TestCase;
 import model.*;
-import view.View;
+import view.Originator;
+import view.ViewFX;
 
 public class Test extends TestCase {
     Canvas canvas = Canvas.getInstance();
@@ -64,7 +65,7 @@ public class Test extends TestCase {
         polygon.addObserver(observer);
         canvas.add(rectangle);
         canvas.add(polygon);
-        View.getInstance().saveState();
+        Originator.getInstance().saveState();
 
         // Checks that you can't get a momento that doesn't exist
         boolean thrown = false;
@@ -100,7 +101,7 @@ public class Test extends TestCase {
 
         Polygon polygon2 = new Polygon(new CanvasPosition(0,0), 0, new Translation(0,0), "#4472c4", 5, 100, implementor);
         canvas.add(polygon2);
-        View.getInstance().saveState();
+        Originator.getInstance().saveState();
 
         // Checks if the current saved state contains the same things that the current canvas
         assertEquals(1, caretaker.getCurrent());

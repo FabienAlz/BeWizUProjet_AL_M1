@@ -5,7 +5,7 @@ import javafx.scene.input.DragEvent;
 import model.*;
 import utils.FXDragAndDropHandlers;
 import view.Mediator;
-import view.View;
+import view.ViewFX;
 
 public class FXToolbar extends javafx.scene.layout.Pane implements Component {
     private Mediator mediator;
@@ -30,28 +30,28 @@ public class FXToolbar extends javafx.scene.layout.Pane implements Component {
         for (Shape s : Toolbar.getInstance().getShapes()) {
             float ratio;
             if (s instanceof Polygon) {
-                ratio = (float) (s.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 35));
-            } else ratio = (float) (s.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
+                ratio = (float) (s.getWidth() / (ViewFX.getInstance().getToolbar().getPrefWidth() - 35));
+            } else ratio = (float) (s.getWidth() / (ViewFX.getInstance().getToolbar().getPrefWidth() - 24));
             if (s instanceof Rectangle) {
-                if (s.getRotation() == 90 && View.getInstance().getToolbar().getHeight() < s.getPositionI().getY() + ((Rectangle) s).getAppearingHeight()) {
-                    View.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (((Rectangle) s).getAppearingHeight())+10);
+                if (s.getRotation() == 90 && ViewFX.getInstance().getToolbar().getHeight() < s.getPositionI().getY() + ((Rectangle) s).getAppearingHeight()) {
+                    ViewFX.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (((Rectangle) s).getAppearingHeight())+10);
                     scrollToDisable = false;
-                } else if (View.getInstance().getToolbar().getHeight() < s.getPositionI().getY() + ((Rectangle) s).getAppearingHeight() / ratio) {
-                    View.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (((Rectangle) s).getAppearingHeight() / ratio)+10);
+                } else if (ViewFX.getInstance().getToolbar().getHeight() < s.getPositionI().getY() + ((Rectangle) s).getAppearingHeight() / ratio) {
+                    ViewFX.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (((Rectangle) s).getAppearingHeight() / ratio)+10);
                     scrollToDisable = false;
                 }
             } else if (s instanceof CompoundShape) {
-                if (View.getInstance().getToolbar().getHeight() < Toolbar.getInstance().getNextPosition().getY()) {
-                    View.getInstance().getToolbar().setPrefHeight(Toolbar.getInstance().getNextPosition().getY());
+                if (ViewFX.getInstance().getToolbar().getHeight() < Toolbar.getInstance().getNextPosition().getY()) {
+                    ViewFX.getInstance().getToolbar().setPrefHeight(Toolbar.getInstance().getNextPosition().getY());
                     scrollToDisable = false;
                 }
-            } else if (View.getInstance().getToolbar().getHeight() < s.getPositionI().getY() + s.getHeight() / ratio) {
-                View.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (s.getHeight() / ratio));
+            } else if (ViewFX.getInstance().getToolbar().getHeight() < s.getPositionI().getY() + s.getHeight() / ratio) {
+                ViewFX.getInstance().getToolbar().setPrefHeight(s.getPositionI().getY() + (s.getHeight() / ratio));
                 scrollToDisable = false;
             }
         }
         if (scrollToDisable)
-            View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
+            ViewFX.getInstance().getToolbar().setPrefHeight(ViewFX.getInstance().TOOLBAR_HEIGHT);
     }
 
     /**

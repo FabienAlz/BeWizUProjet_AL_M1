@@ -6,7 +6,8 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import model.*;
 import model.Toolbar;
-import view.View;
+import view.Originator;
+import view.ViewFX;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,9 +55,9 @@ public class FXDragAndDropHandlers {
                             implementor.createToolbarCompoundShape((CompoundShape) copy);
                             copy.setPosition(new ToolbarPosition());
                             Toolbar.getInstance().add(copy);
-                            float ratio = (float) (copy.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
-                            if (View.getInstance().getToolbar().getHeight() < copy.getPositionI().getY() + copy.getHeight() / ratio) {
-                                View.getInstance().getToolbar().setPrefHeight(copy.getPositionI().getY() + (copy.getHeight() / ratio) + 10);
+                            float ratio = (float) (copy.getWidth() / (ViewFX.getInstance().getToolbar().getPrefWidth() - 24));
+                            if (ViewFX.getInstance().getToolbar().getHeight() < copy.getPositionI().getY() + copy.getHeight() / ratio) {
+                                ViewFX.getInstance().getToolbar().setPrefHeight(copy.getPositionI().getY() + (copy.getHeight() / ratio) + 10);
                             }
                         } else {
                             copy.setPosition(new ToolbarPosition());
@@ -85,7 +86,7 @@ public class FXDragAndDropHandlers {
                 }
             }
             success = true;
-            View.getInstance().saveState();
+            Originator.getInstance().saveState();
         }
         /* let the source know whether the string was successfully
          * transferred and used */
@@ -93,7 +94,7 @@ public class FXDragAndDropHandlers {
         implementor.getCanvas().getChildren().clear();
         Canvas.getInstance().resetSelection();
         Canvas.getInstance().notifyAllShapes();
-        View.getInstance().getToolbar().updateDisplay();
+        ViewFX.getInstance().getToolbar().updateDisplay();
         dragEvent.consume();
     }
 
@@ -197,7 +198,7 @@ public class FXDragAndDropHandlers {
             }
 
             success = true;
-            View.getInstance().saveState();
+            Originator.getInstance().saveState();
 
         }
         /* let the source know whether the string was successfully
@@ -312,23 +313,23 @@ public class FXDragAndDropHandlers {
             else {
                 Shape original = Toolbar.getInstance().getShape(id);
 
-                float ratio = (float) (original.getWidth() / (View.getInstance().getToolbar().getPrefWidth() - 24));
+                float ratio = (float) (original.getWidth() / (ViewFX.getInstance().getToolbar().getPrefWidth() - 24));
                 if (original instanceof Rectangle) {
-                    if (original.getRotation() == 90 && (View.getInstance().getToolbar().getPrefHeight() - (((Rectangle) original).getAppearingHeight())) < View.getInstance().TOOLBAR_HEIGHT)
-                        View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
+                    if (original.getRotation() == 90 && (ViewFX.getInstance().getToolbar().getPrefHeight() - (((Rectangle) original).getAppearingHeight())) < ViewFX.getInstance().TOOLBAR_HEIGHT)
+                        ViewFX.getInstance().getToolbar().setPrefHeight(ViewFX.getInstance().TOOLBAR_HEIGHT);
                     else if (original.getRotation() == 90)
-                        View.getInstance().getToolbar().setPrefHeight(View.getInstance().getToolbar().getPrefHeight() - (((Rectangle) original).getAppearingHeight()) +10 );
+                        ViewFX.getInstance().getToolbar().setPrefHeight(ViewFX.getInstance().getToolbar().getPrefHeight() - (((Rectangle) original).getAppearingHeight()) +10 );
                     else {
-                        if ((View.getInstance().getToolbar().getPrefHeight() - (((Rectangle) original).getAppearingHeight() / ratio)) < View.getInstance().TOOLBAR_HEIGHT)
-                            View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
-                            else  View.getInstance().getToolbar().setPrefHeight(View.getInstance().getToolbar().getPrefHeight() - (((Rectangle) original).getAppearingHeight() / ratio) +10 );
+                        if ((ViewFX.getInstance().getToolbar().getPrefHeight() - (((Rectangle) original).getAppearingHeight() / ratio)) < ViewFX.getInstance().TOOLBAR_HEIGHT)
+                            ViewFX.getInstance().getToolbar().setPrefHeight(ViewFX.getInstance().TOOLBAR_HEIGHT);
+                            else  ViewFX.getInstance().getToolbar().setPrefHeight(ViewFX.getInstance().getToolbar().getPrefHeight() - (((Rectangle) original).getAppearingHeight() / ratio) +10 );
                     }
                 }
-                else if(View.getInstance().getToolbar().getHeight() > View.getInstance().TOOLBAR_HEIGHT) {
-                    if((View.getInstance().getToolbar().getPrefHeight() - (original.getHeight() / ratio)) < View.getInstance().TOOLBAR_HEIGHT)
-                           View.getInstance().getToolbar().setPrefHeight(View.getInstance().TOOLBAR_HEIGHT);
+                else if(ViewFX.getInstance().getToolbar().getHeight() > ViewFX.getInstance().TOOLBAR_HEIGHT) {
+                    if((ViewFX.getInstance().getToolbar().getPrefHeight() - (original.getHeight() / ratio)) < ViewFX.getInstance().TOOLBAR_HEIGHT)
+                           ViewFX.getInstance().getToolbar().setPrefHeight(ViewFX.getInstance().TOOLBAR_HEIGHT);
                     else
-                           View.getInstance().getToolbar().setPrefHeight(View.getInstance().getToolbar().getPrefHeight() - (original.getHeight() / ratio) - 10);
+                           ViewFX.getInstance().getToolbar().setPrefHeight(ViewFX.getInstance().getToolbar().getPrefHeight() - (original.getHeight() / ratio) - 10);
                 }
 
                 Toolbar.getInstance().remove(original);
@@ -338,7 +339,7 @@ public class FXDragAndDropHandlers {
             }
 
             success = true;
-            View.getInstance().saveState();
+            Originator.getInstance().saveState();
 
         }
         /* let the source know whether the string was successfully

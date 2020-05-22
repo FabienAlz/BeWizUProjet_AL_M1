@@ -2,7 +2,8 @@ package model.mediatorFX;
 
 import model.*;
 import view.Mediator;
-import view.View;
+import view.Originator;
+import view.ViewFX;
 
 public class OkButton extends ValidateButton implements Component {
     private Mediator mediator;
@@ -31,11 +32,11 @@ public class OkButton extends ValidateButton implements Component {
                 if (s.isSelected()) {
                     editShape(s);
                     Canvas.getInstance().resetSelection();
-                    View.getInstance().getCanvas().getChildren().clear();
+                    ViewFX.getInstance().getCanvas().getChildren().clear();
                     Canvas.getInstance().notifyAllShapes();
                 }
             }
-            View.getInstance().saveState();
+            Originator.getInstance().saveState();
         });
     }
 }

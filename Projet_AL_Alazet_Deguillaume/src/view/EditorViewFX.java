@@ -8,11 +8,10 @@ import model.mediatorFX.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class EditorView implements Mediator {
-
+public final class EditorViewFX implements Mediator {
 
     private Map<Long, Shape> shapeSaves = new HashMap<>();
-    private static EditorView instance;
+    private static EditorViewFX instance;
     private GridPane gridPane;
     private ColorPicker colorPicker;
     private OkButton ok;
@@ -114,7 +113,7 @@ public final class EditorView implements Mediator {
         gridPane.add(hbValues, 0, 1);
         gridPane.add(hbButtons, 0, 2);
         gridPane.setStyle("-fx-background-color: #FFFFFF");
-        View.getInstance().getCanvas().getChildren().addAll(gridPane);
+        ViewFX.getInstance().getCanvas().getChildren().addAll(gridPane);
     }
 
     /**
@@ -122,9 +121,9 @@ public final class EditorView implements Mediator {
      *
      * @return a new EditorView if it's the first time it's called, the previously created instance otherwise
      */
-    public static EditorView getInstance() {
+    public static EditorViewFX getInstance() {
         if (instance == null) {
-            instance = new EditorView();
+            instance = new EditorViewFX();
         }
         return instance;
     }

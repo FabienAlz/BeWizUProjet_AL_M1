@@ -4,7 +4,8 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import model.*;
 import model.Toolbar;
-import view.View;
+import view.Originator;
+import view.ViewFX;
 
 public class Main extends Application {
     Implementor implementor;
@@ -41,7 +42,7 @@ public class Main extends Application {
         ((FXImplementor)implementor).initializeFX();
         ((FXImplementor)implementor).start(primaryStage);
         //initialize();
-        View.getInstance().saveState();
+        Originator.getInstance().saveState();
     }
 
 
