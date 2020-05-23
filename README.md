@@ -17,7 +17,29 @@ Nous avons utilisé certains des Patrons de Conception vus en cours que nous avo
 
 ## Prérequis
 
-L'application est une application JavaFX : vous aurez besoin des sources JavaFX pour la lancer (<a href="https://www.oracle.com/java/technologies/javase-jdk8-downloads.html">sdk 8</a> ou <a href="https://gluonhq.com/products/javafx/">javafx sdk</a>)
+<p>L'application est une application JavaFX : vous aurez besoin des sources JavaFX pour la lancer (<a href="https://www.oracle.com/java/technologies/javase-jdk8-downloads.html">sdk 8</a> ou <a href="https://gluonhq.com/products/javafx/">javafx sdk</a>).</p>
+
+Vous devez avoir cette configuration de fichiers afin de lancer l'application :
+<code>
+<ul>
+<li> resources <ul>
+    <li> saves <ul> 
+        <li> autosave.ser </li>
+        </ul>
+        </li>
+    <li> ico <ul>
+        <li> bin.png </li>
+        <li> ico.png </li>
+        <li> load.png </li>
+        <li> save.png </li>
+        <li> undo.png </li>
+        <li> redo.png </li>
+        </ul>
+        </li>
+</ul>
+<li> BeWizU.jar </li>
+</ul>
+</code>
 
 ## Lancer l'application
 
@@ -27,4 +49,4 @@ L'application est une application JavaFX : vous aurez besoin des sources JavaFX 
 
 ## Rapport
 
-Pour plus d'information sur le projet, consultez <a href="https://github.com/Peinturalo/BeWizUProjet_AL_M1/blob/master/rapport">notre rapport</a>.
+Pour plus d'information sur le projet, consultez <a href="https://github.com/Peinturalo/BeWizUProjet_AL_M1/blob/master/Projet_AL_Alazet_Deguillaume/rapport.pdf">notre rapport</a>.
