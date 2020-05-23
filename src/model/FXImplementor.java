@@ -350,6 +350,8 @@ public final class FXImplementor implements Implementor, Serializable {
                 ratio = (float) (s.getAppearingWidth() / (toolBarWrapper.getPrefWidth() - 36));
                 newShape.setWidth(s.getWidth() / ratio);
                 newShape.setHeight(s.getHeight() / ratio);
+                newShape.setArcHeight(s.getBorderRadius()/(ratio*2));
+                newShape.setArcWidth(s.getBorderRadius()/(ratio*2));
             }
             double radRotation = s.getRotation()%180 * Math.PI / 180;
             Position rotationCenter = new Position(s.getPositionI().getX() + s.getWidth()/(2 * ratio),
@@ -403,9 +405,7 @@ public final class FXImplementor implements Implementor, Serializable {
         newShape.setHeight(s.getHeight());
         newShape.setRotate(s.getRotation());
         newShape.setStrokeWidth(0);
-
         newShape.setX(s.getPositionI().getX() + (s.getPositionI().getX() - s.getTopLeft().getX()));
-
         newShape.setY(s.getPositionI().getY() + (s.getPositionI().getY() - s.getTopLeft().getY()));
         toolBar.getChildren().add(newShape);
         return newShape;
@@ -530,6 +530,7 @@ public final class FXImplementor implements Implementor, Serializable {
                 copy.setId();
                 copy.setWidth(shape.getWidth() / ratio);
                 copy.setHeight(shape.getHeight() / ratio);
+                copy.setBorderRadius(((Rectangle) shape).getBorderRadius()/ratio);
                 copy.setPosition(pos);
                 javafx.scene.shape.Rectangle rectangle = createToolbarCompoundRectangle(copy);
                 SHAPES.put(copy.getId(), rectangle);

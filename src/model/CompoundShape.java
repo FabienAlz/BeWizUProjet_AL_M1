@@ -230,8 +230,11 @@ public class CompoundShape extends AbstractShape implements Serializable {
         int i = 1;
         String color = "";
         color = shapes.get(0).getColor();
+        if (color.contains("0x")) {
+            color = color.substring(2,color.length()-2);
+        }
         while (i < shapes.size() && sameColor) {
-            if (color != shapes.get(i).getColor())
+            if (!shapes.get(i).getColor().contains(color))
                 sameColor = false;
             i++;
         }

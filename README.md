@@ -43,7 +43,7 @@ Vous devez avoir cette configuration de fichiers afin de lancer l'application :
 
 ## Lancer l'application
 
-<p>Si vous avez le <a href="https://www.oracle.com/java/technologies/javase-jdk8-downloads.html">sdk 8</a> pouvez lancer l'application en vous plaçant dans le dossier du fichier .jar et en utilisant la commande <code>java -jar BeWizU.jar</code> ou en double cliquant sur l'application.</p> 
+<p>Si vous avez le <a href="https://www.oracle.com/java/technologies/javase-jdk8-downloads.html">sdk 8</a> vous pouvez lancer l'application en vous plaçant dans le dossier du fichier .jar et en utilisant la commande <code>java -jar BeWizU.jar</code> ou en double cliquant sur l'application.</p> 
 
 <p>Si vous avec le <a href="https://gluonhq.com/products/javafx/">javafx sdk</a> vous pouvez lancer l'application en vous plaçant dans le dossier du fichier <code>.jar</code> et en utilisant la commande <code>java --module-path &lt;chemin vers javafx sdk&gt;\lib --add-modules javafx.controls,javafx.graphics,javafx.fxml -jar BeWizU.jar</code></p>
 

@@ -79,11 +79,6 @@ public class MenuItemEdit extends MenuItem {
         mediator.registerComponent(new Label("Height"));
         mediator.registerComponent(new Label("Border radius"));
         createSharedComponents(s);
-
-
-//        mediator.registerComponent(new TextField("Width"));
-//        mediator.registerComponent(new TextField("Height"));
-//        mediator.registerComponent(new TextField("Border radius"));
         if (s instanceof CompoundShape) {
             if (((CompoundShape) s).sameWidth())
                 mediator.registerComponent(new TextField("Width", String.valueOf(((CompoundShape) s).getShapes().get(0).getWidth())));
