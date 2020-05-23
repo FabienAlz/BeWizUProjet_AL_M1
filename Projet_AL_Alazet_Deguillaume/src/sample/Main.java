@@ -9,6 +9,9 @@ import view.Originator;
 public class Main extends Application {
     Implementor implementor;
 
+    /**
+     * Adds a Rectangle and a Polygon to the toolbar
+     */
     public void initialize() {
         Toolbar toolbar = Toolbar.getInstance();
         ShapeObserver obs = new ConcreteShapeObserver();
@@ -25,7 +28,7 @@ public class Main extends Application {
         implementor = FXImplementor.getInstance();
         ((FXImplementor) implementor).initializeFX();
         ((FXImplementor) implementor).start(primaryStage);
-        initialize();
+        //initialize();
         Originator.getInstance().saveState();
     }
 
