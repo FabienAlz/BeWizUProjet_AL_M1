@@ -138,7 +138,7 @@ public final class ViewFX implements Mediator {
         bin.toFront();
         concreteMenu.toFront();
         try {
-            primaryStage.getIcons().add(new Image(new FileInputStream("C:/Users/Shadow/Desktop/GL/AL/projet/BeWizUProjet_AL_M1/Projet_AL_Alazet_Deguillaume/ressources/ico/ico.png")));
+            primaryStage.getIcons().add(new Image(new FileInputStream("ressources/ico/ico.png")));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
