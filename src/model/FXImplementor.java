@@ -95,11 +95,11 @@ public final class FXImplementor implements Implementor, Serializable {
     public void initializeFX() {
         ViewFX mediator = ViewFX.getInstance();
 
-        mediator.registerComponent(new SaveButtonWithImage("", "ressources/ico/save.png"));
-        mediator.registerComponent(new LoadButtonWithImage("", "ressources/ico/load.png"));
-        mediator.registerComponent(new UndoButtonWithImage("", "ressources/ico/undo.png"));
-        mediator.registerComponent(new RedoButtonWithImage("", "ressources/ico/redo.png"));
-        mediator.registerComponent(new Bin("ressources/ico/bin.png"));
+        mediator.registerComponent(new SaveButtonWithImage("", "resources/ico/save.png"));
+        mediator.registerComponent(new LoadButtonWithImage("", "resources/ico/load.png"));
+        mediator.registerComponent(new UndoButtonWithImage("", "resources/ico/undo.png"));
+        mediator.registerComponent(new RedoButtonWithImage("", "resources/ico/redo.png"));
+        mediator.registerComponent(new Bin("resources/ico/bin.png"));
         mediator.registerComponent(new FXToolbar());
         mediator.registerComponent(new FXCanvas());
         mediator.registerComponent(new model.mediatorFX.Popup());
@@ -138,7 +138,7 @@ public final class FXImplementor implements Implementor, Serializable {
         ViewFX.getInstance().createGUI();
         initializeFXImplementor(primaryStage);
 
-        File load = new File("ressources/saves/autosave.ser");
+        File load = new File("resources/saves/autosave.ser");
         List<Shape> loadShapes = null;
         if (load.exists()) {
             loadFile(load);
@@ -147,7 +147,7 @@ public final class FXImplementor implements Implementor, Serializable {
         }
 
         primaryStage.setOnCloseRequest(event -> {
-            File file = new File("ressources/saves/autosave.ser");
+            File file = new File("resources/saves/autosave.ser");
             if (file != null) {
                 try {
                     FileOutputStream fileOut =

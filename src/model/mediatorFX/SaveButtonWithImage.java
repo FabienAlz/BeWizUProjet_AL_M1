@@ -39,7 +39,7 @@ public class SaveButtonWithImage extends ButtonWithImage {
     private void saveButtonHandler() {
         setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setInitialDirectory(new File("ressources/saves"));
+            fileChooser.setInitialDirectory(new File("resources/saves"));
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("ser files (*.ser)", "*.ser");
             fileChooser.getExtensionFilters().add(extFilter);
             File file = fileChooser.showSaveDialog(primaryStage);

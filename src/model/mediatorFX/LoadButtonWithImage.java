@@ -38,7 +38,7 @@ public class LoadButtonWithImage extends ButtonWithImage {
     private void loadButtonHandler() {
         setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setInitialDirectory(new File("ressources/saves"));
+            fileChooser.setInitialDirectory(new File("resources/saves"));
             File file = fileChooser.showOpenDialog(primaryStage);
             FXImplementor.getInstance().initializeFXImplementor(primaryStage);
 
