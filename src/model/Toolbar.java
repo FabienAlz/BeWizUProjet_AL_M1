@@ -19,7 +19,7 @@ public final class Toolbar {
     /**
      * Singleton Pattern
      *
-     * @return a new toolbar if it's the first time called, the previously created instance otherwise
+     * @return a new Toolbar if it's the first time called, the previously created instance otherwise
      */
     public static Toolbar getInstance() {
         if (instance == null)
@@ -73,7 +73,7 @@ public final class Toolbar {
     }
 
     /**
-     * Adds a Shape in the toolbar
+     * Adds a Shape in the Toolbar
      *
      * @param s the Shape to add
      */
@@ -82,7 +82,7 @@ public final class Toolbar {
     }
 
     /**
-     * Removes a Shape from the toolbar
+     * Removes a Shape from the Toolbar
      *
      * @param s the Shape to remove
      */
@@ -91,7 +91,7 @@ public final class Toolbar {
     }
 
     /**
-     * Clears the toolbar of all its Shapes and resets position of the next Shape
+     * Clears the Toolbar of all its Shapes and resets position of the next Shape
      */
     public void clear() {
         shapes.clear();
@@ -102,7 +102,7 @@ public final class Toolbar {
      * Checks if the Toolbar contains a Shape given its id
      *
      * @param id the id of the Shape
-     * @return true if the toolbar contains the Shape, false otherwise
+     * @return true if the Toolbar contains the Shape, false otherwise
      */
     public boolean contains(long id) {
         for (Shape s : shapes) {
@@ -112,7 +112,7 @@ public final class Toolbar {
     }
 
     /**
-     * Resets the position of the elements of te toolbar
+     * Resets the position of the elements of the Toolbar
      */
     public void resetPosition() {
         this.nextPosition = new ToolbarPosition(10, 10);

@@ -45,6 +45,7 @@ public interface Shape extends Cloneable {
     void setId();
 
 
+
     boolean isInside(Position startingPoint, Position arrival);
 
     boolean equals(Shape s);

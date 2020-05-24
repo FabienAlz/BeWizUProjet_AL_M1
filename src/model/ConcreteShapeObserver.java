@@ -1,9 +1,10 @@
 package model;
 
-public class ConcreteShapeObserver implements ShapeObserver{
+public class ConcreteShapeObserver implements ShapeObserver {
 
     /**
      * Draws the Shapes
+     *
      * @param o
      */
     @Override

@@ -27,10 +27,10 @@ public class RedoButtonWithImage extends ButtonWithImage {
         return "RedoButton";
     }
 
+    /**
+     * Redo the last undone action
+     */
     private void setRedoButtonHandler() {
-        /**
-         * Redo the last undone action
-         */
         setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {

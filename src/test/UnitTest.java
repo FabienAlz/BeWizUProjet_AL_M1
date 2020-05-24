@@ -67,7 +67,7 @@ public class UnitTest extends TestCase {
         canvas.add(polygon);
         Originator.getInstance().saveState();
 
-        // Checks that you can't get a momento that doesn't exist
+        // Checks that you can't get a Memento that doesn't exist
         boolean thrown = false;
 
         try {
@@ -103,7 +103,7 @@ public class UnitTest extends TestCase {
         canvas.add(polygon2);
         Originator.getInstance().saveState();
 
-        // Checks if the current saved state contains the same things that the current canvas
+        // Checks if the current saved state contains the same things that the current Canvas
         assertEquals(1, caretaker.getCurrent());
         i = 0;
         for(Shape s : canvas.getShapes()) {
@@ -112,7 +112,7 @@ public class UnitTest extends TestCase {
         }
         assertEquals(canvas.getShapes().size(), caretaker.get(1).getState().size());
 
-        // Checks if the old state is different than the current canvas
+        // Checks if the old state is different than the current Canvas
         assertFalse(canvas.getShapes().equals(caretaker.get(0).getState().size()));
 
         canvas.clear();

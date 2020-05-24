@@ -85,7 +85,7 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
      *
      * @param startingPoint
      * @param arrival
-     * @return
+     * @return if the Shape is inside a Rectangle
      */
     public abstract boolean isInside(Position startingPoint, Position arrival);
 
@@ -98,6 +98,12 @@ public abstract class AbstractShape extends ObservableSuperClass implements Shap
         return this;
     }
 
+    /**
+     * Compares this with o with their id
+     *
+     * @param o the object to compare this to
+     * @return if this is equal to o
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

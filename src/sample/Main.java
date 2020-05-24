@@ -28,6 +28,7 @@ public class Main extends Application {
         implementor = FXImplementor.getInstance();
         ((FXImplementor) implementor).initializeFX();
         ((FXImplementor) implementor).start(primaryStage);
+        /* Uncomment this function if you need to have a Rectangle and a Polygon in the Toolbar (if you're missing the autosave.ser file) */
         //initialize();
         Originator.getInstance().saveState();
     }

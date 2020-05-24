@@ -27,7 +27,7 @@ public class CancelButton extends javafx.scene.control.Button implements Compone
     }
 
     /**
-     * On click, revert all Shapes to their state at the opening of the editor, closes the editor and unselected all the selected Shapes
+     * On click, revert all Shapes to their state at the opening of the editor, closes the editor and unselects all the selected Shapes
      */
     private void cancelButtonHandler() {
         setOnAction(e -> {

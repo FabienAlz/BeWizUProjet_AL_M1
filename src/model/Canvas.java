@@ -45,7 +45,9 @@ public final class Canvas {
         return selection;
     }
 
-    public boolean getDragged() {return  dragged; }
+    public boolean getDragged() {
+        return dragged;
+    }
 
     public Shape getShape(long id) {
         for (Shape s : shapes) {
@@ -100,30 +102,16 @@ public final class Canvas {
     }
 
     /**
-     * Checks if the canvas contains a Shape given its id
+     * Checks if the Canvas contains a Shape given its id
      *
      * @param id the id of the Shape
-     * @return true if the Shape is in the canvas, false otherwise
+     * @return true if the Shape is in the Canvas, false otherwise
      */
     public boolean contains(long id) {
         for (Shape s : shapes) {
             if (s.getId() == id) return true;
         }
         return false;
-    }
-
-    /**
-     * Remove a Shape from the canvas given its id
-     *
-     * @param id the id of the Shape to remove
-     */
-    public void removeById(long id) {
-        for (Shape s : shapes) {
-            if (s.getId() == id) {
-                shapes.remove(s);
-                break;
-            }
-        }
     }
 
     /**
@@ -136,7 +124,7 @@ public final class Canvas {
     }
 
     /**
-     * Add a Shape in the canvas and notifies its observer
+     * Adds a Shape in the Canvas and notifies its observer
      *
      * @param s the Shape to add and notify
      */
@@ -146,7 +134,7 @@ public final class Canvas {
     }
 
     /**
-     * Adds a shape in the canvas
+     * Adds a shape in the Canvas
      *
      * @param s the Shape to add
      */
@@ -155,7 +143,7 @@ public final class Canvas {
     }
 
     /**
-     * Remove a Shape from the canvas
+     * Removes a Shape from the Canvas
      *
      * @param s the Shape to remove
      */
@@ -164,7 +152,7 @@ public final class Canvas {
     }
 
     /**
-     * Clears the canvas of all its Shapes
+     * Clears the Canvas of all its Shapes
      */
     public void clear() {
         shapes.clear();

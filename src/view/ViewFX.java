@@ -11,8 +11,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import model.*;
 import model.mediatorFX.*;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -41,6 +40,7 @@ public final class ViewFX implements Mediator {
 
     /**
      * Assigns component to the correct matching field
+     *
      * @param component
      */
     @Override
@@ -66,7 +66,7 @@ public final class ViewFX implements Mediator {
                 bin = (Bin) component;
                 break;
             case "FXMenu":
-                menu = (Menu)component;
+                menu = (Menu) component;
                 break;
             case "FXToolbar":
                 toolbar = (FXToolbar) component;
@@ -108,17 +108,17 @@ public final class ViewFX implements Mediator {
         concreteMenu.getItems().add(undo);
         concreteMenu.getItems().add(new Separator());
 
-        toolbar.setPrefSize(TOOLBAR_WIDTH,TOOLBAR_HEIGHT);
+        toolbar.setPrefSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT);
         toolbar.setStyle("-fx-background-color: #ebeee6");
         toolbar.setLayoutY(concreteMenu.getPrefHeight());
 
         toolbarWrapper = new ScrollPane(toolbar);
         toolbarWrapper.fitToWidthProperty().set(true);
-        toolbarWrapper.setPrefSize(TOOLBAR_WIDTH,TOOLBAR_HEIGHT+2);
+        toolbarWrapper.setPrefSize(TOOLBAR_WIDTH, TOOLBAR_HEIGHT + 2);
         toolbarWrapper.setStyle("-fx-background-color: #ebeee6");
         toolbarWrapper.setLayoutY(concreteMenu.getPrefHeight());
 
-        bin.setPrefSize(TOOLBAR_WIDTH+1,SCENE_HEIGHT - (MENU_HEIGHT + TOOLBAR_HEIGHT));
+        bin.setPrefSize(TOOLBAR_WIDTH + 1, SCENE_HEIGHT - (MENU_HEIGHT + TOOLBAR_HEIGHT));
         bin.setLayoutY(MENU_HEIGHT + TOOLBAR_HEIGHT);
         bin.setStyle("-fx-background-color: #ebeee6");
         bin.setAlignment(Pos.CENTER);
@@ -147,6 +147,7 @@ public final class ViewFX implements Mediator {
 
     /**
      * Singleton pattern
+     *
      * @returns a new View if it's the first time it's called, the previously created instance otherwise
      */
     public static ViewFX getInstance() {
@@ -176,7 +177,9 @@ public final class ViewFX implements Mediator {
         return canvas;
     }
 
-    public ScrollPane getToolbarWrapper() { return toolbarWrapper; }
+    public ScrollPane getToolbarWrapper() {
+        return toolbarWrapper;
+    }
 
     public ContextMenu getContextMenu() {
         return contextMenu;

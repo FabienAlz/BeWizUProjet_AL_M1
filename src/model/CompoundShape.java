@@ -136,7 +136,7 @@ public class CompoundShape extends AbstractShape implements Serializable {
      *
      * @param startingPoint
      * @param arrival
-     * @return
+     * @return true if the Shape is inside a Rectangle, false otherwise
      */
     public boolean isInside(Position startingPoint, Position arrival) {
         for (Shape s : shapes) {
@@ -150,11 +150,12 @@ public class CompoundShape extends AbstractShape implements Serializable {
      * Compares a Shape with this CompoundShape using the Shapes they're composed of
      *
      * @param s the Shape to compare
-     * @return
+     * @return true if this equals s, false otherwise
      */
     @Override
     public boolean equals(Shape s) {
         if (s instanceof CompoundShape) {
+            if(shapes.size() != ((CompoundShape) s).getShapes().size()) return false;
             for (int index = 0; index < shapes.size(); index++) {
                 if (!shapes.get(index).equals(((CompoundShape) s).getShapes().get(index))) {
                     return false;
@@ -204,7 +205,7 @@ public class CompoundShape extends AbstractShape implements Serializable {
     }
 
     /**
-     * Clones this CompoundShape and deep copies its shapes
+     * Clones this CompoundShape and deep copies its Shapes
      *
      * @return a copy of this CompoundShape
      */
@@ -223,7 +224,7 @@ public class CompoundShape extends AbstractShape implements Serializable {
     /**
      * Checks if all the subshapes have the same color
      *
-     * @return the result of the test
+     * @return true if the subshapes have the same color, false otherwise
      */
     public boolean sameColor() {
         boolean sameColor = true;
@@ -244,7 +245,7 @@ public class CompoundShape extends AbstractShape implements Serializable {
     /**
      * Checks if all the subshapes have the same rotation
      *
-     * @return the result of the test
+     * @return true if the subshapes have the same rotation, false otherwise
      */
     public boolean sameRotation() {
         boolean sameRotation = true;
@@ -262,7 +263,7 @@ public class CompoundShape extends AbstractShape implements Serializable {
     /**
      * Checks if all the subshapes have the same width (Rectangles only)
      *
-     * @return the result of the test
+     * @return true if the subshapes have the same width, false otherwise
      */
     public boolean sameWidth() {
         boolean isRectangle = true;
@@ -282,7 +283,7 @@ public class CompoundShape extends AbstractShape implements Serializable {
     /**
      * Checks if all the subshapes have the same height (Rectangles only)
      *
-     * @return the result of the test
+     * @return true if the subshapes have the same height, false otherwise
      */
     public boolean sameHeight() {
         boolean isRectangle = true;
@@ -302,7 +303,7 @@ public class CompoundShape extends AbstractShape implements Serializable {
     /**
      * Checks if all the subshapes have the same border radius (Rectangles only)
      *
-     * @return the result of the test
+     * @return true if the subshapes have the same border radius, false otherwise
      */
     public boolean sameBorderRadius() {
         boolean isRectangle = true;
@@ -322,7 +323,7 @@ public class CompoundShape extends AbstractShape implements Serializable {
     /**
      * Checks if all the subshapes have the same number of edges (Polygon only)
      *
-     * @return the result of the test
+     * @return true if the subshapes have the same number of edges, false otherwise
      */
     public boolean sameEdges() {
         boolean isPolygon = true;
@@ -342,7 +343,7 @@ public class CompoundShape extends AbstractShape implements Serializable {
     /**
      * Checks if all the subshapes have the same length (Polygon only)
      *
-     * @return the result of the test
+     * @return true if the subshapes have the same length, false otherwise
      */
     public boolean sameLength() {
         boolean isPolygon = true;

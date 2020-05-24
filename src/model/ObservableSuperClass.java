@@ -25,7 +25,7 @@ public abstract class ObservableSuperClass implements Shape {
     public void notifyObserver() {
         Set<ShapeObserver> observersCp = new HashSet<>();
         observersCp.addAll(observers);
-        for(ShapeObserver so : observersCp) {
+        for (ShapeObserver so : observersCp) {
             so.update(this);
         }
     }

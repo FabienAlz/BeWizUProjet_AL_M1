@@ -1,7 +1,6 @@
 package view;
 
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 import model.*;
 import model.mediatorFX.*;
 
@@ -47,7 +46,6 @@ public final class EditorViewFX implements Mediator {
             case "TextField":
                 textFields.put(((TextField) component).getID(), (TextField) component);
                 break;
-
             case "GridPane":
                 gridPane = (GridPane) component;
                 break;
@@ -58,11 +56,12 @@ public final class EditorViewFX implements Mediator {
      * Unused
      */
     @Override
-    public void createGUI() { }
+    public void createGUI() {
+    }
 
 
     /**
-     * Puts all the FX components needed for the Rectangle (or Compound Shape of Rectangles) editor window together
+     * Puts all the FX components needed for the Rectangle (or CompoundShape of Rectangles) editor window together
      */
     public void createRectangleEditor() {
         HBox hbValues = new HBox();
@@ -74,7 +73,7 @@ public final class EditorViewFX implements Mediator {
     }
 
     /**
-     * Puts all the FX components needed for the Polygon (or Compound Shape of Polygon) editor window together
+     * Puts all the FX components needed for the Polygon (or CompoundShape of Polygon) editor window together
      */
     public void createPolygonEditor() {
         HBox hbValues = new HBox();
@@ -84,7 +83,7 @@ public final class EditorViewFX implements Mediator {
     }
 
     /**
-     * Puts all the FX components needed for the Compound Shape of both Polygons and Rectangles editor window together
+     * Puts all the FX components needed for the CompoundShape of both Polygons and Rectangles editor window together
      */
     public void createMixedEditor() {
         createSharedComponents(new HBox());

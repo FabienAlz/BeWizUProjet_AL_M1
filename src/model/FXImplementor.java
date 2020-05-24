@@ -40,6 +40,8 @@ public final class FXImplementor implements Implementor, Serializable {
 
     /**
      * Singleton pattern
+     *
+     * @return a new FXImplementor if it's the first time it's called, the previously created instance otherwise
      */
     public static FXImplementor getInstance() {
         if (instance == null) {

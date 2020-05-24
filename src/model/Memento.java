@@ -8,12 +8,12 @@ public class Memento {
 
     public Memento(List<Shape> state) {
         this.state = new ArrayList<>();
-        for(Shape s : state) {
+        for (Shape s : state) {
             this.state.add(s.clone());
         }
     }
 
-    public List<Shape>  getState() {
+    public List<Shape> getState() {
         return this.state;
     }
 }

@@ -8,6 +8,7 @@ import model.*;
 import model.Toolbar;
 import view.Originator;
 import view.ViewFX;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,25 +33,23 @@ public class FXDragAndDropHandlers {
      */
     public void toolbarOnDragDropped(DragEvent dragEvent) {
         /* data dropped */
-        /* if there is a string data on dragboard, read it and use it */
+        /* if there is a string data on dragboard, reads it and uses it */
         Dragboard db = dragEvent.getDragboard();
         boolean success = false;
         if (db.hasString()) {
             long id = Long.parseLong(db.getString());
-            // Checks if the event comes from the canvas
-            // If it's the case, add the shape in the toolbar
+            // Checks if the event comes from the Canvas
+            // If it's the case, adds the Shape in the Toolbar
             if (Canvas.getInstance().contains(id)) {
                 Shape original = Canvas.getInstance().getShape(id);
-                // If the original isn't selected, only adds it to the toolbar
+                // If the original isn't selected, only adds it to the Toolbar
                 if (!original.isSelected()) {
                     Shape copy = original.clone();
                     copy.setId();
-                    if(copy instanceof Rectangle) {
+                    if (copy instanceof Rectangle) {
                         copy.setPosition(new ToolbarPosition());
                         Toolbar.getInstance().addAndNotify(copy);
-
                     } else {
-
                         if (copy instanceof CompoundShape) {
                             implementor.createToolbarCompoundShape((CompoundShape) copy);
                             copy.setPosition(new ToolbarPosition());
@@ -65,7 +64,7 @@ public class FXDragAndDropHandlers {
                         }
                     }
                 }
-                // Adds all the selected shapes in the toolbar
+                // Adds all the selected Shapes in the Toolbar
                 else {
                     for (Shape s : Canvas.getInstance().getShapes()) {
                         if (s.isSelected()) {
@@ -76,8 +75,7 @@ public class FXDragAndDropHandlers {
                                 implementor.createToolbarCompoundShape((CompoundShape) copy);
                                 copy.setPosition(new ToolbarPosition());
                                 Toolbar.getInstance().add(copy);
-                            }
-                            else {
+                            } else {
                                 copy.setPosition(new ToolbarPosition());
                                 Toolbar.getInstance().addAndNotify(copy);
                             }
@@ -88,7 +86,7 @@ public class FXDragAndDropHandlers {
             success = true;
             Originator.getInstance().saveState();
         }
-        /* let the source know whether the string was successfully
+        /* lets the source know whether the string was successfully
          * transferred and used */
         dragEvent.setDropCompleted(success);
         implementor.getCanvas().getChildren().clear();
@@ -99,7 +97,7 @@ public class FXDragAndDropHandlers {
     }
 
     /**
-     * Shows the popup and move it according to the mouse
+     * Shows the popup and moves it according to the mouse
      *
      * @param dragEvent
      */
@@ -146,24 +144,24 @@ public class FXDragAndDropHandlers {
      ************************************************************/
 
     /**
-     * Handles the cases where something is dropped on the canvas
+     * Handles the cases where something is dropped on the Canvas
      *
      * @param dragEvent
      */
     public void canvasOnDragDropped(DragEvent dragEvent) {
         /* data dropped */
-        /* if there is a string data on dragboard, read it and use it */
+        /* if there is a string data on dragboard, reads it and uses it */
         Dragboard db = dragEvent.getDragboard();
         boolean success = false;
         if (db.hasString()) {
             long id = Long.parseLong(db.getString());
-            // If the shape comes from the canvas, changes its position
+            // If the Shape comes from the Canvas, changes its position
             if (Canvas.getInstance().contains(id)) {
 
                 Shape original = Canvas.getInstance().getShape(id);
 
-                double posX = dragEvent.getX() - original.getWidth()/2;
-                double posY = dragEvent.getY() - original.getHeight()/2;
+                double posX = dragEvent.getX() - original.getWidth() / 2;
+                double posY = dragEvent.getY() - original.getHeight() / 2;
                 if (original instanceof CompoundShape) {
                     posX -= original.getPositionI().getX();
                     posY -= original.getPositionI().getY();
@@ -178,13 +176,13 @@ public class FXDragAndDropHandlers {
                 }
 
             }
-            // If the shape comes from the toolbar, adds it to the canvas
+            // If the Shape comes from the Toolbar, adds it to the Canvas
             else {
                 Shape original = Toolbar.getInstance().getShape(id);
                 Shape copy = original.clone();
                 copy.setId();
-                double posX = dragEvent.getX() - original.getWidth()/2;
-                double posY = dragEvent.getY() - original.getHeight()/2;
+                double posX = dragEvent.getX() - original.getWidth() / 2;
+                double posY = dragEvent.getY() - original.getHeight() / 2;
                 if (original instanceof CompoundShape) {
                     posX -= original.getPositionI().getX();
                     posY -= original.getPositionI().getY();
@@ -201,7 +199,7 @@ public class FXDragAndDropHandlers {
             Originator.getInstance().saveState();
 
         }
-        /* let the source know whether the string was successfully
+        /* lets the source know whether the string was successfully
          * transferred and used */
         dragEvent.setDropCompleted(success);
         implementor.getCanvas().getChildren().clear();
@@ -269,10 +267,10 @@ public class FXDragAndDropHandlers {
         boolean success = false;
         if (db.hasString()) {
             long id = Long.parseLong(db.getString());
-            // Remove from canvas
+            // Removes from Canvas
             if (Canvas.getInstance().contains(id)) {
                 Shape original = Canvas.getInstance().getShape(id);
-                // Remove all the selected shapes
+                // Removes all the selected Shapes
                 if (original.isSelected()) {
                     List<Shape> selectedShapes = new ArrayList<>();
                     for (Shape s : Canvas.getInstance().getShapes()) {
@@ -294,7 +292,7 @@ public class FXDragAndDropHandlers {
                         }
                     }
                 }
-                // Remove only the original
+                // Removes only the original
                 else {
                     Canvas.getInstance().remove(original);
                     if (original instanceof CompoundShape) {
@@ -309,7 +307,7 @@ public class FXDragAndDropHandlers {
                     }
                 }
             }
-            // Remove from Toolbar
+            // Removes from Toolbar
             else {
                 Shape original = Toolbar.getInstance().getShape(id);
 
@@ -318,18 +316,18 @@ public class FXDragAndDropHandlers {
                     if (original.getRotation() == 90 && (ViewFX.getInstance().getToolbar().getPrefHeight() - (((Rectangle) original).getAppearingHeight())) < ViewFX.getInstance().TOOLBAR_HEIGHT)
                         ViewFX.getInstance().getToolbar().setPrefHeight(ViewFX.getInstance().TOOLBAR_HEIGHT);
                     else if (original.getRotation() == 90)
-                        ViewFX.getInstance().getToolbar().setPrefHeight(ViewFX.getInstance().getToolbar().getPrefHeight() - (((Rectangle) original).getAppearingHeight()) +10 );
+                        ViewFX.getInstance().getToolbar().setPrefHeight(ViewFX.getInstance().getToolbar().getPrefHeight() - (((Rectangle) original).getAppearingHeight()) + 10);
                     else {
                         if ((ViewFX.getInstance().getToolbar().getPrefHeight() - (((Rectangle) original).getAppearingHeight() / ratio)) < ViewFX.getInstance().TOOLBAR_HEIGHT)
                             ViewFX.getInstance().getToolbar().setPrefHeight(ViewFX.getInstance().TOOLBAR_HEIGHT);
-                            else  ViewFX.getInstance().getToolbar().setPrefHeight(ViewFX.getInstance().getToolbar().getPrefHeight() - (((Rectangle) original).getAppearingHeight() / ratio) +10 );
+                        else
+                            ViewFX.getInstance().getToolbar().setPrefHeight(ViewFX.getInstance().getToolbar().getPrefHeight() - (((Rectangle) original).getAppearingHeight() / ratio) + 10);
                     }
-                }
-                else if(ViewFX.getInstance().getToolbar().getHeight() > ViewFX.getInstance().TOOLBAR_HEIGHT) {
-                    if((ViewFX.getInstance().getToolbar().getPrefHeight() - (original.getHeight() / ratio)) < ViewFX.getInstance().TOOLBAR_HEIGHT)
-                           ViewFX.getInstance().getToolbar().setPrefHeight(ViewFX.getInstance().TOOLBAR_HEIGHT);
+                } else if (ViewFX.getInstance().getToolbar().getHeight() > ViewFX.getInstance().TOOLBAR_HEIGHT) {
+                    if ((ViewFX.getInstance().getToolbar().getPrefHeight() - (original.getHeight() / ratio)) < ViewFX.getInstance().TOOLBAR_HEIGHT)
+                        ViewFX.getInstance().getToolbar().setPrefHeight(ViewFX.getInstance().TOOLBAR_HEIGHT);
                     else
-                           ViewFX.getInstance().getToolbar().setPrefHeight(ViewFX.getInstance().getToolbar().getPrefHeight() - (original.getHeight() / ratio) - 10);
+                        ViewFX.getInstance().getToolbar().setPrefHeight(ViewFX.getInstance().getToolbar().getPrefHeight() - (original.getHeight() / ratio) - 10);
                 }
 
                 Toolbar.getInstance().remove(original);
@@ -342,7 +340,7 @@ public class FXDragAndDropHandlers {
             Originator.getInstance().saveState();
 
         }
-        /* let the source know whether the string was successfully
+        /* lets the source know whether the string was successfully
          * transferred and used */
         dragEvent.setDropCompleted(success);
         implementor.getCanvas().getChildren().clear();
@@ -367,7 +365,7 @@ public class FXDragAndDropHandlers {
     }
 
     /**
-     * Puts back the opacity of the bin
+     * Reverts the opacity of the bin
      *
      * @param dragEvent
      */
@@ -385,7 +383,7 @@ public class FXDragAndDropHandlers {
     }
 
     /**
-     * Shows the popup and move it according to the mouse
+     * Shows the popup and moves it according to the mouse
      *
      * @param dragEvent
      */

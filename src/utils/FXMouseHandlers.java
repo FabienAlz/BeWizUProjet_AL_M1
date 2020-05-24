@@ -26,7 +26,7 @@ public class FXMouseHandlers {
      *                     COMMON HANDLERS                     *
      ***********************************************************/
     /**
-     * Changes the color of the shape the user has his mouse on
+     * Changes the color of the Shape the user has his mouse on
      */
     public void hoverColor(MouseEvent mouseEvent) {
         FXShape.setCursor(Cursor.HAND);
@@ -45,14 +45,14 @@ public class FXMouseHandlers {
     }
 
     /**
-     * Sets the color of the shape back when the mouse exits the shape
+     * Reverts the Shape color when the mouse exits the shape
      */
     public void setBackColor(MouseEvent mouseEvent) {
         FXShape.setFill(Color.valueOf(shape.getColor()));
     }
 
     /**
-     * Permits to add a stroke to the selected shapes
+     * Permits to add a stroke to the selected Shapes
      */
     public void selection(MouseEvent mouseEvent) {
         if (mouseEvent.getButton() == MouseButton.PRIMARY) {
@@ -71,7 +71,7 @@ public class FXMouseHandlers {
      *****************************************************/
 
     /**
-     * Initializes the selection rectangle
+     * Initializes the selection Rectangle
      */
     public void setGestureStarted(MouseEvent mouseEvent) {
         if (FXShape instanceof Rectangle) {
@@ -93,25 +93,24 @@ public class FXMouseHandlers {
     }
 
     /**
-     * Updates the selection rectangle to make it follow the mouse
+     * Updates the selection Rectangle to make it follow the mouse
      */
     public void updateSelectionRectangle(MouseEvent mouseEvent) {
         if (Canvas.getInstance().getSelection()) {
             Canvas.getInstance().setDragged(true);
-            if(FXShape.getStrokeWidth() == 0) {
+            if (FXShape.getStrokeWidth() == 0) {
                 FXShape.setStrokeWidth(2);
             }
             double posX = mouseEvent.getX();
             double posY = mouseEvent.getY();
-            if(posX < 0) {
+            if (posX < 0) {
                 posX = 0;
-            }
-            else if(posX > ViewFX.getInstance().getCanvas().getWidth()) {
+            } else if (posX > ViewFX.getInstance().getCanvas().getWidth()) {
                 posX = ViewFX.getInstance().getCanvas().getWidth();
             }
-            if(posY < 0) {
+            if (posY < 0) {
                 posY = 0;
-            } else if(posY > ViewFX.getInstance().getCanvas().getHeight()) {
+            } else if (posY > ViewFX.getInstance().getCanvas().getHeight()) {
                 posY = ViewFX.getInstance().getCanvas().getHeight();
             }
             if (FXShape instanceof Rectangle) {
@@ -152,10 +151,10 @@ public class FXMouseHandlers {
     }
 
     /**
-     * Selects the shapes inside the rectangle selection
+     * Selects the Shapes inside the rectangle selection
      */
     public void endSelection(MouseEvent mouseEvent) {
-        if(Canvas.getInstance().getDragged()) {
+        if (Canvas.getInstance().getDragged()) {
             if (FXShape instanceof Rectangle) {
                 if (Canvas.getInstance().getSelection()) {
                     Position firstPos = Canvas.getInstance().getStartSelectPos();

@@ -30,7 +30,7 @@ public class FXContextMenuHandlers {
      */
     public void manageContextMenu(ContextMenuEvent contextMenuEvent) {
         if (!shape.isSelected()) {
-            // Makes the shape selected and deselect the others
+            // Makes the Shape selected and deselects the others
             for (Shape s : Canvas.getInstance().getShapes()) {
                 if (s.isSelected()) {
                     s.setSelected(false);
@@ -38,10 +38,10 @@ public class FXContextMenuHandlers {
             }
             shape.setSelected(true);
             implementor.setLastSelected(shape, FXShape);
-            // Updates the canvas
+            // Updates the Canvas
             implementor.getCanvas().getChildren().clear();
             Canvas.getInstance().notifyAllShapes();
-            // Finds the new FXShape (with stroke) to bind with the context menu since the last one was destroyed
+            // Finds the new FXShape (with stroke) to bind with the ContextMenu since the last one was destroyed
             for (Node n : implementor.getCanvas().getChildren()) {
                 if (n.getClass() == FXShape.getClass()) {
                     if (n instanceof javafx.scene.shape.Rectangle) {

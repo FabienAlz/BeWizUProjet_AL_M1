@@ -33,7 +33,7 @@ public class LoadButtonWithImage extends ButtonWithImage {
     }
 
     /**
-     * On click, open a file chooser to pick a file. If the file is valid (not null and .ser extension) it will load its content
+     * On click, opens a file chooser to pick a file. If the file is valid (not null and .ser extension) it will load its content
      */
     private void loadButtonHandler() {
         setOnAction(e -> {
@@ -75,11 +75,8 @@ public class LoadButtonWithImage extends ButtonWithImage {
                         }
                         in.close();
                         fileIn.close();
-                    } catch (IOException i) {
+                    } catch (IOException | ClassNotFoundException i) {
                         i.printStackTrace();
-                        return;
-                    } catch (ClassNotFoundException c) {
-                        c.printStackTrace();
                         return;
                     }
                     Originator.getInstance().saveState();

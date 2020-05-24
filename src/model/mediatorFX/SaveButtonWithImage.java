@@ -34,7 +34,7 @@ public class SaveButtonWithImage extends ButtonWithImage {
     }
 
     /**
-     * On click, open a file chooser to name a file then saves the Toolbar and Canvas Shapes inside
+     * On click, opens a file chooser to name a file then saves the Toolbar and Canvas Shapes inside
      */
     private void saveButtonHandler() {
         setOnAction(e -> {
@@ -55,12 +55,8 @@ public class SaveButtonWithImage extends ButtonWithImage {
                     out.writeObject(shapesToSave);
                     out.close();
                     fileOut.close();
-                } catch (FileNotFoundException ex) {
+                } catch (IOException | NullPointerException ex) {
                     ex.printStackTrace();
-                } catch (IOException i) {
-                    i.printStackTrace();
-                } catch (NullPointerException np) {
-                    np.printStackTrace();
                 }
             }
         });

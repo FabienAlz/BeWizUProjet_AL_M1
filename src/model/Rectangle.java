@@ -13,7 +13,7 @@ public class Rectangle extends SingleShape implements Serializable {
     /**
      * Creates a Rectangle
      *
-     * @param position the position of the top-left corner of the rectangle
+     * @param position     the position of the top-left corner of the rectangle (without rotation)
      * @param rotation
      * @param translation
      * @param color
@@ -41,7 +41,7 @@ public class Rectangle extends SingleShape implements Serializable {
     }
 
     @Override
-    public float getHeight(){
+    public float getHeight() {
         return height;
     }
 
@@ -50,34 +50,45 @@ public class Rectangle extends SingleShape implements Serializable {
         return vertices;
     }
 
-
+    /**
+     * Computes the X distance between the top-left corner of the Rectangle and the
+     * bottom-right one, considering the rotation
+     *
+     * @return the width of the rotated Rectangle
+     */
     public float getAppearingWidth() {
         double maxX = vertices.get(0);
         double minX = vertices.get(0);
-        for(int index = 0; index < 8; index += 2){
-            if(vertices.get(index) > maxX) maxX = vertices.get(index);
+        for (int index = 0; index < 8; index += 2) {
+            if (vertices.get(index) > maxX) maxX = vertices.get(index);
             else if (vertices.get(index) < minX) minX = vertices.get(index);
         }
-        return (float)(maxX-minX);
+        return (float) (maxX - minX);
     }
 
-    public float getAppearingHeight(){
+    /**
+     * Computes the Y distance between the top-left corner of the Rectangle and the
+     * bottom-right one, considering the rotation
+     *
+     * @return the height of the rotated Rectangle
+     */
+    public float getAppearingHeight() {
         double maxY = vertices.get(1);
         double minY = vertices.get(1);
-        for(int index = 1; index < 8; index += 2){
-            if(vertices.get(index) > maxY) maxY = vertices.get(index);
+        for (int index = 1; index < 8; index += 2) {
+            if (vertices.get(index) > maxY) maxY = vertices.get(index);
             if (vertices.get(index) < minY) minY = vertices.get(index);
         }
-        return (float)(maxY-minY);
+        return (float) (maxY - minY);
     }
 
     @Override
     public Position getTopLeft() {
         double minX = vertices.get(0);
         double minY = vertices.get(1);
-        for(int i = 0; i < 8; i += 2) {
-            if(minX > vertices.get(i)) minX = vertices.get(i);
-            if(minY > vertices.get(i+1)) minY = vertices.get(i+1);
+        for (int i = 0; i < 8; i += 2) {
+            if (minX > vertices.get(i)) minX = vertices.get(i);
+            if (minY > vertices.get(i + 1)) minY = vertices.get(i + 1);
         }
         return new Position(minX, minY);
     }
@@ -117,7 +128,7 @@ public class Rectangle extends SingleShape implements Serializable {
      */
     @Override
     public void computeRotationCenter() {
-        setRotationCenter(new Position(getPositionI().getX() + width/2, getPositionI().getY() + height/2));
+        setRotationCenter(new Position(getPositionI().getX() + width / 2, getPositionI().getY() + height / 2));
     }
 
     /**
@@ -131,7 +142,7 @@ public class Rectangle extends SingleShape implements Serializable {
         Position secondVertex = new Position(getPositionI().getX() + width, getPositionI().getY());
         Position thirdVertex = new Position(getPositionI().getX(), getPositionI().getY() + height);
         Position fourthVertex = new Position(getPositionI().getX() + width, getPositionI().getY() + height);
-        double radRotation = getRotation()%180 * Math.PI / 180;
+        double radRotation = getRotation() % 180 * Math.PI / 180;
         vertices.add(firstVertex.getX());
         vertices.add(firstVertex.getY());
         vertices.add(secondVertex.getX());
@@ -142,7 +153,7 @@ public class Rectangle extends SingleShape implements Serializable {
         vertices.add(fourthVertex.getY());
         // Computes the rotation
         Vector<Double> tmp = new Vector<>();
-        for(int i = 0; i < 8; i+=2) {
+        for (int i = 0; i < 8; i += 2) {
             tmp.add((Math.cos(radRotation) * (vertices.get(i) - getRotationCenter().getX()) -
                     Math.sin(radRotation) * (vertices.get(i + 1) - getRotationCenter().getY()) +
                     getRotationCenter().getX()));
@@ -156,17 +167,18 @@ public class Rectangle extends SingleShape implements Serializable {
 
     /**
      * Checks if the Shape is inside a Rectangle
+     *
      * @param startingPoint
      * @param arrival
-     * @return
+     * @return true if the Shape is inside a Rectangle, false otherwise
      */
     @Override
     public boolean isInside(Position startingPoint, Position arrival) {
-        for(int i = 0; i < 8; i+=2) {
+        for (int i = 0; i < 8; i += 2) {
             if (!(vertices.get(i) > startingPoint.getX() &&
                     vertices.get(i) < arrival.getX() &&
-                    vertices.get(i+1) > startingPoint.getY() &&
-                    vertices.get(i+1) < arrival.getY())) {
+                    vertices.get(i + 1) > startingPoint.getY() &&
+                    vertices.get(i + 1) < arrival.getY())) {
                 return false;
             }
         }
@@ -177,7 +189,7 @@ public class Rectangle extends SingleShape implements Serializable {
      * Compares a given Shape with this Rectangle
      *
      * @param s the Shape to compare to this Rectangle
-     * @return true if the given Rectangle has the same id false otherwise
+     * @return true if this equals s, false otherwise
      */
     @Override
     public boolean equals(Shape s) {
@@ -196,7 +208,7 @@ public class Rectangle extends SingleShape implements Serializable {
     public Rectangle clone() {
         Rectangle copy = (Rectangle) super.clone();
         copy.vertices = new Vector<>();
-        Vector<Double> copyVector = (Vector<Double>)vertices.clone();
+        Vector<Double> copyVector = (Vector<Double>) vertices.clone();
         copy.vertices.addAll(copyVector);
         return copy;
     }
