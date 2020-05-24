@@ -49,4 +49,9 @@ Vous devez avoir cette configuration de fichiers afin de lancer l'application :
 
 ## Rapport
 
-Pour plus d'information sur le projet, consultez <a href="https://github.com/Peinturalo/BeWizUProjet_AL_M1/blob/master/Projet_AL_Alazet_Deguillaume/rapport.pdf">notre rapport</a>.
+Pour plus d'information sur le projet, consultez <a href="https://github.com/Peinturalo/BeWizUProjet_AL_M1/blob/master/rapport.pdf">notre rapport</a>.
+
+## Vidéo
+
+Une vidéo de présentation du projet est disponible
+[![BeWizU](https://i.imgur.com/gZxlVnl.png)](https://www.youtube.com/watch?v=cWrU5IltSFo "BeWizU")
