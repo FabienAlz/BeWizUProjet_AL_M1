@@ -47,6 +47,8 @@ Vous devez avoir cette configuration de fichiers afin de lancer l'application :
 
 <p>Si vous avec le <a href="https://gluonhq.com/products/javafx/">javafx sdk</a> vous pouvez lancer l'application en vous plaçant dans le dossier du fichier <code>.jar</code> et en utilisant la commande <code>java --module-path &lt;chemin vers javafx sdk&gt;\lib --add-modules javafx.controls,javafx.graphics,javafx.fxml -jar BeWizU.jar</code></p>
 
+__Remarque__ : dans la classe sample.Main.java nous avons laissé la fonction <code>initialize()</code> commentée. Elle crée un Polygon et un Rectangle dans la Toolbar (tout comme le fichier <code>autosave.ser</code> présent). Décommentez l'appel de la fonction si besoin. 
+
 ## Rapport
 
 Pour plus d'information sur le projet, consultez <a href="https://github.com/Peinturalo/BeWizUProjet_AL_M1/blob/master/rapport.pdf">notre rapport</a>.
