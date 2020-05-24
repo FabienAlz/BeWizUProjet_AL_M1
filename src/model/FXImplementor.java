@@ -25,7 +25,7 @@ public final class FXImplementor implements Implementor, Serializable {
     private transient Pane canvas;
     private transient Pane toolBar;
     private transient Pane bin;
-    private transient  ScrollPane toolBarWrapper;
+    private transient ScrollPane toolBarWrapper;
     private transient Color BORDER_COLOR;
     private transient static FXImplementor instance;
     private transient static Stage stage;
@@ -141,40 +141,7 @@ public final class FXImplementor implements Implementor, Serializable {
         File load = new File("ressources/saves/autosave.ser");
         List<Shape> loadShapes = null;
         if (load.exists()) {
-            try {
-                FileInputStream fileIn = new FileInputStream(load);
-                ObjectInputStream in = new ObjectInputStream(fileIn);
-                loadShapes = (List<Shape>) in.readObject();
-                ShapeObserver obs = new ConcreteShapeObserver();
-
-                for (Shape s : loadShapes) {
-                    try {
-                        s.setId();
-                        s.setImplementor(this);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                    if (s instanceof CompoundShape) {
-                        for (Shape subShape : ((CompoundShape) s).getShapes()) {
-                            subShape.setId();
-                            subShape.setImplementor(this);
-                            subShape.addObserver(obs);
-                        }
-                    }
-                    s.addObserver(obs);
-                    if (s.getPositionI() instanceof ToolbarPosition) {
-                        Toolbar.getInstance().addAndNotify(s);
-                    }
-                }
-                in.close();
-                fileIn.close();
-            } catch (IOException i) {
-                i.printStackTrace();
-                return;
-            } catch (ClassNotFoundException c) {
-                c.printStackTrace();
-                return;
-            }
+            loadFile(load);
             Originator.getInstance().saveState();
             ViewFX.getInstance().getToolbar().updateDisplay();
         }
@@ -352,23 +319,23 @@ public final class FXImplementor implements Implementor, Serializable {
                 ratio = (float) (s.getAppearingWidth() / (toolBarWrapper.getPrefWidth() - 36));
                 newShape.setWidth(s.getWidth() / ratio);
                 newShape.setHeight(s.getHeight() / ratio);
-                newShape.setArcHeight(s.getBorderRadius()/(ratio*2));
-                newShape.setArcWidth(s.getBorderRadius()/(ratio*2));
+                newShape.setArcHeight(s.getBorderRadius() / (ratio * 2));
+                newShape.setArcWidth(s.getBorderRadius() / (ratio * 2));
             }
-            double radRotation = s.getRotation()%180 * Math.PI / 180;
-            Position rotationCenter = new Position(s.getPositionI().getX() + s.getWidth()/(2 * ratio),
-                    s.getPositionI().getY() + s.getHeight()/(2 * ratio));
-            double posYtopLeft = (Math.sin(radRotation) * (s.getPositionI().getX()-rotationCenter.getX()) +
-                    Math.cos(radRotation) * (s.getPositionI().getY()-rotationCenter.getY()) +
+            double radRotation = s.getRotation() % 180 * Math.PI / 180;
+            Position rotationCenter = new Position(s.getPositionI().getX() + s.getWidth() / (2 * ratio),
+                    s.getPositionI().getY() + s.getHeight() / (2 * ratio));
+            double posYtopLeft = (Math.sin(radRotation) * (s.getPositionI().getX() - rotationCenter.getX()) +
+                    Math.cos(radRotation) * (s.getPositionI().getY() - rotationCenter.getY()) +
                     rotationCenter.getY());
 
-            double posXbottomLeft = (Math.cos(radRotation) * (s.getPositionI().getX()-rotationCenter.getX()) -
-                    Math.sin(radRotation) * (s.getPositionI().getY()+s.getHeight()/ratio-rotationCenter.getY()) +
+            double posXbottomLeft = (Math.cos(radRotation) * (s.getPositionI().getX() - rotationCenter.getX()) -
+                    Math.sin(radRotation) * (s.getPositionI().getY() + s.getHeight() / ratio - rotationCenter.getY()) +
                     rotationCenter.getX());
 
             newShape.setX(s.getPositionI().getX() + (s.getPositionI().getX() - posXbottomLeft));
             newShape.setY(s.getPositionI().getY() + (s.getPositionI().getY() - posYtopLeft));
-            Toolbar.getInstance().setNextPosition((int) (s.getAppearingHeight()/ratio));
+            Toolbar.getInstance().setNextPosition((int) (s.getAppearingHeight() / ratio));
             toolBar.getChildren().add(newShape);
 
         } else {
@@ -532,7 +499,7 @@ public final class FXImplementor implements Implementor, Serializable {
                 copy.setId();
                 copy.setWidth(shape.getWidth() / ratio);
                 copy.setHeight(shape.getHeight() / ratio);
-                copy.setBorderRadius(((Rectangle) shape).getBorderRadius()/ratio);
+                copy.setBorderRadius(((Rectangle) shape).getBorderRadius() / ratio);
                 copy.setPosition(pos);
                 javafx.scene.shape.Rectangle rectangle = createToolbarCompoundRectangle(copy);
                 SHAPES.put(copy.getId(), rectangle);
@@ -630,6 +597,38 @@ public final class FXImplementor implements Implementor, Serializable {
     public void setLastSelected(Shape shape, javafx.scene.shape.Shape shapeFX) {
         lastSelected = shape;
         lastFXSelected = shapeFX;
+    }
+
+    public void loadFile(File file) {
+        try {
+            FileInputStream fileIn = new FileInputStream(file);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            List<Shape> loadShapes = (List<Shape>) in.readObject();
+            ShapeObserver obs = new ConcreteShapeObserver();
+            for (Shape s : loadShapes) {
+                try {
+                    s.setId();
+                    s.setImplementor(FXImplementor.getInstance());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                if (s instanceof CompoundShape) {
+                    for (Shape subShape : ((CompoundShape) s).getShapes()) {
+                        subShape.setId();
+                        subShape.setImplementor(FXImplementor.getInstance());
+                        subShape.addObserver(obs);
+                    }
+                }
+                s.addObserver(obs);
+                if (s.getPositionI() instanceof ToolbarPosition) {
+                    Toolbar.getInstance().addAndNotify(s);
+                }
+            }
+            in.close();
+            fileIn.close();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 }

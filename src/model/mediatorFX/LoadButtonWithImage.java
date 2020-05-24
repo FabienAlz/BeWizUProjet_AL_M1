@@ -40,8 +40,23 @@ public class LoadButtonWithImage extends ButtonWithImage {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setInitialDirectory(new File("ressources/saves"));
             File file = fileChooser.showOpenDialog(primaryStage);
-            List<Shape> loadShapes = null;
+            FXImplementor.getInstance().initializeFXImplementor(primaryStage);
+
             if (file != null) {
+                if (file.toString().substring(file.toString().length() - 3).compareTo("ser") == 0) {
+                    Canvas.getInstance().getShapes().clear();
+                    Toolbar.getInstance().getShapes().clear();
+                    Toolbar.getInstance().resetPosition();
+                    ViewFX.getInstance().getCanvas().getChildren().clear();
+                    ViewFX.getInstance().getToolbar().getChildren().clear();
+                    ViewFX.getInstance().getToolbar().setPrefHeight(ViewFX.getInstance().TOOLBAR_HEIGHT);
+                    FXImplementor.getInstance().loadFile(file);
+                }
+                Originator.getInstance().saveState();
+                ViewFX.getInstance().getToolbar().updateDisplay();
+            }
+
+            /*
                 if (file.toString().substring(file.toString().length() - 3).compareTo("ser") == 0) {
                     try {
                         FileInputStream fileIn = new FileInputStream(file);
@@ -81,7 +96,7 @@ public class LoadButtonWithImage extends ButtonWithImage {
                     }
                     Originator.getInstance().saveState();
                 }
-            }
+            }*/
         });
     }
 }
